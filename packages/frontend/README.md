@@ -1,36 +1,84 @@
-# Welcome to Remix!
+# Datanaut Frontend
 
-- 📖 [Remix docs](https://remix.run/docs)
+A modern web application built with:
 
-## Development
+- React 18
+- Remix 2
+- Vite 6
+- TypeScript
+- Sass
 
-Run the dev server:
+## Development Setup
 
-```shellscript
+1. Install dependencies:
+
+```sh
+npm install
+```
+
+2. Start development server:
+
+```sh
 npm run dev
 ```
 
+3. Open [http://localhost:3000](http://localhost:3000) in your browser
+
+## Available Scripts
+
+- `dev`: Starts development server with hot reload
+- `build`: Creates production build
+- `start`: Runs production server
+- `lint`: Runs ESLint for code quality checks
+- `typecheck`: Runs TypeScript compiler
+
+## Project Structure
+
+Key directories:
+
+- `app/`: Remix route components and core application logic
+- `public/`: Static assets
+- `vite.config.ts`: Vite configuration
+- `tsconfig.json`: TypeScript configuration
+
 ## Deployment
 
-First, build your app for production:
+1. Create production build:
 
 ```sh
 npm run build
 ```
 
-Then run the app in production mode:
+2. Start production server:
 
 ```sh
 npm start
 ```
 
-Now you'll need to pick a host to deploy it to.
-
-### DIY
-
-If you're familiar with deploying Node applications, the built-in Remix app server is production-ready.
-
-Make sure to deploy the output of `npm run build`
+3. Deploy the following directories:
 
 - `build/server`
 - `build/client`
+
+## Contributing
+
+1. Follow existing code style and patterns
+2. Run linter before committing:
+
+```sh
+npm run lint
+```
+
+3. Ensure TypeScript checks pass:
+
+```sh
+npm run typecheck
+```
+
+4. Write clear commit messages
+
+## Documentation
+
+- [Remix Docs](https://remix.run/docs)
+- [React Docs](https://react.dev)
+- [Vite Docs](https://vitejs.dev)
