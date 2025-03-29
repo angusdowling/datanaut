@@ -7,6 +7,10 @@ import {
   getSortedRowModel,
   getPaginationRowModel,
   SortingState,
+  getGroupedRowModel,
+  getExpandedRowModel,
+  ExpandedState,
+  GroupingState,
 } from "@tanstack/react-table";
 import { EditableCell } from "./EditableCell";
 import { TableHeader } from "./TableHeader";
@@ -18,14 +22,18 @@ interface DataTableProps<T> {
   data: T[];
   setData: (data: T[]) => void;
   columns: ColumnDef<T>[];
+  defaultGrouping?: string[];
 }
 
 export function DataTable<T extends object>({
   data,
   setData,
   columns,
+  defaultGrouping = [],
 }: DataTableProps<T>) {
   const [sorting, setSorting] = useState<SortingState>([]);
+  const [grouping, setGrouping] = useState<GroupingState>(defaultGrouping);
+  const [expanded, setExpanded] = useState<ExpandedState>({});
   const [editingCell, setEditingCell] = useState<{
     rowId: string;
     columnId: string;
@@ -63,6 +71,7 @@ export function DataTable<T extends object>({
           />
         );
       },
+      enableGrouping: true,
     })
   );
 
@@ -72,10 +81,17 @@ export function DataTable<T extends object>({
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
+    getGroupedRowModel: getGroupedRowModel(),
+    getExpandedRowModel: getExpandedRowModel(),
     state: {
       sorting,
+      grouping,
+      expanded,
     },
     onSortingChange: setSorting,
+    onGroupingChange: setGrouping,
+    onExpandedChange: setExpanded,
+    enableGrouping: true,
   });
 
   return (
@@ -98,6 +114,10 @@ export function DataTable<T extends object>({
               renderCell={(cell) =>
                 flexRender(cell.column.columnDef.cell, cell.getContext())
               }
+              isGrouped={row.getIsGrouped()}
+              isExpanded={row.getIsExpanded()}
+              toggleExpanded={() => row.toggleExpanded()}
+              groupedCell={row.getGroupingValue(grouping[0])}
             />
           ))}
         </tbody>
