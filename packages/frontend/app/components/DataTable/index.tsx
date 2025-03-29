@@ -12,11 +12,12 @@ import {
   ExpandedState,
   GroupingState,
 } from "@tanstack/react-table";
-import { EditableCell } from "./EditableCell";
-import { TableHeader } from "./TableHeader";
-import { TableRow } from "./TableRow";
-import { Pagination } from "./Pagination";
-import { ColumnDef } from "./types";
+import { EditableCell } from "../EditableCell";
+import { TableHeader } from "../TableHeader";
+import { TableRow } from "../TableRow";
+import { Pagination } from "../Pagination";
+import { ColumnDef } from "../types";
+import styles from "./DataTable.module.scss";
 
 interface DataTableProps<T> {
   data: T[];
@@ -95,7 +96,7 @@ export function DataTable<T extends object>({
   });
 
   return (
-    <div className="overflow-x-auto">
+    <div className={styles.wrapper}>
       <table className="min-w-full border-collapse border border-gray-300">
         <thead>
           {table.getHeaderGroups().map((headerGroup) => (
@@ -117,7 +118,9 @@ export function DataTable<T extends object>({
               isGrouped={row.getIsGrouped()}
               isExpanded={row.getIsExpanded()}
               toggleExpanded={() => row.toggleExpanded()}
-              groupedCell={row.getGroupingValue(grouping[0])}
+              groupedCell={
+                grouping[0] ? row.getGroupingValue(grouping[0]) : undefined
+              }
             />
           ))}
         </tbody>

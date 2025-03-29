@@ -1,5 +1,23 @@
+# Dependencies
 node_modules
+**/node_modules
 
-/.cache
-/build
+# Build outputs
+dist
+build
+.cache
+
+# Environment
 .env
+.env.*
+!.env.example
+
+# IDE and Editor files
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
