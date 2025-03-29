@@ -1,0 +1,13 @@
+{
+  "name": "@datanaut/database",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "watch": "graphile-migrate watch",
+    "migrate": "graphile-migrate migrate",
+    "commit": "graphile-migrate commit"
+  },
+  "dependencies": {
+    "graphile-migrate": "^1.4.1"
+  }
+}
