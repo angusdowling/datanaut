@@ -53,7 +53,8 @@ We use Graphile Migrate for managing database migrations. The following commands
 1. Create your table in `current.sql` using the following template:
 
    ```sql
-   create table app_public.your_table_name (
+   drop table if exists your_table_name cascade;
+   create table your_table_name (
      id uuid primary key default gen_random_uuid(),
      created_at timestamptz not null default now(),
      updated_at timestamptz not null default now()
@@ -72,8 +73,6 @@ We use Graphile Migrate for managing database migrations. The following commands
 
 ### Best Practices
 
-- Use `app_public` schema for tables that should be directly accessible
-- Use `app_private` schema for internal tables and functions
 - Always include `created_at` and `updated_at` timestamps
 - Use UUIDs for primary keys
 - Add appropriate indexes for foreign keys and frequently queried columns
@@ -87,11 +86,6 @@ We use Graphile Migrate for managing database migrations. The following commands
 4. Check that row level security policies work as expected
 
 ## Schema Overview
-
-The database is organized into two main schemas:
-
-- `app_public`: Contains tables and functions that are directly accessible
-- `app_private`: Contains internal tables and functions
 
 All tables include standard audit fields:
 
