@@ -43,7 +43,7 @@ We use Graphile Migrate for managing database migrations. The following commands
 
 3. Once you're happy with your changes, commit the migration:
    ```bash
-   yarn commit "description of your changes"
+   yarn commit --message "description of your changes"
    ```
 
 ## Contributing
