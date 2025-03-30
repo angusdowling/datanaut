@@ -1,4 +1,4 @@
-import { PoolClient } from "pg";
+import pg from "pg";
 
 /**
  * @swagger
@@ -38,7 +38,7 @@ export type AppTable = {
   updated_at: Date;
 };
 
-export async function getTables(workspaceId: string, db: PoolClient) {
+export async function getTables(workspaceId: string, db: pg.PoolClient) {
   const result = await db.query<AppTable>(
     `SELECT * FROM app_tables WHERE workspace_id = $1`,
     [workspaceId]
@@ -49,7 +49,7 @@ export async function getTables(workspaceId: string, db: PoolClient) {
 export async function createTable(
   workspaceId: string,
   name: string,
-  db: PoolClient
+  db: pg.PoolClient
 ) {
   const result = await db.query<AppTable>(
     `INSERT INTO app_tables(workspace_id, name) VALUES($1, $2) RETURNING *`,
@@ -61,7 +61,7 @@ export async function createTable(
 export async function renameTable(
   tableId: string,
   name: string,
-  db: PoolClient
+  db: pg.PoolClient
 ) {
   const result = await db.query<AppTable>(
     `UPDATE app_tables SET name = $1 WHERE id = $2 RETURNING *`,
@@ -70,7 +70,7 @@ export async function renameTable(
   return result.rows[0];
 }
 
-export async function deleteTable(tableId: string, db: PoolClient) {
+export async function deleteTable(tableId: string, db: pg.PoolClient) {
   const result = await db.query<AppTable>(
     `DELETE FROM app_tables WHERE id = $1 RETURNING *`,
     [tableId]
@@ -81,7 +81,7 @@ export async function deleteTable(tableId: string, db: PoolClient) {
 export async function updateTable(
   tableId: string,
   updates: Partial<Omit<AppTable, "id" | "workspace_id" | "created_at">>,
-  db: PoolClient
+  db: pg.PoolClient
 ) {
   const setClause = Object.keys(updates)
     .map((key, i) => `${key} = $${i + 1}`)

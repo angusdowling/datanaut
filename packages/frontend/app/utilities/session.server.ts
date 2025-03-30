@@ -1,5 +1,4 @@
 import { createCookieSessionStorage, redirect } from "@remix-run/node";
-import { UserRole } from "~/models";
 
 const sessionStorage = createCookieSessionStorage({
   cookie: {
@@ -9,39 +8,46 @@ const sessionStorage = createCookieSessionStorage({
     sameSite: "lax",
     path: "/",
     httpOnly: true,
+    maxAge: 60 * 60 * 24 * 7, // 1 week
   },
 });
 
 type CreateUserSessionArgs = {
   request: Request;
   userId: string;
-  role: string;
+  roleId: string;
   tenantId: string;
-  redirectTo: string;
+  // redirectTo: string;
 };
 
 export async function createUserSession({
   request,
   userId,
-  role,
+  roleId,
   tenantId,
-  redirectTo,
-}: CreateUserSessionArgs) {
+}: // redirectTo,
+CreateUserSessionArgs) {
   const session = await sessionStorage.getSession();
   session.set("userId", userId);
-  session.set("role", role);
+  session.set("roleId", roleId);
   session.set("tenantId", tenantId);
 
-  return redirect(redirectTo, {
+  return new Response("", {
     headers: {
       "Set-Cookie": await sessionStorage.commitSession(session),
     },
   });
+
+  // return redirect(redirectTo, {
+  //   headers: {
+  //     "Set-Cookie": await sessionStorage.commitSession(session),
+  //   },
+  // });
 }
 
 type UserSession = {
   userId: string;
-  role: UserRole;
+  roleId: string;
   tenantId: string;
 };
 
@@ -52,11 +58,14 @@ export async function requireUserSession(
     request.headers.get("Cookie")
   );
   const userId = session.get("userId");
+
+  console.log(userId);
+
   if (!userId) throw new Response("Unauthorized", { status: 401 });
 
   return {
     userId,
-    role: session.get("role"),
+    roleId: session.get("roleId"),
     tenantId: session.get("tenantId"),
   };
 }

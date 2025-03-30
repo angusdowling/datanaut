@@ -5,43 +5,42 @@ import { requireUserSession } from "~/utilities/session.server";
 
 /**
  * @swagger
- * /api/tenants/{tenantId}:
+ * /api/tables/{tableId}:
  *   patch:
- *     summary: Update a tenant
+ *     summary: Update a table
+ *     description: Updates properties of an existing table
  *     tags:
- *       - Tenants
+ *       - Tables
  *     parameters:
  *       - in: path
- *         name: tenantId
+ *         name: tableId
  *         required: true
+ *         description: ID of the table to update
  *         schema:
  *           type: string
- *         description: The tenant ID
  *     requestBody:
  *       required: true
  *       content:
- *         application/x-www-form-urlencoded:
+ *         application/json:
  *           schema:
- *             type: object
- *             properties:
- *               data:
- *                 type: object
- *                 description: Tenant update data
- *             required:
- *               - data
+ *             $ref: '#/components/schemas/AppTable'
  *     responses:
  *       200:
- *         description: The updated tenant
+ *         description: Table updated successfully
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/Tenant'
+ *               $ref: '#/components/schemas/AppTable'
  *       400:
- *         description: Missing tenantId or invalid data
+ *         description: Missing tableId or invalid request body
+ *       401:
+ *         description: Unauthorized
+ *       404:
+ *         description: Table not found
  */
 
 export const action: ActionFunction = async ({ request, params }) => {
-  const { userId, tenantId, role } = await requireUserSession(request);
+  const { userId, tenantId, roleId } = await requireUserSession(request);
   const tableId = params.tableId;
 
   if (!tableId) {
@@ -51,7 +50,7 @@ export const action: ActionFunction = async ({ request, params }) => {
   const form = await request.formData();
   const data = JSON.parse(form.get("data")?.toString() || "{}");
 
-  return queryWithContext({ userId, tenantId, role }, async (db) => {
+  return queryWithContext({ userId, tenantId, roleId }, async (db) => {
     const updated = await updateTable(tableId, data, db);
     return Response.json(updated);
   });

@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { MetaFunction } from "@remix-run/node";
 import { DataTable } from "~/components/DataTable";
+import { getUsers } from "~/services/api.client";
 
 type Person = {
   firstName: string;
@@ -51,6 +52,14 @@ export const meta: MetaFunction = () => {
 
 export default function Index() {
   const [data, setData] = useState(() => [...defaultData]);
+
+  useEffect(() => {
+    console.log("useEffect");
+
+    getUsers().then((users) => {
+      console.log("users", users);
+    });
+  }, []);
 
   const columns = [
     {

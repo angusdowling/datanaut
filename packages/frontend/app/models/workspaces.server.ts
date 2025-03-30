@@ -1,4 +1,4 @@
-import { PoolClient } from "pg";
+import pg from "pg";
 
 /**
  * @swagger
@@ -33,7 +33,10 @@ export type Workspace = {
   updated_at: Date;
 };
 
-export async function getWorkspaces(db: PoolClient, tenantId?: string | null) {
+export async function getWorkspaces(
+  db: pg.PoolClient,
+  tenantId?: string | null
+) {
   let query = `SELECT * FROM users`;
   const conditions: string[] = [];
   const values: any[] = [];
@@ -54,7 +57,7 @@ export async function getWorkspaces(db: PoolClient, tenantId?: string | null) {
 export async function createWorkspace(
   tenantId: string,
   name: string,
-  db: PoolClient
+  db: pg.PoolClient
 ) {
   const result = await db.query<Workspace>(
     `INSERT INTO workspaces(id, name) VALUES($1, $2) RETURNING *`,
@@ -63,7 +66,7 @@ export async function createWorkspace(
   return result.rows[0];
 }
 
-export async function deleteWorkspace(workspaceId: string, db: PoolClient) {
+export async function deleteWorkspace(workspaceId: string, db: pg.PoolClient) {
   const result = await db.query<Workspace>(
     `DELETE FROM workspaces WHERE id = $1 RETURNING *`,
     [workspaceId]
@@ -74,7 +77,7 @@ export async function deleteWorkspace(workspaceId: string, db: PoolClient) {
 export async function updateWorkspace(
   workspaceId: string,
   updates: Partial<Omit<Workspace, "id" | "created_at">>,
-  db: PoolClient
+  db: pg.PoolClient
 ) {
   const setClause = Object.keys(updates)
     .map((key, i) => `${key} = $${i + 1}`)

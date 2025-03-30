@@ -1,15 +1,15 @@
 import { ActionFunction, LoaderFunction } from "@remix-run/node";
-import { createRow, getRows } from "~/models";
+import { createColumn, getColumns } from "~/models";
 import { queryWithContext } from "~/utilities/db.server";
 import { requireUserSession } from "~/utilities/session.server";
 
 /**
  * @swagger
- * /api/rows:
+ * /api/columns:
  *   get:
- *     summary: Get all rows for a table
+ *     summary: Get all columns for a table
  *     tags:
- *       - Rows
+ *       - Columns
  *     parameters:
  *       - in: query
  *         name: tableId
@@ -18,19 +18,19 @@ import { requireUserSession } from "~/utilities/session.server";
  *           type: string
  *     responses:
  *       200:
- *         description: List of rows
+ *         description: List of columns
  *         content:
  *           application/json:
  *             schema:
  *               type: array
  *               items:
- *                 $ref: '#/components/schemas/AppRow'
+ *                 $ref: '#/components/schemas/AppColumn'
  *       400:
  *         description: Missing tableId
  *   post:
- *     summary: Create a new row
+ *     summary: Create a new column
  *     tags:
- *       - Rows
+ *       - Columns
  *     requestBody:
  *       required: true
  *       content:
@@ -47,17 +47,17 @@ import { requireUserSession } from "~/utilities/session.server";
  *               - data
  *     responses:
  *       200:
- *         description: The created row
+ *         description: The created column
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/AppRow'
+ *               $ref: '#/components/schemas/AppColumn'
  *       400:
  *         description: Missing tableId or data
  */
 
 export const loader: LoaderFunction = async ({ request }) => {
-  const { userId, tenantId, role } = await requireUserSession(request);
+  const { userId, tenantId, roleId } = await requireUserSession(request);
   const url = new URL(request.url);
   const tableId = url.searchParams.get("tableId");
 
@@ -65,14 +65,14 @@ export const loader: LoaderFunction = async ({ request }) => {
     throw new Response("Missing tableId", { status: 400 });
   }
 
-  return queryWithContext({ userId, tenantId, role }, async (db) => {
-    const rows = await getRows(tableId, db);
-    return Response.json(rows);
+  return queryWithContext({ userId, tenantId, roleId }, async (db) => {
+    const columns = await getColumns(tableId, db);
+    return Response.json(columns);
   });
 };
 
 export const action: ActionFunction = async ({ request }) => {
-  const { userId, tenantId, role } = await requireUserSession(request);
+  const { userId, tenantId, roleId } = await requireUserSession(request);
   const form = await request.formData();
 
   const tableId = form.get("tableId")?.toString();
@@ -82,8 +82,12 @@ export const action: ActionFunction = async ({ request }) => {
     throw new Response("Missing tableId", { status: 400 });
   }
 
-  return queryWithContext({ userId, tenantId, role }, async (db) => {
-    const newRow = await createRow(tableId, data, userId, db);
-    return Response.json(newRow);
+  if (!data) {
+    throw new Response("Missing data", { status: 400 });
+  }
+
+  return queryWithContext({ userId, tenantId, roleId }, async (db) => {
+    const newColumn = await createColumn(tableId, data, db);
+    return Response.json(newColumn);
   });
 };
