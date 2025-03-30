@@ -1,4 +1,4 @@
-import { PoolClient } from "pg";
+import pg from "pg";
 
 /**
  * @swagger
@@ -61,7 +61,7 @@ export type AppColumn = {
  * @param {PoolClient} db - Database client
  * @returns {Promise<AppColumn[]>} Array of columns
  */
-export async function getColumns(tableId: string, db: PoolClient) {
+export async function getColumns(tableId: string, db: pg.PoolClient) {
   const result = await db.query<AppColumn>(
     `SELECT * FROM app_columns WHERE table_id = $1`,
     [tableId]
@@ -83,7 +83,7 @@ export async function getColumns(tableId: string, db: PoolClient) {
 export async function createColumn(
   tableId: string,
   data: Omit<AppColumn, "id" | "table_id" | "created_at" | "updated_at">,
-  db: PoolClient
+  db: pg.PoolClient
 ) {
   const result = await db.query<AppColumn>(
     `INSERT INTO app_columns(table_id, name, type, config) VALUES($1, $2, $3, $4) RETURNING *`,
@@ -106,7 +106,7 @@ export async function createColumn(
 export async function updateColumn(
   columnId: string,
   updates: Partial<Omit<AppColumn, "id" | "table_id" | "created_at">>,
-  db: PoolClient
+  db: pg.PoolClient
 ) {
   const setClause = Object.keys(updates)
     .map((key, i) => `${key} = $${i + 1}`)
@@ -128,7 +128,7 @@ export async function updateColumn(
  * @param {PoolClient} db - Database client
  * @returns {Promise<AppColumn>} The deleted column
  */
-export async function deleteColumn(columnId: string, db: PoolClient) {
+export async function deleteColumn(columnId: string, db: pg.PoolClient) {
   const result = await db.query<AppColumn>(
     `DELETE FROM app_columns WHERE id = $1 RETURNING *`,
     [columnId]

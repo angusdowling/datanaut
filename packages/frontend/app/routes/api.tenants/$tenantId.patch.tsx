@@ -5,18 +5,18 @@ import { requireUserSession } from "~/utilities/session.server";
 
 /**
  * @swagger
- * /api/users/{userId}:
+ * /api/tenants/{tenantId}:
  *   patch:
- *     summary: Update a user
+ *     summary: Update a tenant
  *     tags:
- *       - Users
+ *       - Tenants
  *     parameters:
  *       - in: path
- *         name: userId
+ *         name: tenantId
  *         required: true
  *         schema:
  *           type: string
- *         description: The user ID
+ *         description: The tenant ID
  *     requestBody:
  *       required: true
  *       content:
@@ -26,33 +26,33 @@ import { requireUserSession } from "~/utilities/session.server";
  *             properties:
  *               data:
  *                 type: object
- *                 description: User update data
+ *                 description: Tenant update data
  *             required:
  *               - data
  *     responses:
  *       200:
- *         description: The updated user
+ *         description: The updated tenant
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/User'
+ *               $ref: '#/components/schemas/Tenant'
  *       400:
- *         description: Missing userId or invalid data
+ *         description: Missing tenantId or invalid data
  */
 
 export const action: ActionFunction = async ({ request, params }) => {
-  const { userId, tenantId, role } = await requireUserSession(request);
-  const requestUserId = params.userId;
+  const { userId, tenantId, roleId } = await requireUserSession(request);
+  const tableId = params.tableId;
 
-  if (!requestUserId) {
-    throw new Response("Missing userId", { status: 400 });
+  if (!tableId) {
+    throw new Response("Missing tableId", { status: 400 });
   }
 
   const form = await request.formData();
   const data = JSON.parse(form.get("data")?.toString() || "{}");
 
-  return queryWithContext({ userId, tenantId, role }, async (db) => {
-    const updated = await updateTable(requestUserId, data, db);
+  return queryWithContext({ userId, tenantId, roleId }, async (db) => {
+    const updated = await updateTable(tableId, data, db);
     return Response.json(updated);
   });
 };

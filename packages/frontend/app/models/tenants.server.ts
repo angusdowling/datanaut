@@ -1,4 +1,4 @@
-import { PoolClient } from "pg";
+import pg from "pg";
 
 /**
  * @swagger
@@ -35,7 +35,7 @@ export type Tenant = {
 
 export async function createTenant(
   data: Omit<Tenant, "created_at" | "updated_at">,
-  db: PoolClient
+  db: pg.PoolClient
 ) {
   const result = await db.query<Tenant>(
     `INSERT INTO tenants(name) VALUES($1) RETURNING *`,
@@ -44,7 +44,7 @@ export async function createTenant(
   return result.rows[0];
 }
 
-export async function deleteTenant(tenantId: string, db: PoolClient) {
+export async function deleteTenant(tenantId: string, db: pg.PoolClient) {
   const result = await db.query<Tenant>(
     `DELETE FROM tenants WHERE id = $1 RETURNING *`,
     [tenantId]
@@ -55,14 +55,14 @@ export async function deleteTenant(tenantId: string, db: PoolClient) {
   return result.rows[0];
 }
 
-export async function getTenantById(id: string, db: PoolClient) {
+export async function getTenantById(id: string, db: pg.PoolClient) {
   const result = await db.query<Tenant>(`SELECT * FROM tenants WHERE id = $1`, [
     id,
   ]);
   return result.rows[0];
 }
 
-export async function getTenantByUserId(userId: string, db: PoolClient) {
+export async function getTenantByUserId(userId: string, db: pg.PoolClient) {
   const result = await db.query<Tenant>(
     `SELECT t.* FROM tenants t JOIN users u ON t.id = u.tenant_id WHERE u.id = $1`,
     [userId]
@@ -71,7 +71,7 @@ export async function getTenantByUserId(userId: string, db: PoolClient) {
   return result.rows[0];
 }
 
-export async function getTenants(db: PoolClient) {
+export async function getTenants(db: pg.PoolClient) {
   const result = await db.query<Tenant>(`SELECT * FROM tenants`);
   return result.rows;
 }

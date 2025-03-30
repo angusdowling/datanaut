@@ -1,32 +1,38 @@
 import { ActionFunction } from "@remix-run/node";
-import { deleteRow } from "~/models";
+import { updateRow } from "~/models";
 import { queryWithContext } from "~/utilities/db.server";
 import { requireUserSession } from "~/utilities/session.server";
 
 /**
  * @swagger
  * /api/rows/{rowId}:
- *   delete:
- *     summary: Delete a row
- *     description: Permanently deletes a row from a table
+ *   patch:
+ *     summary: Update a row
+ *     description: Updates properties of an existing row
  *     tags:
  *       - Rows
  *     parameters:
  *       - in: path
  *         name: rowId
  *         required: true
- *         description: ID of the row to delete
+ *         description: ID of the row to update
  *         schema:
  *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/AppRow'
  *     responses:
  *       200:
- *         description: Row deleted successfully
+ *         description: Row updated successfully
  *         content:
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/AppRow'
  *       400:
- *         description: Missing rowId parameter
+ *         description: Missing rowId or invalid request body
  *       401:
  *         description: Unauthorized
  *       404:
@@ -34,15 +40,18 @@ import { requireUserSession } from "~/utilities/session.server";
  */
 
 export const action: ActionFunction = async ({ request, params }) => {
-  const { userId, tenantId, role } = await requireUserSession(request);
+  const { userId, tenantId, roleId } = await requireUserSession(request);
   const rowId = params.rowId;
 
   if (!rowId) {
     throw new Response("Missing rowId", { status: 400 });
   }
 
-  return queryWithContext({ userId, tenantId, role }, async (db) => {
-    const deleted = await deleteRow(rowId, db);
-    return Response.json(deleted);
+  const form = await request.formData();
+  const data = JSON.parse(form.get("data")?.toString() || "{}");
+
+  return queryWithContext({ userId, tenantId, roleId }, async (db) => {
+    const updated = await updateRow(rowId, data, db);
+    return Response.json(updated);
   });
 };

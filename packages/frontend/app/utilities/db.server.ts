@@ -1,24 +1,46 @@
-import { Pool, PoolClient } from "pg";
-import { UserRole } from "~/models";
+import pg from "pg";
 
-const pool = new Pool({
-  // Configure your PostgreSQL connection here
+const pool = new pg.Pool({
+  host: process.env.PG_HOST || "localhost",
+  port: parseInt(process.env.PG_PORT || "5432"),
+  user: process.env.PG_USER,
+  password: process.env.PG_PASSWORD,
+  database: process.env.PG_DATABASE,
 });
 
-export async function queryWithContext<T>(
-  context: {
-    role: UserRole;
-    tenantId?: string;
-    userId?: string;
-  },
-  fn: (client: PoolClient) => Promise<T>
+if (
+  !process.env.PG_USER ||
+  !process.env.PG_PASSWORD ||
+  !process.env.PG_DATABASE
+) {
+  throw new Error("Missing required PostgreSQL environment variables");
+}
+
+export async function query<T>(
+  fn: (client: pg.PoolClient) => Promise<T>
 ): Promise<T> {
   const client = await pool.connect();
   try {
-    if (context.role) {
+    return await fn(client);
+  } finally {
+    client.release();
+  }
+}
+
+export async function queryWithContext<T>(
+  context: {
+    roleId?: string;
+    tenantId?: string;
+    userId?: string;
+  },
+  fn: (client: pg.PoolClient) => Promise<T>
+): Promise<T> {
+  const client = await pool.connect();
+  try {
+    if (context.roleId) {
       await client.query(
-        `select set_config('app.current_user_role', $1, true)`,
-        [context.role]
+        `select set_config('app.current_user_permissions', $1, true)`,
+        [context.roleId]
       );
     }
     if (context.tenantId) {

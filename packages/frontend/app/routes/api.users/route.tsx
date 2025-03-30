@@ -62,20 +62,23 @@ import { requireUserSession } from "~/utilities/session.server";
  */
 
 export const loader: LoaderFunction = async ({ request }) => {
-  const { userId, tenantId, role } = await requireUserSession(request);
+  const { userId, tenantId, roleId } = await requireUserSession(request);
 
   const url = new URL(request.url);
   const requestTenantId = url.searchParams.get("tenantId");
   const requestEmail = url.searchParams.get("email");
 
-  return queryWithContext({ userId, tenantId, role }, async (db) => {
-    const users = await getUsers(db, requestTenantId, requestEmail);
+  return queryWithContext({ userId, tenantId, roleId }, async (db) => {
+    const users = await getUsers(db, {
+      email: requestEmail,
+      tenantId: requestTenantId,
+    });
     return Response.json(users);
   });
 };
 
 export const action: ActionFunction = async ({ request }) => {
-  const { userId, tenantId, role } = await requireUserSession(request);
+  const { userId, tenantId, roleId } = await requireUserSession(request);
   const form = await request.formData();
 
   const data = JSON.parse(form.get("data")?.toString() || "{}");
@@ -89,7 +92,7 @@ export const action: ActionFunction = async ({ request }) => {
     throw new Response("Missing data", { status: 400 });
   }
 
-  return queryWithContext({ userId, tenantId, role }, async (db) => {
+  return queryWithContext({ userId, tenantId, roleId }, async (db) => {
     const newUser = await createUser(queryTenantId, data, db);
     return Response.json(newUser);
   });

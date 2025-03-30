@@ -1,21 +1,21 @@
 import { ActionFunction } from "@remix-run/node";
-import { updateRow } from "~/models";
+import { updateColumn } from "~/models";
 import { queryWithContext } from "~/utilities/db.server";
 import { requireUserSession } from "~/utilities/session.server";
 
 /**
  * @swagger
- * /api/rows/{rowId}:
+ * /api/columns/{columnId}:
  *   patch:
- *     summary: Update a row
- *     description: Updates properties of an existing row
+ *     summary: Update a column
+ *     description: Updates properties of an existing column
  *     tags:
- *       - Rows
+ *       - Columns
  *     parameters:
  *       - in: path
- *         name: rowId
+ *         name: columnId
  *         required: true
- *         description: ID of the row to update
+ *         description: ID of the column to update
  *         schema:
  *           type: string
  *     requestBody:
@@ -23,35 +23,35 @@ import { requireUserSession } from "~/utilities/session.server";
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/AppRow'
+ *             $ref: '#/components/schemas/AppColumn'
  *     responses:
  *       200:
- *         description: Row updated successfully
+ *         description: Column updated successfully
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/AppRow'
+ *               $ref: '#/components/schemas/AppColumn'
  *       400:
- *         description: Missing rowId or invalid request body
+ *         description: Missing columnId or invalid request body
  *       401:
  *         description: Unauthorized
  *       404:
- *         description: Row not found
+ *         description: Column not found
  */
 
 export const action: ActionFunction = async ({ request, params }) => {
-  const { userId, tenantId, role } = await requireUserSession(request);
-  const rowId = params.rowId;
+  const { userId, tenantId, roleId } = await requireUserSession(request);
+  const columnId = params.columnId;
 
-  if (!rowId) {
-    throw new Response("Missing rowId", { status: 400 });
+  if (!columnId) {
+    throw new Response("Missing columnId", { status: 400 });
   }
 
   const form = await request.formData();
   const data = JSON.parse(form.get("data")?.toString() || "{}");
 
-  return queryWithContext({ userId, tenantId, role }, async (db) => {
-    const updated = await updateRow(rowId, data, db);
+  return queryWithContext({ userId, tenantId, roleId }, async (db) => {
+    const updated = await updateColumn(columnId, data, db);
     return Response.json(updated);
   });
 };

@@ -1,4 +1,4 @@
-import { PoolClient } from "pg";
+import pg from "pg";
 
 /**
  * @swagger
@@ -41,6 +41,7 @@ import { PoolClient } from "pg";
 export type User = {
   id: string;
   tenant_id: string;
+  role_id: string;
   email: string;
   name: string;
   password_hash: string;
@@ -48,31 +49,10 @@ export type User = {
   updated_at: Date;
 };
 
-/**
- * @swagger
- * components:
- *   schemas:
- *     UserRole:
- *       type: string
- *       enum:
- *         - PLATFORM_ADMIN
- *         - TENANT_ADMIN
- *         - REGULAR_USER
- *         - GUEST
- *       description: User role types
- */
-
-export enum UserRole {
-  PLATFORM_ADMIN = "platform_admin",
-  TENANT_ADMIN = "tenant_admin",
-  REGULAR_USER = "regular_user",
-  GUEST = "guest",
-}
-
 export async function createUser(
   tenantId: string,
   userData: Omit<User, "id" | "tenant_id" | "created_at" | "updated_at">,
-  db: PoolClient
+  db: pg.PoolClient
 ) {
   const result = await db.query<User>(
     `INSERT INTO users(tenant_id, email, name, password_hash) VALUES($1, $2, $3, $4) RETURNING *`,
@@ -82,10 +62,21 @@ export async function createUser(
 }
 
 export async function getUsers(
-  db: PoolClient,
-  tenantId?: string | null,
-  email?: string | null
-) {
+  db: pg.PoolClient,
+  options?: {
+    tenantId?: string | null;
+    email?: string | null;
+    bypassRLSForLogin?: boolean;
+  }
+): Promise<User[]> {
+  const { tenantId, email, bypassRLSForLogin = false } = options ?? {};
+
+  if (bypassRLSForLogin) {
+    await db.query(
+      `SET LOCAL app.current_user_permissions TO '["platform_admin"]'`
+    );
+  }
+
   let query = `SELECT * FROM users`;
   const conditions: string[] = [];
   const values: any[] = [];
@@ -108,6 +99,6 @@ export async function getUsers(
   return result.rows;
 }
 
-export async function deleteUser(id: string, db: PoolClient) {
+export async function deleteUser(id: string, db: pg.PoolClient) {
   await db.query(`DELETE FROM users WHERE id = $1`, [id]);
 }

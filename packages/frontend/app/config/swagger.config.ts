@@ -45,8 +45,8 @@ const swaggerDefinition = {
 const options: swaggerJSDoc.Options = {
   swaggerDefinition,
   apis: [
-    "./app/routes/api/**/*.tsx",
-    "./app/routes/api/**/*.ts",
+    "./app/routes/**/*.tsx",
+    "./app/routes/**/*.ts",
     "./app/models/**/*.ts",
   ],
 };
