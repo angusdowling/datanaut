@@ -3,6 +3,31 @@ import { deleteUser } from "~/models";
 import { queryWithContext } from "~/utilities/db.server";
 import { requireUserSession } from "~/utilities/session.server";
 
+/**
+ * @swagger
+ * /api/users/{userId}:
+ *   delete:
+ *     summary: Delete a user
+ *     tags:
+ *       - Users
+ *     parameters:
+ *       - in: path
+ *         name: userId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The user ID to delete
+ *     responses:
+ *       200:
+ *         description: The deleted user
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/User'
+ *       400:
+ *         description: Missing userId
+ */
+
 export const action: ActionFunction = async ({ request, params }) => {
   const { userId, tenantId, role } = await requireUserSession(request);
   const requestUserId = params.userId;
