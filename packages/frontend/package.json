@@ -21,13 +21,22 @@
     "query-string": "^9.1.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "sass": "^1.86.0"
+    "remix-utils": "^8.5.0",
+    "sass": "^1.86.0",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-dist": "^5.20.2",
+    "swagger-ui-express": "^5.0.1",
+    "swagger-ui-react": "^5.20.2"
   },
   "devDependencies": {
     "@remix-run/dev": "^2.16.3",
     "@types/pg": "^8.11.11",
     "@types/react": "^18.2.20",
     "@types/react-dom": "^18.2.7",
+    "@types/swagger-jsdoc": "^6.0.4",
+    "@types/swagger-ui-dist": "^3.30.5",
+    "@types/swagger-ui-express": "^4.1.8",
+    "@types/swagger-ui-react": "^5.18.0",
     "@typescript-eslint/eslint-plugin": "^6.7.4",
     "@typescript-eslint/parser": "^6.7.4",
     "autoprefixer": "^10.4.19",

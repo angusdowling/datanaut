@@ -1,7 +1,59 @@
 import { ActionFunction, LoaderFunction } from "@remix-run/node";
-import { createWorkspace, getUsers, getWorkspaces } from "~/models";
+import { createWorkspace, getWorkspaces } from "~/models";
 import { queryWithContext } from "~/utilities/db.server";
 import { requireUserSession } from "~/utilities/session.server";
+
+/**
+ * @swagger
+ * /api/workspaces:
+ *   get:
+ *     summary: Get all workspaces
+ *     tags:
+ *       - Workspaces
+ *     description: Returns a list of workspaces, optionally filtered by tenantId
+ *     parameters:
+ *       - in: query
+ *         name: tenantId
+ *         schema:
+ *           type: string
+ *         description: Optional tenant ID to filter workspaces
+ *     responses:
+ *       200:
+ *         description: A list of workspaces
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Workspace'
+ *   post:
+ *     summary: Create a new workspace
+ *     tags:
+ *       - Workspaces
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/x-www-form-urlencoded:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *               tenantId:
+ *                 type: string
+ *             required:
+ *               - name
+ *               - tenantId
+ *     responses:
+ *       200:
+ *         description: The created workspace
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Workspace'
+ *       400:
+ *         description: Missing required fields
+ */
 
 export const loader: LoaderFunction = async ({ request }) => {
   const { userId, tenantId, role } = await requireUserSession(request);

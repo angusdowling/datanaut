@@ -1,5 +1,31 @@
 import { PoolClient } from "pg";
 
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     Workspace:
+ *       type: object
+ *       properties:
+ *         id:
+ *           type: string
+ *           description: The workspace ID
+ *         name:
+ *           type: string
+ *           description: The workspace name
+ *         created_at:
+ *           type: string
+ *           format: date-time
+ *         updated_at:
+ *           type: string
+ *           format: date-time
+ *       required:
+ *         - id
+ *         - name
+ *         - created_at
+ *         - updated_at
+ */
+
 export type Workspace = {
   id: string;
   name: string;

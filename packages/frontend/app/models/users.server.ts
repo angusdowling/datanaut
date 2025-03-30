@@ -1,5 +1,43 @@
 import { PoolClient } from "pg";
 
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     User:
+ *       type: object
+ *       properties:
+ *         id:
+ *           type: string
+ *           description: The user ID
+ *         tenant_id:
+ *           type: string
+ *           description: The tenant this user belongs to
+ *         email:
+ *           type: string
+ *           description: The user's email
+ *         name:
+ *           type: string
+ *           description: The user's name
+ *         password_hash:
+ *           type: string
+ *           description: Hashed password
+ *         created_at:
+ *           type: string
+ *           format: date-time
+ *         updated_at:
+ *           type: string
+ *           format: date-time
+ *       required:
+ *         - id
+ *         - tenant_id
+ *         - email
+ *         - name
+ *         - password_hash
+ *         - created_at
+ *         - updated_at
+ */
+
 export type User = {
   id: string;
   tenant_id: string;
@@ -9,6 +47,20 @@ export type User = {
   created_at: Date;
   updated_at: Date;
 };
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     UserRole:
+ *       type: string
+ *       enum:
+ *         - PLATFORM_ADMIN
+ *         - TENANT_ADMIN
+ *         - REGULAR_USER
+ *         - GUEST
+ *       description: User role types
+ */
 
 export enum UserRole {
   PLATFORM_ADMIN = "platform_admin",

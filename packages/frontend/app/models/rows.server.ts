@@ -1,5 +1,39 @@
 import { PoolClient } from "pg";
 
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     AppRow:
+ *       type: object
+ *       properties:
+ *         id:
+ *           type: string
+ *           description: The row ID
+ *         table_id:
+ *           type: string
+ *           description: The table this row belongs to
+ *         data:
+ *           type: object
+ *           description: The row data as key-value pairs
+ *         created_by:
+ *           type: string
+ *           description: User ID who created this row
+ *         created_at:
+ *           type: string
+ *           format: date-time
+ *         updated_at:
+ *           type: string
+ *           format: date-time
+ *       required:
+ *         - id
+ *         - table_id
+ *         - data
+ *         - created_by
+ *         - created_at
+ *         - updated_at
+ */
+
 export type AppRow = {
   id: string;
   table_id: string;

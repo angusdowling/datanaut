@@ -1,5 +1,31 @@
 import { PoolClient } from "pg";
 
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     Tenant:
+ *       type: object
+ *       properties:
+ *         id:
+ *           type: string
+ *           description: The tenant ID
+ *         name:
+ *           type: string
+ *           description: The tenant name
+ *         created_at:
+ *           type: string
+ *           format: date-time
+ *         updated_at:
+ *           type: string
+ *           format: date-time
+ *       required:
+ *         - id
+ *         - name
+ *         - created_at
+ *         - updated_at
+ */
+
 export type Tenant = {
   id: string;
   name: string;
