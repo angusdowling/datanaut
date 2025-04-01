@@ -37,7 +37,7 @@ export async function getWorkspaces(
   db: pg.PoolClient,
   tenantId?: string | null
 ) {
-  let query = `SELECT * FROM users`;
+  let query = `SELECT * FROM workspaces`;
   const conditions: string[] = [];
   const values: any[] = [];
 

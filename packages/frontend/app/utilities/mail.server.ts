@@ -1,5 +1,7 @@
 import nodemailer from "nodemailer";
 
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
+
 const transporter = nodemailer.createTransport({
   host: "localhost",
   port: 1025,

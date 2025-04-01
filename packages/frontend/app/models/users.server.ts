@@ -102,3 +102,21 @@ export async function getUsers(
 export async function deleteUser(id: string, db: pg.PoolClient) {
   await db.query(`DELETE FROM users WHERE id = $1`, [id]);
 }
+
+export async function updateUser(
+  id: string,
+  data: Partial<Omit<User, "id" | "tenant_id" | "created_at" | "updated_at">>,
+  db: pg.PoolClient
+) {
+  const updateFields = Object.entries(data)
+    .map(([key, _], index) => `${key} = $${index + 2}`)
+    .join(", ");
+
+  const values = [id, ...Object.values(data)];
+  const result = await db.query<User>(
+    `UPDATE users SET ${updateFields} WHERE id = $1 RETURNING *`,
+    values
+  );
+
+  return result.rows[0];
+}

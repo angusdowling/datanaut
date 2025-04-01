@@ -16,6 +16,7 @@ export const action: ActionFunction = async ({ request }) => {
     if (!email) {
       throw new Response("Email is required", { status: 400 });
     }
+
     // First step: send login email
     const response = await fetch("http://localhost:5173/api/login", {
       method: "POST",

@@ -1,4 +1,4 @@
-import { createCookieSessionStorage, redirect } from "@remix-run/node";
+import { createCookieSessionStorage } from "@remix-run/node";
 
 const sessionStorage = createCookieSessionStorage({
   cookie: {
@@ -17,7 +17,6 @@ type CreateUserSessionArgs = {
   userId: string;
   roleId: string;
   tenantId: string;
-  // redirectTo: string;
 };
 
 export async function createUserSession({
@@ -25,8 +24,7 @@ export async function createUserSession({
   userId,
   roleId,
   tenantId,
-}: // redirectTo,
-CreateUserSessionArgs) {
+}: CreateUserSessionArgs) {
   const session = await sessionStorage.getSession();
   session.set("userId", userId);
   session.set("roleId", roleId);
@@ -37,12 +35,6 @@ CreateUserSessionArgs) {
       "Set-Cookie": await sessionStorage.commitSession(session),
     },
   });
-
-  // return redirect(redirectTo, {
-  //   headers: {
-  //     "Set-Cookie": await sessionStorage.commitSession(session),
-  //   },
-  // });
 }
 
 type UserSession = {
@@ -58,8 +50,6 @@ export async function requireUserSession(
     request.headers.get("Cookie")
   );
   const userId = session.get("userId");
-
-  console.log(userId);
 
   if (!userId) throw new Response("Unauthorized", { status: 401 });
 
