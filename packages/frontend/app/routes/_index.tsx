@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import type { MetaFunction } from "@remix-run/node";
 import { DataTable } from "~/components/DataTable";
+import { getApiUsers } from "~/services/api/users/users";
 
 type Person = {
   firstName: string;
@@ -52,13 +53,13 @@ export const meta: MetaFunction = () => {
 export default function Index() {
   const [data, setData] = useState(() => [...defaultData]);
 
-  // useEffect(() => {
-  //   console.log("useEffect");
+  useEffect(() => {
+    console.log("useEffect");
 
-  //   getUsers().then((users) => {
-  //     console.log("users", users);
-  //   });
-  // }, []);
+    getApiUsers().then((users) => {
+      console.log("users", users);
+    });
+  }, []);
 
   const columns = [
     {
@@ -90,8 +91,8 @@ export default function Index() {
   ];
 
   return (
-    <div className="p-4">
-      <h1 className="text-2xl font-bold mb-4">Data Table</h1>
+    <div>
+      <h1>Data Table</h1>
       <DataTable data={data} setData={setData} columns={columns} />
     </div>
   );

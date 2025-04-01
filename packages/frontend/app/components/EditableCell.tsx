@@ -36,7 +36,6 @@ export const EditableCell = ({
     return (
       <input
         type={type === "text" ? "text" : "number"}
-        className="w-full p-1 border rounded"
         value={value}
         onChange={handleChange}
         onBlur={onFinishEdit}
@@ -46,9 +45,5 @@ export const EditableCell = ({
     );
   }
 
-  return (
-    <div onDoubleClick={onStartEdit} className="cursor-pointer">
-      {displayValue}
-    </div>
-  );
+  return <div onDoubleClick={onStartEdit}>{displayValue}</div>;
 };

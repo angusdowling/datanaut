@@ -7,7 +7,7 @@ export default defineConfig({
       target: "app/services/api",
       schemas: "app/services/api/model",
       client: "react-query",
-      baseUrl: "/api",
+      baseUrl: "/",
       mock: false,
       override: {
         useNativeEnums: true,

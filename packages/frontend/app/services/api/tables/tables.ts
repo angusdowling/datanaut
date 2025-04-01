@@ -39,7 +39,7 @@ export const patchApiTablesTableId = (
   appTable: AppTable,
   options?: AxiosRequestConfig,
 ): Promise<AxiosResponse<AppTable>> => {
-  return axios.patch(`/api/api/tables/${tableId}`, appTable, options);
+  return axios.patch(`/api/tables/${tableId}`, appTable, options);
 };
 
 export const getPatchApiTablesTableIdMutationOptions = <
@@ -118,7 +118,7 @@ export const deleteApiTablesTableId = (
   tableId: string,
   options?: AxiosRequestConfig,
 ): Promise<AxiosResponse<AppTable>> => {
-  return axios.delete(`/api/api/tables/${tableId}`, options);
+  return axios.delete(`/api/tables/${tableId}`, options);
 };
 
 export const getDeleteApiTablesTableIdMutationOptions = <
@@ -196,14 +196,14 @@ export const getApiTables = (
   params: GetApiTablesParams,
   options?: AxiosRequestConfig,
 ): Promise<AxiosResponse<AppTable[]>> => {
-  return axios.get(`/api/api/tables`, {
+  return axios.get(`/api/tables`, {
     ...options,
     params: { ...params, ...options?.params },
   });
 };
 
 export const getGetApiTablesQueryKey = (params: GetApiTablesParams) => {
-  return [`/api/api/tables`, ...(params ? [params] : [])] as const;
+  return [`/api/tables`, ...(params ? [params] : [])] as const;
 };
 
 export const getGetApiTablesQueryOptions = <
@@ -364,7 +364,7 @@ export const postApiTables = (
   formUrlEncoded.append("workspaceId", postApiTablesBody.workspaceId);
   formUrlEncoded.append("name", postApiTablesBody.name);
 
-  return axios.post(`/api/api/tables`, formUrlEncoded, options);
+  return axios.post(`/api/tables`, formUrlEncoded, options);
 };
 
 export const getPostApiTablesMutationOptions = <

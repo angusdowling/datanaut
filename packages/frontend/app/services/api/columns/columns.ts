@@ -39,7 +39,7 @@ export const patchApiColumnsColumnId = (
   appColumn: AppColumn,
   options?: AxiosRequestConfig,
 ): Promise<AxiosResponse<AppColumn>> => {
-  return axios.patch(`/api/api/columns/${columnId}`, appColumn, options);
+  return axios.patch(`/api/columns/${columnId}`, appColumn, options);
 };
 
 export const getPatchApiColumnsColumnIdMutationOptions = <
@@ -118,7 +118,7 @@ export const deleteApiColumnsColumnId = (
   columnId: string,
   options?: AxiosRequestConfig,
 ): Promise<AxiosResponse<AppColumn>> => {
-  return axios.delete(`/api/api/columns/${columnId}`, options);
+  return axios.delete(`/api/columns/${columnId}`, options);
 };
 
 export const getDeleteApiColumnsColumnIdMutationOptions = <
@@ -196,14 +196,14 @@ export const getApiColumns = (
   params: GetApiColumnsParams,
   options?: AxiosRequestConfig,
 ): Promise<AxiosResponse<AppColumn[]>> => {
-  return axios.get(`/api/api/columns`, {
+  return axios.get(`/api/columns`, {
     ...options,
     params: { ...params, ...options?.params },
   });
 };
 
 export const getGetApiColumnsQueryKey = (params: GetApiColumnsParams) => {
-  return [`/api/api/columns`, ...(params ? [params] : [])] as const;
+  return [`/api/columns`, ...(params ? [params] : [])] as const;
 };
 
 export const getGetApiColumnsQueryOptions = <
@@ -364,7 +364,7 @@ export const postApiColumns = (
   formUrlEncoded.append("tableId", postApiColumnsBody.tableId);
   formUrlEncoded.append("data", JSON.stringify(postApiColumnsBody.data));
 
-  return axios.post(`/api/api/columns`, formUrlEncoded, options);
+  return axios.post(`/api/columns`, formUrlEncoded, options);
 };
 
 export const getPostApiColumnsMutationOptions = <

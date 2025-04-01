@@ -95,9 +95,13 @@ export function DataTable<T extends object>({
     enableGrouping: true,
   });
 
+  const rowModel = table.getRowModel();
+
+  console.log("rowModel", rowModel);
+
   return (
     <div className={styles.wrapper}>
-      <table className="min-w-full border-collapse border border-gray-300">
+      <table>
         <thead>
           {table.getHeaderGroups().map((headerGroup) => (
             <tr key={headerGroup.id}>
@@ -108,7 +112,7 @@ export function DataTable<T extends object>({
           ))}
         </thead>
         <tbody>
-          {table.getRowModel().rows.map((row) => (
+          {rowModel.rows.map((row) => (
             <TableRow
               key={row.id}
               row={row}
