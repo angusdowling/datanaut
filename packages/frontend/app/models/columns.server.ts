@@ -57,9 +57,9 @@ export type AppColumn = {
 
 /**
  * Get all columns for a table
- * @param {string} tableId - The ID of the table to get columns for
- * @param {PoolClient} db - Database client
- * @returns {Promise<AppColumn[]>} Array of columns
+ * @param tableId - The ID of the table to get columns for
+ * @param db - Database client
+ * @returns Array of columns
  */
 export async function getColumns(tableId: string, db: pg.PoolClient) {
   const result = await db.query<AppColumn>(
@@ -72,13 +72,13 @@ export async function getColumns(tableId: string, db: pg.PoolClient) {
 
 /**
  * Create a new column
- * @param {string} tableId - The ID of the table to add the column to
- * @param {object} data - Column data
- * @param {string} data.name - Column name
- * @param {string} data.type - Column type
- * @param {object} data.config - Column configuration
- * @param {PoolClient} db - Database client
- * @returns {Promise<AppColumn>} The created column
+ * @param tableId - The ID of the table to add the column to
+ * @param data - Column data
+ * @param data.name - Column name
+ * @param data.type - Column type
+ * @param data.config - Column configuration
+ * @param db - Database client
+ * @returns The created column
  */
 export async function createColumn(
   tableId: string,
@@ -95,13 +95,13 @@ export async function createColumn(
 
 /**
  * Update a column
- * @param {string} columnId - The ID of the column to update
- * @param {object} updates - Partial column data to update
- * @param {string} [updates.name] - New column name
- * @param {string} [updates.type] - New column type
- * @param {object} [updates.config] - New column configuration
- * @param {PoolClient} db - Database client
- * @returns {Promise<AppColumn>} The updated column
+ * @param columnId - The ID of the column to update
+ * @param updates - Partial column data to update
+ * @param [updates.name] - New column name
+ * @param [updates.type] - New column type
+ * @param [updates.config] - New column configuration
+ * @param db - Database client
+ * @returns The updated column
  */
 export async function updateColumn(
   columnId: string,
@@ -124,9 +124,9 @@ export async function updateColumn(
 
 /**
  * Delete a column
- * @param {string} columnId - The ID of the column to delete
- * @param {PoolClient} db - Database client
- * @returns {Promise<AppColumn>} The deleted column
+ * @param columnId - The ID of the column to delete
+ * @param db - Database client
+ * @returns The deleted column
  */
 export async function deleteColumn(columnId: string, db: pg.PoolClient) {
   const result = await db.query<AppColumn>(

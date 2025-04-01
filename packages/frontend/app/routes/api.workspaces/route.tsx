@@ -26,6 +26,7 @@ import { requireUserSession } from "~/utilities/session.server";
  *               type: array
  *               items:
  *                 $ref: '#/components/schemas/Workspace'
+ *
  *   post:
  *     summary: Create a new workspace
  *     tags:
@@ -55,19 +56,7 @@ import { requireUserSession } from "~/utilities/session.server";
  *         description: Missing required fields
  */
 
-export const loader: LoaderFunction = async ({ request }) => {
-  const { userId, tenantId, roleId } = await requireUserSession(request);
-
-  const url = new URL(request.url);
-  const requestTenantId = url.searchParams.get("tenantId");
-
-  return queryWithContext({ userId, tenantId, roleId }, async (db) => {
-    const workspaces = await getWorkspaces(db, requestTenantId);
-    return Response.json(workspaces);
-  });
-};
-
-export const action: ActionFunction = async ({ request }) => {
+export const action: ActionFunction = async ({ request, params }) => {
   const { userId, tenantId, roleId } = await requireUserSession(request);
   const form = await request.formData();
 
@@ -85,5 +74,17 @@ export const action: ActionFunction = async ({ request }) => {
   return queryWithContext({ userId, tenantId, roleId }, async (db) => {
     const newWorkspace = await createWorkspace(queryTenantId, name, db);
     return Response.json(newWorkspace);
+  });
+};
+
+export const loader: LoaderFunction = async ({ request }) => {
+  const { userId, tenantId, roleId } = await requireUserSession(request);
+
+  const url = new URL(request.url);
+  const requestTenantId = url.searchParams.get("tenantId");
+
+  return queryWithContext({ userId, tenantId, roleId }, async (db) => {
+    const workspaces = await getWorkspaces(db, requestTenantId);
+    return Response.json(workspaces);
   });
 };

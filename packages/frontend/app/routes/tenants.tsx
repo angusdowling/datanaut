@@ -8,15 +8,14 @@ import {
   Text,
 } from "@radix-ui/themes";
 import { Link, useLoaderData } from "@remix-run/react";
-import { getTenants } from "~/services/api.client";
 
 export async function loader() {
-  const tenants = await getTenants();
-  return { tenants };
+  // const tenants = await getTenants();
+  // return { tenants };
 }
 
 export default function TenantsRoute() {
-  const { tenants } = useLoaderData<typeof loader>();
+  // const { tenants } = useLoaderData<typeof loader>();
 
   return (
     <Box p="4">
@@ -38,7 +37,7 @@ export default function TenantsRoute() {
           </Table.Header>
 
           <Table.Body>
-            {tenants.map((tenant) => (
+            {/* {tenants.map((tenant) => (
               <Table.Row key={tenant.id}>
                 <Table.Cell>
                   <Text weight="bold">{tenant.name}</Text>
@@ -57,7 +56,7 @@ export default function TenantsRoute() {
                   </Flex>
                 </Table.Cell>
               </Table.Row>
-            ))}
+            ))} */}
           </Table.Body>
         </Table.Root>
       </Card>

@@ -1,7 +1,8 @@
 import { ActionFunction } from "@remix-run/node";
-import { updateWorkspace } from "~/models";
+import { deleteWorkspace, updateWorkspace } from "~/models";
 import { queryWithContext } from "~/utilities/db.server";
 import { requireUserSession } from "~/utilities/session.server";
+import { ActionFunctionArgs } from "react-router";
 
 /**
  * @swagger
@@ -38,9 +39,30 @@ import { requireUserSession } from "~/utilities/session.server";
  *               $ref: '#/components/schemas/Workspace'
  *       400:
  *         description: Missing workspaceId or invalid data
+ *
+ *   delete:
+ *     summary: Delete a workspace
+ *     tags:
+ *       - Workspaces
+ *     parameters:
+ *       - in: path
+ *         name: workspaceId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The workspace ID to delete
+ *     responses:
+ *       200:
+ *         description: The deleted workspace
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Workspace'
+ *       400:
+ *         description: Missing workspaceId
  */
 
-export const action: ActionFunction = async ({ request, params }) => {
+const patchHandler = async ({ request, params }: ActionFunctionArgs) => {
   const { userId, tenantId, roleId } = await requireUserSession(request);
   const workspaceId = params.workspaceId;
 
@@ -55,4 +77,29 @@ export const action: ActionFunction = async ({ request, params }) => {
     const updated = await updateWorkspace(workspaceId, data, db);
     return Response.json(updated);
   });
+};
+
+const deleteHandler = async ({ request, params }: ActionFunctionArgs) => {
+  const { userId, tenantId, roleId } = await requireUserSession(request);
+  const workspaceId = params.workspaceId;
+
+  if (!workspaceId) {
+    throw new Response("Missing workspaceId", { status: 400 });
+  }
+
+  return queryWithContext({ userId, tenantId, roleId }, async (db) => {
+    const deleted = await deleteWorkspace(workspaceId, db);
+    return Response.json(deleted);
+  });
+};
+
+export const action: ActionFunction = async ({ request, params }) => {
+  switch (request.method) {
+    case "PATCH":
+      return patchHandler({ request, params });
+    case "DELETE":
+      return deleteHandler({ request, params });
+    default:
+      throw new Response("Method not allowed", { status: 405 });
+  }
 };
