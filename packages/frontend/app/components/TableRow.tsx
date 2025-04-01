@@ -18,46 +18,28 @@ export const TableRow = ({
   toggleExpanded,
   groupedCell,
 }: TableRowProps) => (
-  <tr key={row.id} className={isGrouped ? "bg-gray-50" : ""}>
+  <tr key={row.id}>
     {row.getVisibleCells().map((cell) => {
       if (cell.getIsGrouped()) {
         return (
-          <td key={cell.id} className="border border-gray-300 p-2 font-bold">
-            <button
-              onClick={toggleExpanded}
-              className="mr-2 inline-flex items-center"
-            >
-              {isExpanded ? "🔽" : "▶️"}
-            </button>
+          <td key={cell.id}>
+            <button onClick={toggleExpanded}>{isExpanded ? "🔽" : "▶️"}</button>
             {`${cell.column.columnDef.header as string}: ${String(
               cell.getValue()
             )}`}
-            <span className="ml-2 text-gray-500">
-              ({row.subRows.length} items)
-            </span>
+            <span>({row.subRows.length} items)</span>
           </td>
         );
       } else if (cell.getIsAggregated()) {
         // If the cell is aggregated, you can display aggregated values
-        return (
-          <td
-            key={cell.id}
-            className="border border-gray-300 p-2 font-semibold"
-          >
-            {renderCell(cell)} (aggregated)
-          </td>
-        );
+        return <td key={cell.id}>{renderCell(cell)}</td>;
       } else if (cell.getIsPlaceholder()) {
         // For placeholder cells (in grouped rows)
-        return <td key={cell.id} className="border border-gray-300 p-2"></td>;
+        return <td key={cell.id}></td>;
       }
 
       // Regular cell
-      return (
-        <td key={cell.id} className="border border-gray-300 p-2">
-          {renderCell(cell)}
-        </td>
-      );
+      return <td key={cell.id}>{renderCell(cell)}</td>;
     })}
   </tr>
 );

@@ -45,11 +45,7 @@ export const patchApiWorkspacesWorkspaceId = (
     JSON.stringify(patchApiWorkspacesWorkspaceIdBody.data),
   );
 
-  return axios.patch(
-    `/api/api/workspaces/${workspaceId}`,
-    formUrlEncoded,
-    options,
-  );
+  return axios.patch(`/api/workspaces/${workspaceId}`, formUrlEncoded, options);
 };
 
 export const getPatchApiWorkspacesWorkspaceIdMutationOptions = <
@@ -129,7 +125,7 @@ export const deleteApiWorkspacesWorkspaceId = (
   workspaceId: string,
   options?: AxiosRequestConfig,
 ): Promise<AxiosResponse<Workspace>> => {
-  return axios.delete(`/api/api/workspaces/${workspaceId}`, options);
+  return axios.delete(`/api/workspaces/${workspaceId}`, options);
 };
 
 export const getDeleteApiWorkspacesWorkspaceIdMutationOptions = <
@@ -209,7 +205,7 @@ export const getApiWorkspaces = (
   params?: GetApiWorkspacesParams,
   options?: AxiosRequestConfig,
 ): Promise<AxiosResponse<Workspace[]>> => {
-  return axios.get(`/api/api/workspaces`, {
+  return axios.get(`/api/workspaces`, {
     ...options,
     params: { ...params, ...options?.params },
   });
@@ -218,7 +214,7 @@ export const getApiWorkspaces = (
 export const getGetApiWorkspacesQueryKey = (
   params?: GetApiWorkspacesParams,
 ) => {
-  return [`/api/api/workspaces`, ...(params ? [params] : [])] as const;
+  return [`/api/workspaces`, ...(params ? [params] : [])] as const;
 };
 
 export const getGetApiWorkspacesQueryOptions = <
@@ -404,7 +400,7 @@ export const postApiWorkspaces = (
   formUrlEncoded.append("name", postApiWorkspacesBody.name);
   formUrlEncoded.append("tenantId", postApiWorkspacesBody.tenantId);
 
-  return axios.post(`/api/api/workspaces`, formUrlEncoded, options);
+  return axios.post(`/api/workspaces`, formUrlEncoded, options);
 };
 
 export const getPostApiWorkspacesMutationOptions = <

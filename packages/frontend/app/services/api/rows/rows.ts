@@ -35,7 +35,7 @@ export const patchApiRowsRowId = (
   appRow: AppRow,
   options?: AxiosRequestConfig,
 ): Promise<AxiosResponse<AppRow>> => {
-  return axios.patch(`/api/api/rows/${rowId}`, appRow, options);
+  return axios.patch(`/api/rows/${rowId}`, appRow, options);
 };
 
 export const getPatchApiRowsRowIdMutationOptions = <
@@ -114,7 +114,7 @@ export const deleteApiRowsRowId = (
   rowId: string,
   options?: AxiosRequestConfig,
 ): Promise<AxiosResponse<AppRow>> => {
-  return axios.delete(`/api/api/rows/${rowId}`, options);
+  return axios.delete(`/api/rows/${rowId}`, options);
 };
 
 export const getDeleteApiRowsRowIdMutationOptions = <
@@ -192,14 +192,14 @@ export const getApiRows = (
   params: GetApiRowsParams,
   options?: AxiosRequestConfig,
 ): Promise<AxiosResponse<AppRow[]>> => {
-  return axios.get(`/api/api/rows`, {
+  return axios.get(`/api/rows`, {
     ...options,
     params: { ...params, ...options?.params },
   });
 };
 
 export const getGetApiRowsQueryKey = (params: GetApiRowsParams) => {
-  return [`/api/api/rows`, ...(params ? [params] : [])] as const;
+  return [`/api/rows`, ...(params ? [params] : [])] as const;
 };
 
 export const getGetApiRowsQueryOptions = <
@@ -360,7 +360,7 @@ export const postApiRows = (
   formUrlEncoded.append("tableId", postApiRowsBody.tableId);
   formUrlEncoded.append("data", JSON.stringify(postApiRowsBody.data));
 
-  return axios.post(`/api/api/rows`, formUrlEncoded, options);
+  return axios.post(`/api/rows`, formUrlEncoded, options);
 };
 
 export const getPostApiRowsMutationOptions = <

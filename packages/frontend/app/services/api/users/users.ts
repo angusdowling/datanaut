@@ -42,7 +42,7 @@ export const patchApiUsersUserId = (
   const formUrlEncoded = new URLSearchParams();
   formUrlEncoded.append("data", JSON.stringify(patchApiUsersUserIdBody.data));
 
-  return axios.patch(`/api/api/users/${userId}`, formUrlEncoded, options);
+  return axios.patch(`/api/users/${userId}`, formUrlEncoded, options);
 };
 
 export const getPatchApiUsersUserIdMutationOptions = <
@@ -120,7 +120,7 @@ export const deleteApiUsersUserId = (
   userId: string,
   options?: AxiosRequestConfig,
 ): Promise<AxiosResponse<User>> => {
-  return axios.delete(`/api/api/users/${userId}`, options);
+  return axios.delete(`/api/users/${userId}`, options);
 };
 
 export const getDeleteApiUsersUserIdMutationOptions = <
@@ -199,14 +199,14 @@ export const getApiUsers = (
   params?: GetApiUsersParams,
   options?: AxiosRequestConfig,
 ): Promise<AxiosResponse<User[]>> => {
-  return axios.get(`/api/api/users`, {
+  return axios.get(`/api/users`, {
     ...options,
     params: { ...params, ...options?.params },
   });
 };
 
 export const getGetApiUsersQueryKey = (params?: GetApiUsersParams) => {
-  return [`/api/api/users`, ...(params ? [params] : [])] as const;
+  return [`/api/users`, ...(params ? [params] : [])] as const;
 };
 
 export const getGetApiUsersQueryOptions = <
@@ -367,7 +367,7 @@ export const postApiUsers = (
   formUrlEncoded.append("data", JSON.stringify(postApiUsersBody.data));
   formUrlEncoded.append("tenantId", postApiUsersBody.tenantId);
 
-  return axios.post(`/api/api/users`, formUrlEncoded, options);
+  return axios.post(`/api/users`, formUrlEncoded, options);
 };
 
 export const getPostApiUsersMutationOptions = <

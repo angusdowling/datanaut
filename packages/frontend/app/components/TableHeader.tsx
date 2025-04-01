@@ -8,11 +8,8 @@ export const TableHeader = ({ header }: TableHeaderProps) => {
   const isGrouped = header.column.getIsGrouped();
 
   return (
-    <th
-      key={header.id}
-      className="border border-gray-300 bg-gray-100 p-2 text-left"
-    >
-      <div className="flex items-center gap-2">
+    <th key={header.id}>
+      <div>
         {/* Grouping control */}
         {header.column.getCanGroup() && (
           <button
@@ -20,9 +17,6 @@ export const TableHeader = ({ header }: TableHeaderProps) => {
               e.stopPropagation();
               header.column.toggleGrouping();
             }}
-            className={`mr-2 ${
-              isGrouped ? "text-blue-600 font-bold" : "text-gray-400"
-            }`}
             title={
               isGrouped ? "Ungroup by this column" : "Group by this column"
             }
@@ -32,10 +26,7 @@ export const TableHeader = ({ header }: TableHeaderProps) => {
         )}
 
         {/* Column header with sort control */}
-        <div
-          onClick={header.column.getToggleSortingHandler()}
-          className="cursor-pointer flex items-center"
-        >
+        <div onClick={header.column.getToggleSortingHandler()}>
           {flexRender(header.column.columnDef.header, header.getContext())}
         </div>
       </div>

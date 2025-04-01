@@ -33,11 +33,11 @@ import type { PostApiTenantsBody, Tenant } from ".././model";
 export const getApiTenants = (
   options?: AxiosRequestConfig,
 ): Promise<AxiosResponse<Tenant[]>> => {
-  return axios.get(`/api/api/tenants`, options);
+  return axios.get(`/api/tenants`, options);
 };
 
 export const getGetApiTenantsQueryKey = () => {
-  return [`/api/api/tenants`] as const;
+  return [`/api/tenants`] as const;
 };
 
 export const getGetApiTenantsQueryOptions = <
@@ -181,7 +181,7 @@ export const postApiTenants = (
   const formUrlEncoded = new URLSearchParams();
   formUrlEncoded.append("data", JSON.stringify(postApiTenantsBody.data));
 
-  return axios.post(`/api/api/tenants`, formUrlEncoded, options);
+  return axios.post(`/api/tenants`, formUrlEncoded, options);
 };
 
 export const getPostApiTenantsMutationOptions = <
