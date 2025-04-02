@@ -97,8 +97,6 @@ export function DataTable<T extends object>({
 
   const rowModel = table.getRowModel();
 
-  console.log("rowModel", rowModel);
-
   return (
     <div className={styles.wrapper}>
       <table>

@@ -21,9 +21,6 @@ import type {
   UseQueryResult,
 } from "@tanstack/react-query";
 
-import axios from "axios";
-import type { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios";
-
 import type {
   GetApiWorkspacesParams,
   PatchApiWorkspacesWorkspaceIdBody,
@@ -34,22 +31,64 @@ import type {
 /**
  * @summary Update a workspace
  */
-export const patchApiWorkspacesWorkspaceId = (
+export type patchApiWorkspacesWorkspaceIdResponse200 = {
+  data: Workspace;
+  status: 200;
+};
+
+export type patchApiWorkspacesWorkspaceIdResponse400 = {
+  data: void;
+  status: 400;
+};
+
+export type patchApiWorkspacesWorkspaceIdResponseComposite =
+  | patchApiWorkspacesWorkspaceIdResponse200
+  | patchApiWorkspacesWorkspaceIdResponse400;
+
+export type patchApiWorkspacesWorkspaceIdResponse =
+  patchApiWorkspacesWorkspaceIdResponseComposite & {
+    headers: Headers;
+  };
+
+export const getPatchApiWorkspacesWorkspaceIdUrl = (workspaceId: string) => {
+  return `http://localhost:5173/api/workspaces/${workspaceId}`;
+};
+
+export const patchApiWorkspacesWorkspaceId = async (
   workspaceId: string,
   patchApiWorkspacesWorkspaceIdBody: PatchApiWorkspacesWorkspaceIdBody,
-  options?: AxiosRequestConfig,
-): Promise<AxiosResponse<Workspace>> => {
+  options?: RequestInit,
+): Promise<patchApiWorkspacesWorkspaceIdResponse> => {
   const formUrlEncoded = new URLSearchParams();
   formUrlEncoded.append(
     "data",
     JSON.stringify(patchApiWorkspacesWorkspaceIdBody.data),
   );
 
-  return axios.patch(`/api/workspaces/${workspaceId}`, formUrlEncoded, options);
+  const res = await fetch(getPatchApiWorkspacesWorkspaceIdUrl(workspaceId), {
+    ...options,
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+      ...options?.headers,
+    },
+    body: formUrlEncoded,
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  const data: patchApiWorkspacesWorkspaceIdResponse["data"] = body
+    ? JSON.parse(body)
+    : {};
+
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as patchApiWorkspacesWorkspaceIdResponse;
 };
 
 export const getPatchApiWorkspacesWorkspaceIdMutationOptions = <
-  TError = AxiosError<void>,
+  TError = void,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<
@@ -58,7 +97,7 @@ export const getPatchApiWorkspacesWorkspaceIdMutationOptions = <
     { workspaceId: string; data: PatchApiWorkspacesWorkspaceIdBody },
     TContext
   >;
-  axios?: AxiosRequestConfig;
+  fetch?: RequestInit;
 }): UseMutationOptions<
   Awaited<ReturnType<typeof patchApiWorkspacesWorkspaceId>>,
   TError,
@@ -66,13 +105,13 @@ export const getPatchApiWorkspacesWorkspaceIdMutationOptions = <
   TContext
 > => {
   const mutationKey = ["patchApiWorkspacesWorkspaceId"];
-  const { mutation: mutationOptions, axios: axiosOptions } = options
+  const { mutation: mutationOptions, fetch: fetchOptions } = options
     ? options.mutation &&
       "mutationKey" in options.mutation &&
       options.mutation.mutationKey
       ? options
       : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, axios: undefined };
+    : { mutation: { mutationKey }, fetch: undefined };
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof patchApiWorkspacesWorkspaceId>>,
@@ -80,7 +119,7 @@ export const getPatchApiWorkspacesWorkspaceIdMutationOptions = <
   > = (props) => {
     const { workspaceId, data } = props ?? {};
 
-    return patchApiWorkspacesWorkspaceId(workspaceId, data, axiosOptions);
+    return patchApiWorkspacesWorkspaceId(workspaceId, data, fetchOptions);
   };
 
   return { mutationFn, ...mutationOptions };
@@ -91,13 +130,13 @@ export type PatchApiWorkspacesWorkspaceIdMutationResult = NonNullable<
 >;
 export type PatchApiWorkspacesWorkspaceIdMutationBody =
   PatchApiWorkspacesWorkspaceIdBody;
-export type PatchApiWorkspacesWorkspaceIdMutationError = AxiosError<void>;
+export type PatchApiWorkspacesWorkspaceIdMutationError = void;
 
 /**
  * @summary Update a workspace
  */
 export const usePatchApiWorkspacesWorkspaceId = <
-  TError = AxiosError<void>,
+  TError = void,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<
@@ -106,7 +145,7 @@ export const usePatchApiWorkspacesWorkspaceId = <
     { workspaceId: string; data: PatchApiWorkspacesWorkspaceIdBody },
     TContext
   >;
-  axios?: AxiosRequestConfig;
+  fetch?: RequestInit;
 }): UseMutationResult<
   Awaited<ReturnType<typeof patchApiWorkspacesWorkspaceId>>,
   TError,
@@ -121,15 +160,52 @@ export const usePatchApiWorkspacesWorkspaceId = <
 /**
  * @summary Delete a workspace
  */
-export const deleteApiWorkspacesWorkspaceId = (
+export type deleteApiWorkspacesWorkspaceIdResponse200 = {
+  data: Workspace;
+  status: 200;
+};
+
+export type deleteApiWorkspacesWorkspaceIdResponse400 = {
+  data: void;
+  status: 400;
+};
+
+export type deleteApiWorkspacesWorkspaceIdResponseComposite =
+  | deleteApiWorkspacesWorkspaceIdResponse200
+  | deleteApiWorkspacesWorkspaceIdResponse400;
+
+export type deleteApiWorkspacesWorkspaceIdResponse =
+  deleteApiWorkspacesWorkspaceIdResponseComposite & {
+    headers: Headers;
+  };
+
+export const getDeleteApiWorkspacesWorkspaceIdUrl = (workspaceId: string) => {
+  return `http://localhost:5173/api/workspaces/${workspaceId}`;
+};
+
+export const deleteApiWorkspacesWorkspaceId = async (
   workspaceId: string,
-  options?: AxiosRequestConfig,
-): Promise<AxiosResponse<Workspace>> => {
-  return axios.delete(`/api/workspaces/${workspaceId}`, options);
+  options?: RequestInit,
+): Promise<deleteApiWorkspacesWorkspaceIdResponse> => {
+  const res = await fetch(getDeleteApiWorkspacesWorkspaceIdUrl(workspaceId), {
+    ...options,
+    method: "DELETE",
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  const data: deleteApiWorkspacesWorkspaceIdResponse["data"] = body
+    ? JSON.parse(body)
+    : {};
+
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as deleteApiWorkspacesWorkspaceIdResponse;
 };
 
 export const getDeleteApiWorkspacesWorkspaceIdMutationOptions = <
-  TError = AxiosError<void>,
+  TError = void,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<
@@ -138,7 +214,7 @@ export const getDeleteApiWorkspacesWorkspaceIdMutationOptions = <
     { workspaceId: string },
     TContext
   >;
-  axios?: AxiosRequestConfig;
+  fetch?: RequestInit;
 }): UseMutationOptions<
   Awaited<ReturnType<typeof deleteApiWorkspacesWorkspaceId>>,
   TError,
@@ -146,13 +222,13 @@ export const getDeleteApiWorkspacesWorkspaceIdMutationOptions = <
   TContext
 > => {
   const mutationKey = ["deleteApiWorkspacesWorkspaceId"];
-  const { mutation: mutationOptions, axios: axiosOptions } = options
+  const { mutation: mutationOptions, fetch: fetchOptions } = options
     ? options.mutation &&
       "mutationKey" in options.mutation &&
       options.mutation.mutationKey
       ? options
       : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, axios: undefined };
+    : { mutation: { mutationKey }, fetch: undefined };
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof deleteApiWorkspacesWorkspaceId>>,
@@ -160,7 +236,7 @@ export const getDeleteApiWorkspacesWorkspaceIdMutationOptions = <
   > = (props) => {
     const { workspaceId } = props ?? {};
 
-    return deleteApiWorkspacesWorkspaceId(workspaceId, axiosOptions);
+    return deleteApiWorkspacesWorkspaceId(workspaceId, fetchOptions);
   };
 
   return { mutationFn, ...mutationOptions };
@@ -170,13 +246,13 @@ export type DeleteApiWorkspacesWorkspaceIdMutationResult = NonNullable<
   Awaited<ReturnType<typeof deleteApiWorkspacesWorkspaceId>>
 >;
 
-export type DeleteApiWorkspacesWorkspaceIdMutationError = AxiosError<void>;
+export type DeleteApiWorkspacesWorkspaceIdMutationError = void;
 
 /**
  * @summary Delete a workspace
  */
 export const useDeleteApiWorkspacesWorkspaceId = <
-  TError = AxiosError<void>,
+  TError = void,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<
@@ -185,7 +261,7 @@ export const useDeleteApiWorkspacesWorkspaceId = <
     { workspaceId: string },
     TContext
   >;
-  axios?: AxiosRequestConfig;
+  fetch?: RequestInit;
 }): UseMutationResult<
   Awaited<ReturnType<typeof deleteApiWorkspacesWorkspaceId>>,
   TError,
@@ -201,25 +277,64 @@ export const useDeleteApiWorkspacesWorkspaceId = <
  * Returns a list of workspaces, optionally filtered by tenantId
  * @summary Get all workspaces
  */
-export const getApiWorkspaces = (
-  params?: GetApiWorkspacesParams,
-  options?: AxiosRequestConfig,
-): Promise<AxiosResponse<Workspace[]>> => {
-  return axios.get(`/api/workspaces`, {
-    ...options,
-    params: { ...params, ...options?.params },
+export type getApiWorkspacesResponse200 = {
+  data: Workspace[];
+  status: 200;
+};
+
+export type getApiWorkspacesResponseComposite = getApiWorkspacesResponse200;
+
+export type getApiWorkspacesResponse = getApiWorkspacesResponseComposite & {
+  headers: Headers;
+};
+
+export const getGetApiWorkspacesUrl = (params?: GetApiWorkspacesParams) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? "null" : value.toString());
+    }
   });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0
+    ? `http://localhost:5173/api/workspaces?${stringifiedParams}`
+    : `http://localhost:5173/api/workspaces`;
+};
+
+export const getApiWorkspaces = async (
+  params?: GetApiWorkspacesParams,
+  options?: RequestInit,
+): Promise<getApiWorkspacesResponse> => {
+  const res = await fetch(getGetApiWorkspacesUrl(params), {
+    ...options,
+    method: "GET",
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  const data: getApiWorkspacesResponse["data"] = body ? JSON.parse(body) : {};
+
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as getApiWorkspacesResponse;
 };
 
 export const getGetApiWorkspacesQueryKey = (
   params?: GetApiWorkspacesParams,
 ) => {
-  return [`/api/workspaces`, ...(params ? [params] : [])] as const;
+  return [
+    `http://localhost:5173/api/workspaces`,
+    ...(params ? [params] : []),
+  ] as const;
 };
 
 export const getGetApiWorkspacesQueryOptions = <
   TData = Awaited<ReturnType<typeof getApiWorkspaces>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(
   params?: GetApiWorkspacesParams,
   options?: {
@@ -230,17 +345,17 @@ export const getGetApiWorkspacesQueryOptions = <
         TData
       >
     >;
-    axios?: AxiosRequestConfig;
+    fetch?: RequestInit;
   },
 ) => {
-  const { query: queryOptions, axios: axiosOptions } = options ?? {};
+  const { query: queryOptions, fetch: fetchOptions } = options ?? {};
 
   const queryKey =
     queryOptions?.queryKey ?? getGetApiWorkspacesQueryKey(params);
 
   const queryFn: QueryFunction<
     Awaited<ReturnType<typeof getApiWorkspaces>>
-  > = ({ signal }) => getApiWorkspaces(params, { signal, ...axiosOptions });
+  > = ({ signal }) => getApiWorkspaces(params, { signal, ...fetchOptions });
 
   return {
     queryKey,
@@ -257,11 +372,11 @@ export const getGetApiWorkspacesQueryOptions = <
 export type GetApiWorkspacesQueryResult = NonNullable<
   Awaited<ReturnType<typeof getApiWorkspaces>>
 >;
-export type GetApiWorkspacesQueryError = AxiosError<unknown>;
+export type GetApiWorkspacesQueryError = unknown;
 
 export function useGetApiWorkspaces<
   TData = Awaited<ReturnType<typeof getApiWorkspaces>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(
   params: undefined | GetApiWorkspacesParams,
   options: {
@@ -280,14 +395,14 @@ export function useGetApiWorkspaces<
         >,
         "initialData"
       >;
-    axios?: AxiosRequestConfig;
+    fetch?: RequestInit;
   },
 ): DefinedUseQueryResult<TData, TError> & {
   queryKey: DataTag<QueryKey, TData, TError>;
 };
 export function useGetApiWorkspaces<
   TData = Awaited<ReturnType<typeof getApiWorkspaces>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(
   params?: GetApiWorkspacesParams,
   options?: {
@@ -306,14 +421,14 @@ export function useGetApiWorkspaces<
         >,
         "initialData"
       >;
-    axios?: AxiosRequestConfig;
+    fetch?: RequestInit;
   },
 ): UseQueryResult<TData, TError> & {
   queryKey: DataTag<QueryKey, TData, TError>;
 };
 export function useGetApiWorkspaces<
   TData = Awaited<ReturnType<typeof getApiWorkspaces>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(
   params?: GetApiWorkspacesParams,
   options?: {
@@ -324,7 +439,7 @@ export function useGetApiWorkspaces<
         TData
       >
     >;
-    axios?: AxiosRequestConfig;
+    fetch?: RequestInit;
   },
 ): UseQueryResult<TData, TError> & {
   queryKey: DataTag<QueryKey, TData, TError>;
@@ -335,7 +450,7 @@ export function useGetApiWorkspaces<
 
 export function useGetApiWorkspaces<
   TData = Awaited<ReturnType<typeof getApiWorkspaces>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(
   params?: GetApiWorkspacesParams,
   options?: {
@@ -346,7 +461,7 @@ export function useGetApiWorkspaces<
         TData
       >
     >;
-    axios?: AxiosRequestConfig;
+    fetch?: RequestInit;
   },
 ): UseQueryResult<TData, TError> & {
   queryKey: DataTag<QueryKey, TData, TError>;
@@ -367,7 +482,7 @@ export function useGetApiWorkspaces<
  */
 export const prefetchGetApiWorkspaces = async <
   TData = Awaited<ReturnType<typeof getApiWorkspaces>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(
   queryClient: QueryClient,
   params?: GetApiWorkspacesParams,
@@ -379,7 +494,7 @@ export const prefetchGetApiWorkspaces = async <
         TData
       >
     >;
-    axios?: AxiosRequestConfig;
+    fetch?: RequestInit;
   },
 ): Promise<QueryClient> => {
   const queryOptions = getGetApiWorkspacesQueryOptions(params, options);
@@ -392,19 +507,58 @@ export const prefetchGetApiWorkspaces = async <
 /**
  * @summary Create a new workspace
  */
-export const postApiWorkspaces = (
+export type postApiWorkspacesResponse200 = {
+  data: Workspace;
+  status: 200;
+};
+
+export type postApiWorkspacesResponse400 = {
+  data: void;
+  status: 400;
+};
+
+export type postApiWorkspacesResponseComposite =
+  | postApiWorkspacesResponse200
+  | postApiWorkspacesResponse400;
+
+export type postApiWorkspacesResponse = postApiWorkspacesResponseComposite & {
+  headers: Headers;
+};
+
+export const getPostApiWorkspacesUrl = () => {
+  return `http://localhost:5173/api/workspaces`;
+};
+
+export const postApiWorkspaces = async (
   postApiWorkspacesBody: PostApiWorkspacesBody,
-  options?: AxiosRequestConfig,
-): Promise<AxiosResponse<Workspace>> => {
+  options?: RequestInit,
+): Promise<postApiWorkspacesResponse> => {
   const formUrlEncoded = new URLSearchParams();
   formUrlEncoded.append("name", postApiWorkspacesBody.name);
   formUrlEncoded.append("tenantId", postApiWorkspacesBody.tenantId);
 
-  return axios.post(`/api/workspaces`, formUrlEncoded, options);
+  const res = await fetch(getPostApiWorkspacesUrl(), {
+    ...options,
+    method: "POST",
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+      ...options?.headers,
+    },
+    body: formUrlEncoded,
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  const data: postApiWorkspacesResponse["data"] = body ? JSON.parse(body) : {};
+
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as postApiWorkspacesResponse;
 };
 
 export const getPostApiWorkspacesMutationOptions = <
-  TError = AxiosError<void>,
+  TError = void,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<
@@ -413,7 +567,7 @@ export const getPostApiWorkspacesMutationOptions = <
     { data: PostApiWorkspacesBody },
     TContext
   >;
-  axios?: AxiosRequestConfig;
+  fetch?: RequestInit;
 }): UseMutationOptions<
   Awaited<ReturnType<typeof postApiWorkspaces>>,
   TError,
@@ -421,13 +575,13 @@ export const getPostApiWorkspacesMutationOptions = <
   TContext
 > => {
   const mutationKey = ["postApiWorkspaces"];
-  const { mutation: mutationOptions, axios: axiosOptions } = options
+  const { mutation: mutationOptions, fetch: fetchOptions } = options
     ? options.mutation &&
       "mutationKey" in options.mutation &&
       options.mutation.mutationKey
       ? options
       : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, axios: undefined };
+    : { mutation: { mutationKey }, fetch: undefined };
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof postApiWorkspaces>>,
@@ -435,7 +589,7 @@ export const getPostApiWorkspacesMutationOptions = <
   > = (props) => {
     const { data } = props ?? {};
 
-    return postApiWorkspaces(data, axiosOptions);
+    return postApiWorkspaces(data, fetchOptions);
   };
 
   return { mutationFn, ...mutationOptions };
@@ -445,13 +599,13 @@ export type PostApiWorkspacesMutationResult = NonNullable<
   Awaited<ReturnType<typeof postApiWorkspaces>>
 >;
 export type PostApiWorkspacesMutationBody = PostApiWorkspacesBody;
-export type PostApiWorkspacesMutationError = AxiosError<void>;
+export type PostApiWorkspacesMutationError = void;
 
 /**
  * @summary Create a new workspace
  */
 export const usePostApiWorkspaces = <
-  TError = AxiosError<void>,
+  TError = void,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<
@@ -460,7 +614,7 @@ export const usePostApiWorkspaces = <
     { data: PostApiWorkspacesBody },
     TContext
   >;
-  axios?: AxiosRequestConfig;
+  fetch?: RequestInit;
 }): UseMutationResult<
   Awaited<ReturnType<typeof postApiWorkspaces>>,
   TError,

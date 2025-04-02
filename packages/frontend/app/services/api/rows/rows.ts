@@ -21,25 +21,58 @@ import type {
   UseQueryResult,
 } from "@tanstack/react-query";
 
-import axios from "axios";
-import type { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios";
-
 import type { AppRow, GetApiRowsParams, PostApiRowsBody } from ".././model";
 
 /**
  * Updates properties of an existing row
  * @summary Update a row
  */
-export const patchApiRowsRowId = (
+export type patchApiRowsRowIdResponse200 = {
+  data: AppRow;
+  status: 200;
+};
+
+export type patchApiRowsRowIdResponse400 = {
+  data: void;
+  status: 400;
+};
+
+export type patchApiRowsRowIdResponseComposite =
+  | patchApiRowsRowIdResponse200
+  | patchApiRowsRowIdResponse400;
+
+export type patchApiRowsRowIdResponse = patchApiRowsRowIdResponseComposite & {
+  headers: Headers;
+};
+
+export const getPatchApiRowsRowIdUrl = (rowId: string) => {
+  return `http://localhost:5173/api/rows/${rowId}`;
+};
+
+export const patchApiRowsRowId = async (
   rowId: string,
   appRow: AppRow,
-  options?: AxiosRequestConfig,
-): Promise<AxiosResponse<AppRow>> => {
-  return axios.patch(`/api/rows/${rowId}`, appRow, options);
+  options?: RequestInit,
+): Promise<patchApiRowsRowIdResponse> => {
+  const res = await fetch(getPatchApiRowsRowIdUrl(rowId), {
+    ...options,
+    method: "PATCH",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(appRow),
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  const data: patchApiRowsRowIdResponse["data"] = body ? JSON.parse(body) : {};
+
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as patchApiRowsRowIdResponse;
 };
 
 export const getPatchApiRowsRowIdMutationOptions = <
-  TError = AxiosError<void>,
+  TError = void,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<
@@ -48,7 +81,7 @@ export const getPatchApiRowsRowIdMutationOptions = <
     { rowId: string; data: AppRow },
     TContext
   >;
-  axios?: AxiosRequestConfig;
+  fetch?: RequestInit;
 }): UseMutationOptions<
   Awaited<ReturnType<typeof patchApiRowsRowId>>,
   TError,
@@ -56,13 +89,13 @@ export const getPatchApiRowsRowIdMutationOptions = <
   TContext
 > => {
   const mutationKey = ["patchApiRowsRowId"];
-  const { mutation: mutationOptions, axios: axiosOptions } = options
+  const { mutation: mutationOptions, fetch: fetchOptions } = options
     ? options.mutation &&
       "mutationKey" in options.mutation &&
       options.mutation.mutationKey
       ? options
       : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, axios: undefined };
+    : { mutation: { mutationKey }, fetch: undefined };
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof patchApiRowsRowId>>,
@@ -70,7 +103,7 @@ export const getPatchApiRowsRowIdMutationOptions = <
   > = (props) => {
     const { rowId, data } = props ?? {};
 
-    return patchApiRowsRowId(rowId, data, axiosOptions);
+    return patchApiRowsRowId(rowId, data, fetchOptions);
   };
 
   return { mutationFn, ...mutationOptions };
@@ -80,13 +113,13 @@ export type PatchApiRowsRowIdMutationResult = NonNullable<
   Awaited<ReturnType<typeof patchApiRowsRowId>>
 >;
 export type PatchApiRowsRowIdMutationBody = AppRow;
-export type PatchApiRowsRowIdMutationError = AxiosError<void>;
+export type PatchApiRowsRowIdMutationError = void;
 
 /**
  * @summary Update a row
  */
 export const usePatchApiRowsRowId = <
-  TError = AxiosError<void>,
+  TError = void,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<
@@ -95,7 +128,7 @@ export const usePatchApiRowsRowId = <
     { rowId: string; data: AppRow },
     TContext
   >;
-  axios?: AxiosRequestConfig;
+  fetch?: RequestInit;
 }): UseMutationResult<
   Awaited<ReturnType<typeof patchApiRowsRowId>>,
   TError,
@@ -110,15 +143,49 @@ export const usePatchApiRowsRowId = <
  * Permanently deletes a row from a table
  * @summary Delete a row
  */
-export const deleteApiRowsRowId = (
+export type deleteApiRowsRowIdResponse200 = {
+  data: AppRow;
+  status: 200;
+};
+
+export type deleteApiRowsRowIdResponse400 = {
+  data: void;
+  status: 400;
+};
+
+export type deleteApiRowsRowIdResponseComposite =
+  | deleteApiRowsRowIdResponse200
+  | deleteApiRowsRowIdResponse400;
+
+export type deleteApiRowsRowIdResponse = deleteApiRowsRowIdResponseComposite & {
+  headers: Headers;
+};
+
+export const getDeleteApiRowsRowIdUrl = (rowId: string) => {
+  return `http://localhost:5173/api/rows/${rowId}`;
+};
+
+export const deleteApiRowsRowId = async (
   rowId: string,
-  options?: AxiosRequestConfig,
-): Promise<AxiosResponse<AppRow>> => {
-  return axios.delete(`/api/rows/${rowId}`, options);
+  options?: RequestInit,
+): Promise<deleteApiRowsRowIdResponse> => {
+  const res = await fetch(getDeleteApiRowsRowIdUrl(rowId), {
+    ...options,
+    method: "DELETE",
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  const data: deleteApiRowsRowIdResponse["data"] = body ? JSON.parse(body) : {};
+
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as deleteApiRowsRowIdResponse;
 };
 
 export const getDeleteApiRowsRowIdMutationOptions = <
-  TError = AxiosError<void>,
+  TError = void,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<
@@ -127,7 +194,7 @@ export const getDeleteApiRowsRowIdMutationOptions = <
     { rowId: string },
     TContext
   >;
-  axios?: AxiosRequestConfig;
+  fetch?: RequestInit;
 }): UseMutationOptions<
   Awaited<ReturnType<typeof deleteApiRowsRowId>>,
   TError,
@@ -135,13 +202,13 @@ export const getDeleteApiRowsRowIdMutationOptions = <
   TContext
 > => {
   const mutationKey = ["deleteApiRowsRowId"];
-  const { mutation: mutationOptions, axios: axiosOptions } = options
+  const { mutation: mutationOptions, fetch: fetchOptions } = options
     ? options.mutation &&
       "mutationKey" in options.mutation &&
       options.mutation.mutationKey
       ? options
       : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, axios: undefined };
+    : { mutation: { mutationKey }, fetch: undefined };
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof deleteApiRowsRowId>>,
@@ -149,7 +216,7 @@ export const getDeleteApiRowsRowIdMutationOptions = <
   > = (props) => {
     const { rowId } = props ?? {};
 
-    return deleteApiRowsRowId(rowId, axiosOptions);
+    return deleteApiRowsRowId(rowId, fetchOptions);
   };
 
   return { mutationFn, ...mutationOptions };
@@ -159,13 +226,13 @@ export type DeleteApiRowsRowIdMutationResult = NonNullable<
   Awaited<ReturnType<typeof deleteApiRowsRowId>>
 >;
 
-export type DeleteApiRowsRowIdMutationError = AxiosError<void>;
+export type DeleteApiRowsRowIdMutationError = void;
 
 /**
  * @summary Delete a row
  */
 export const useDeleteApiRowsRowId = <
-  TError = AxiosError<void>,
+  TError = void,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<
@@ -174,7 +241,7 @@ export const useDeleteApiRowsRowId = <
     { rowId: string },
     TContext
   >;
-  axios?: AxiosRequestConfig;
+  fetch?: RequestInit;
 }): UseMutationResult<
   Awaited<ReturnType<typeof deleteApiRowsRowId>>,
   TError,
@@ -188,39 +255,85 @@ export const useDeleteApiRowsRowId = <
 /**
  * @summary Get all rows for a table
  */
-export const getApiRows = (
-  params: GetApiRowsParams,
-  options?: AxiosRequestConfig,
-): Promise<AxiosResponse<AppRow[]>> => {
-  return axios.get(`/api/rows`, {
-    ...options,
-    params: { ...params, ...options?.params },
+export type getApiRowsResponse200 = {
+  data: AppRow[];
+  status: 200;
+};
+
+export type getApiRowsResponse400 = {
+  data: void;
+  status: 400;
+};
+
+export type getApiRowsResponseComposite =
+  | getApiRowsResponse200
+  | getApiRowsResponse400;
+
+export type getApiRowsResponse = getApiRowsResponseComposite & {
+  headers: Headers;
+};
+
+export const getGetApiRowsUrl = (params: GetApiRowsParams) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? "null" : value.toString());
+    }
   });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0
+    ? `http://localhost:5173/api/rows?${stringifiedParams}`
+    : `http://localhost:5173/api/rows`;
+};
+
+export const getApiRows = async (
+  params: GetApiRowsParams,
+  options?: RequestInit,
+): Promise<getApiRowsResponse> => {
+  const res = await fetch(getGetApiRowsUrl(params), {
+    ...options,
+    method: "GET",
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  const data: getApiRowsResponse["data"] = body ? JSON.parse(body) : {};
+
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as getApiRowsResponse;
 };
 
 export const getGetApiRowsQueryKey = (params: GetApiRowsParams) => {
-  return [`/api/rows`, ...(params ? [params] : [])] as const;
+  return [
+    `http://localhost:5173/api/rows`,
+    ...(params ? [params] : []),
+  ] as const;
 };
 
 export const getGetApiRowsQueryOptions = <
   TData = Awaited<ReturnType<typeof getApiRows>>,
-  TError = AxiosError<void>,
+  TError = void,
 >(
   params: GetApiRowsParams,
   options?: {
     query?: Partial<
       UseQueryOptions<Awaited<ReturnType<typeof getApiRows>>, TError, TData>
     >;
-    axios?: AxiosRequestConfig;
+    fetch?: RequestInit;
   },
 ) => {
-  const { query: queryOptions, axios: axiosOptions } = options ?? {};
+  const { query: queryOptions, fetch: fetchOptions } = options ?? {};
 
   const queryKey = queryOptions?.queryKey ?? getGetApiRowsQueryKey(params);
 
   const queryFn: QueryFunction<Awaited<ReturnType<typeof getApiRows>>> = ({
     signal,
-  }) => getApiRows(params, { signal, ...axiosOptions });
+  }) => getApiRows(params, { signal, ...fetchOptions });
 
   return {
     queryKey,
@@ -237,11 +350,11 @@ export const getGetApiRowsQueryOptions = <
 export type GetApiRowsQueryResult = NonNullable<
   Awaited<ReturnType<typeof getApiRows>>
 >;
-export type GetApiRowsQueryError = AxiosError<void>;
+export type GetApiRowsQueryError = void;
 
 export function useGetApiRows<
   TData = Awaited<ReturnType<typeof getApiRows>>,
-  TError = AxiosError<void>,
+  TError = void,
 >(
   params: GetApiRowsParams,
   options: {
@@ -256,14 +369,14 @@ export function useGetApiRows<
         >,
         "initialData"
       >;
-    axios?: AxiosRequestConfig;
+    fetch?: RequestInit;
   },
 ): DefinedUseQueryResult<TData, TError> & {
   queryKey: DataTag<QueryKey, TData, TError>;
 };
 export function useGetApiRows<
   TData = Awaited<ReturnType<typeof getApiRows>>,
-  TError = AxiosError<void>,
+  TError = void,
 >(
   params: GetApiRowsParams,
   options?: {
@@ -278,21 +391,21 @@ export function useGetApiRows<
         >,
         "initialData"
       >;
-    axios?: AxiosRequestConfig;
+    fetch?: RequestInit;
   },
 ): UseQueryResult<TData, TError> & {
   queryKey: DataTag<QueryKey, TData, TError>;
 };
 export function useGetApiRows<
   TData = Awaited<ReturnType<typeof getApiRows>>,
-  TError = AxiosError<void>,
+  TError = void,
 >(
   params: GetApiRowsParams,
   options?: {
     query?: Partial<
       UseQueryOptions<Awaited<ReturnType<typeof getApiRows>>, TError, TData>
     >;
-    axios?: AxiosRequestConfig;
+    fetch?: RequestInit;
   },
 ): UseQueryResult<TData, TError> & {
   queryKey: DataTag<QueryKey, TData, TError>;
@@ -303,14 +416,14 @@ export function useGetApiRows<
 
 export function useGetApiRows<
   TData = Awaited<ReturnType<typeof getApiRows>>,
-  TError = AxiosError<void>,
+  TError = void,
 >(
   params: GetApiRowsParams,
   options?: {
     query?: Partial<
       UseQueryOptions<Awaited<ReturnType<typeof getApiRows>>, TError, TData>
     >;
-    axios?: AxiosRequestConfig;
+    fetch?: RequestInit;
   },
 ): UseQueryResult<TData, TError> & {
   queryKey: DataTag<QueryKey, TData, TError>;
@@ -331,7 +444,7 @@ export function useGetApiRows<
  */
 export const prefetchGetApiRows = async <
   TData = Awaited<ReturnType<typeof getApiRows>>,
-  TError = AxiosError<void>,
+  TError = void,
 >(
   queryClient: QueryClient,
   params: GetApiRowsParams,
@@ -339,7 +452,7 @@ export const prefetchGetApiRows = async <
     query?: Partial<
       UseQueryOptions<Awaited<ReturnType<typeof getApiRows>>, TError, TData>
     >;
-    axios?: AxiosRequestConfig;
+    fetch?: RequestInit;
   },
 ): Promise<QueryClient> => {
   const queryOptions = getGetApiRowsQueryOptions(params, options);
@@ -352,19 +465,58 @@ export const prefetchGetApiRows = async <
 /**
  * @summary Create a new row
  */
-export const postApiRows = (
+export type postApiRowsResponse200 = {
+  data: AppRow;
+  status: 200;
+};
+
+export type postApiRowsResponse400 = {
+  data: void;
+  status: 400;
+};
+
+export type postApiRowsResponseComposite =
+  | postApiRowsResponse200
+  | postApiRowsResponse400;
+
+export type postApiRowsResponse = postApiRowsResponseComposite & {
+  headers: Headers;
+};
+
+export const getPostApiRowsUrl = () => {
+  return `http://localhost:5173/api/rows`;
+};
+
+export const postApiRows = async (
   postApiRowsBody: PostApiRowsBody,
-  options?: AxiosRequestConfig,
-): Promise<AxiosResponse<AppRow>> => {
+  options?: RequestInit,
+): Promise<postApiRowsResponse> => {
   const formUrlEncoded = new URLSearchParams();
   formUrlEncoded.append("tableId", postApiRowsBody.tableId);
   formUrlEncoded.append("data", JSON.stringify(postApiRowsBody.data));
 
-  return axios.post(`/api/rows`, formUrlEncoded, options);
+  const res = await fetch(getPostApiRowsUrl(), {
+    ...options,
+    method: "POST",
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+      ...options?.headers,
+    },
+    body: formUrlEncoded,
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  const data: postApiRowsResponse["data"] = body ? JSON.parse(body) : {};
+
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as postApiRowsResponse;
 };
 
 export const getPostApiRowsMutationOptions = <
-  TError = AxiosError<void>,
+  TError = void,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<
@@ -373,7 +525,7 @@ export const getPostApiRowsMutationOptions = <
     { data: PostApiRowsBody },
     TContext
   >;
-  axios?: AxiosRequestConfig;
+  fetch?: RequestInit;
 }): UseMutationOptions<
   Awaited<ReturnType<typeof postApiRows>>,
   TError,
@@ -381,13 +533,13 @@ export const getPostApiRowsMutationOptions = <
   TContext
 > => {
   const mutationKey = ["postApiRows"];
-  const { mutation: mutationOptions, axios: axiosOptions } = options
+  const { mutation: mutationOptions, fetch: fetchOptions } = options
     ? options.mutation &&
       "mutationKey" in options.mutation &&
       options.mutation.mutationKey
       ? options
       : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, axios: undefined };
+    : { mutation: { mutationKey }, fetch: undefined };
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof postApiRows>>,
@@ -395,7 +547,7 @@ export const getPostApiRowsMutationOptions = <
   > = (props) => {
     const { data } = props ?? {};
 
-    return postApiRows(data, axiosOptions);
+    return postApiRows(data, fetchOptions);
   };
 
   return { mutationFn, ...mutationOptions };
@@ -405,22 +557,19 @@ export type PostApiRowsMutationResult = NonNullable<
   Awaited<ReturnType<typeof postApiRows>>
 >;
 export type PostApiRowsMutationBody = PostApiRowsBody;
-export type PostApiRowsMutationError = AxiosError<void>;
+export type PostApiRowsMutationError = void;
 
 /**
  * @summary Create a new row
  */
-export const usePostApiRows = <
-  TError = AxiosError<void>,
-  TContext = unknown,
->(options?: {
+export const usePostApiRows = <TError = void, TContext = unknown>(options?: {
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof postApiRows>>,
     TError,
     { data: PostApiRowsBody },
     TContext
   >;
-  axios?: AxiosRequestConfig;
+  fetch?: RequestInit;
 }): UseMutationResult<
   Awaited<ReturnType<typeof postApiRows>>,
   TError,
