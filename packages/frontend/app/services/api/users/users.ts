@@ -21,9 +21,6 @@ import type {
   UseQueryResult,
 } from "@tanstack/react-query";
 
-import axios from "axios";
-import type { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios";
-
 import type {
   GetApiUsersParams,
   PatchApiUsersUserIdBody,
@@ -34,19 +31,61 @@ import type {
 /**
  * @summary Update a user
  */
-export const patchApiUsersUserId = (
+export type patchApiUsersUserIdResponse200 = {
+  data: User;
+  status: 200;
+};
+
+export type patchApiUsersUserIdResponse400 = {
+  data: void;
+  status: 400;
+};
+
+export type patchApiUsersUserIdResponseComposite =
+  | patchApiUsersUserIdResponse200
+  | patchApiUsersUserIdResponse400;
+
+export type patchApiUsersUserIdResponse =
+  patchApiUsersUserIdResponseComposite & {
+    headers: Headers;
+  };
+
+export const getPatchApiUsersUserIdUrl = (userId: string) => {
+  return `http://localhost:5173/api/users/${userId}`;
+};
+
+export const patchApiUsersUserId = async (
   userId: string,
   patchApiUsersUserIdBody: PatchApiUsersUserIdBody,
-  options?: AxiosRequestConfig,
-): Promise<AxiosResponse<User>> => {
+  options?: RequestInit,
+): Promise<patchApiUsersUserIdResponse> => {
   const formUrlEncoded = new URLSearchParams();
   formUrlEncoded.append("data", JSON.stringify(patchApiUsersUserIdBody.data));
 
-  return axios.patch(`/api/users/${userId}`, formUrlEncoded, options);
+  const res = await fetch(getPatchApiUsersUserIdUrl(userId), {
+    ...options,
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+      ...options?.headers,
+    },
+    body: formUrlEncoded,
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  const data: patchApiUsersUserIdResponse["data"] = body
+    ? JSON.parse(body)
+    : {};
+
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as patchApiUsersUserIdResponse;
 };
 
 export const getPatchApiUsersUserIdMutationOptions = <
-  TError = AxiosError<void>,
+  TError = void,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<
@@ -55,7 +94,7 @@ export const getPatchApiUsersUserIdMutationOptions = <
     { userId: string; data: PatchApiUsersUserIdBody },
     TContext
   >;
-  axios?: AxiosRequestConfig;
+  fetch?: RequestInit;
 }): UseMutationOptions<
   Awaited<ReturnType<typeof patchApiUsersUserId>>,
   TError,
@@ -63,13 +102,13 @@ export const getPatchApiUsersUserIdMutationOptions = <
   TContext
 > => {
   const mutationKey = ["patchApiUsersUserId"];
-  const { mutation: mutationOptions, axios: axiosOptions } = options
+  const { mutation: mutationOptions, fetch: fetchOptions } = options
     ? options.mutation &&
       "mutationKey" in options.mutation &&
       options.mutation.mutationKey
       ? options
       : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, axios: undefined };
+    : { mutation: { mutationKey }, fetch: undefined };
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof patchApiUsersUserId>>,
@@ -77,7 +116,7 @@ export const getPatchApiUsersUserIdMutationOptions = <
   > = (props) => {
     const { userId, data } = props ?? {};
 
-    return patchApiUsersUserId(userId, data, axiosOptions);
+    return patchApiUsersUserId(userId, data, fetchOptions);
   };
 
   return { mutationFn, ...mutationOptions };
@@ -87,13 +126,13 @@ export type PatchApiUsersUserIdMutationResult = NonNullable<
   Awaited<ReturnType<typeof patchApiUsersUserId>>
 >;
 export type PatchApiUsersUserIdMutationBody = PatchApiUsersUserIdBody;
-export type PatchApiUsersUserIdMutationError = AxiosError<void>;
+export type PatchApiUsersUserIdMutationError = void;
 
 /**
  * @summary Update a user
  */
 export const usePatchApiUsersUserId = <
-  TError = AxiosError<void>,
+  TError = void,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<
@@ -102,7 +141,7 @@ export const usePatchApiUsersUserId = <
     { userId: string; data: PatchApiUsersUserIdBody },
     TContext
   >;
-  axios?: AxiosRequestConfig;
+  fetch?: RequestInit;
 }): UseMutationResult<
   Awaited<ReturnType<typeof patchApiUsersUserId>>,
   TError,
@@ -116,15 +155,52 @@ export const usePatchApiUsersUserId = <
 /**
  * @summary Delete a user
  */
-export const deleteApiUsersUserId = (
+export type deleteApiUsersUserIdResponse200 = {
+  data: User;
+  status: 200;
+};
+
+export type deleteApiUsersUserIdResponse400 = {
+  data: void;
+  status: 400;
+};
+
+export type deleteApiUsersUserIdResponseComposite =
+  | deleteApiUsersUserIdResponse200
+  | deleteApiUsersUserIdResponse400;
+
+export type deleteApiUsersUserIdResponse =
+  deleteApiUsersUserIdResponseComposite & {
+    headers: Headers;
+  };
+
+export const getDeleteApiUsersUserIdUrl = (userId: string) => {
+  return `http://localhost:5173/api/users/${userId}`;
+};
+
+export const deleteApiUsersUserId = async (
   userId: string,
-  options?: AxiosRequestConfig,
-): Promise<AxiosResponse<User>> => {
-  return axios.delete(`/api/users/${userId}`, options);
+  options?: RequestInit,
+): Promise<deleteApiUsersUserIdResponse> => {
+  const res = await fetch(getDeleteApiUsersUserIdUrl(userId), {
+    ...options,
+    method: "DELETE",
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  const data: deleteApiUsersUserIdResponse["data"] = body
+    ? JSON.parse(body)
+    : {};
+
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as deleteApiUsersUserIdResponse;
 };
 
 export const getDeleteApiUsersUserIdMutationOptions = <
-  TError = AxiosError<void>,
+  TError = void,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<
@@ -133,7 +209,7 @@ export const getDeleteApiUsersUserIdMutationOptions = <
     { userId: string },
     TContext
   >;
-  axios?: AxiosRequestConfig;
+  fetch?: RequestInit;
 }): UseMutationOptions<
   Awaited<ReturnType<typeof deleteApiUsersUserId>>,
   TError,
@@ -141,13 +217,13 @@ export const getDeleteApiUsersUserIdMutationOptions = <
   TContext
 > => {
   const mutationKey = ["deleteApiUsersUserId"];
-  const { mutation: mutationOptions, axios: axiosOptions } = options
+  const { mutation: mutationOptions, fetch: fetchOptions } = options
     ? options.mutation &&
       "mutationKey" in options.mutation &&
       options.mutation.mutationKey
       ? options
       : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, axios: undefined };
+    : { mutation: { mutationKey }, fetch: undefined };
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof deleteApiUsersUserId>>,
@@ -155,7 +231,7 @@ export const getDeleteApiUsersUserIdMutationOptions = <
   > = (props) => {
     const { userId } = props ?? {};
 
-    return deleteApiUsersUserId(userId, axiosOptions);
+    return deleteApiUsersUserId(userId, fetchOptions);
   };
 
   return { mutationFn, ...mutationOptions };
@@ -165,13 +241,13 @@ export type DeleteApiUsersUserIdMutationResult = NonNullable<
   Awaited<ReturnType<typeof deleteApiUsersUserId>>
 >;
 
-export type DeleteApiUsersUserIdMutationError = AxiosError<void>;
+export type DeleteApiUsersUserIdMutationError = void;
 
 /**
  * @summary Delete a user
  */
 export const useDeleteApiUsersUserId = <
-  TError = AxiosError<void>,
+  TError = void,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<
@@ -180,7 +256,7 @@ export const useDeleteApiUsersUserId = <
     { userId: string },
     TContext
   >;
-  axios?: AxiosRequestConfig;
+  fetch?: RequestInit;
 }): UseMutationResult<
   Awaited<ReturnType<typeof deleteApiUsersUserId>>,
   TError,
@@ -195,39 +271,78 @@ export const useDeleteApiUsersUserId = <
  * Returns a list of users, optionally filtered by tenantId or email
  * @summary Get all users
  */
-export const getApiUsers = (
-  params?: GetApiUsersParams,
-  options?: AxiosRequestConfig,
-): Promise<AxiosResponse<User[]>> => {
-  return axios.get(`/api/users`, {
-    ...options,
-    params: { ...params, ...options?.params },
+export type getApiUsersResponse200 = {
+  data: User[];
+  status: 200;
+};
+
+export type getApiUsersResponseComposite = getApiUsersResponse200;
+
+export type getApiUsersResponse = getApiUsersResponseComposite & {
+  headers: Headers;
+};
+
+export const getGetApiUsersUrl = (params?: GetApiUsersParams) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? "null" : value.toString());
+    }
   });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0
+    ? `http://localhost:5173/api/users?${stringifiedParams}`
+    : `http://localhost:5173/api/users`;
+};
+
+export const getApiUsers = async (
+  params?: GetApiUsersParams,
+  options?: RequestInit,
+): Promise<getApiUsersResponse> => {
+  const res = await fetch(getGetApiUsersUrl(params), {
+    ...options,
+    method: "GET",
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  const data: getApiUsersResponse["data"] = body ? JSON.parse(body) : {};
+
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as getApiUsersResponse;
 };
 
 export const getGetApiUsersQueryKey = (params?: GetApiUsersParams) => {
-  return [`/api/users`, ...(params ? [params] : [])] as const;
+  return [
+    `http://localhost:5173/api/users`,
+    ...(params ? [params] : []),
+  ] as const;
 };
 
 export const getGetApiUsersQueryOptions = <
   TData = Awaited<ReturnType<typeof getApiUsers>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(
   params?: GetApiUsersParams,
   options?: {
     query?: Partial<
       UseQueryOptions<Awaited<ReturnType<typeof getApiUsers>>, TError, TData>
     >;
-    axios?: AxiosRequestConfig;
+    fetch?: RequestInit;
   },
 ) => {
-  const { query: queryOptions, axios: axiosOptions } = options ?? {};
+  const { query: queryOptions, fetch: fetchOptions } = options ?? {};
 
   const queryKey = queryOptions?.queryKey ?? getGetApiUsersQueryKey(params);
 
   const queryFn: QueryFunction<Awaited<ReturnType<typeof getApiUsers>>> = ({
     signal,
-  }) => getApiUsers(params, { signal, ...axiosOptions });
+  }) => getApiUsers(params, { signal, ...fetchOptions });
 
   return {
     queryKey,
@@ -244,11 +359,11 @@ export const getGetApiUsersQueryOptions = <
 export type GetApiUsersQueryResult = NonNullable<
   Awaited<ReturnType<typeof getApiUsers>>
 >;
-export type GetApiUsersQueryError = AxiosError<unknown>;
+export type GetApiUsersQueryError = unknown;
 
 export function useGetApiUsers<
   TData = Awaited<ReturnType<typeof getApiUsers>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(
   params: undefined | GetApiUsersParams,
   options: {
@@ -263,14 +378,14 @@ export function useGetApiUsers<
         >,
         "initialData"
       >;
-    axios?: AxiosRequestConfig;
+    fetch?: RequestInit;
   },
 ): DefinedUseQueryResult<TData, TError> & {
   queryKey: DataTag<QueryKey, TData, TError>;
 };
 export function useGetApiUsers<
   TData = Awaited<ReturnType<typeof getApiUsers>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(
   params?: GetApiUsersParams,
   options?: {
@@ -285,21 +400,21 @@ export function useGetApiUsers<
         >,
         "initialData"
       >;
-    axios?: AxiosRequestConfig;
+    fetch?: RequestInit;
   },
 ): UseQueryResult<TData, TError> & {
   queryKey: DataTag<QueryKey, TData, TError>;
 };
 export function useGetApiUsers<
   TData = Awaited<ReturnType<typeof getApiUsers>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(
   params?: GetApiUsersParams,
   options?: {
     query?: Partial<
       UseQueryOptions<Awaited<ReturnType<typeof getApiUsers>>, TError, TData>
     >;
-    axios?: AxiosRequestConfig;
+    fetch?: RequestInit;
   },
 ): UseQueryResult<TData, TError> & {
   queryKey: DataTag<QueryKey, TData, TError>;
@@ -310,14 +425,14 @@ export function useGetApiUsers<
 
 export function useGetApiUsers<
   TData = Awaited<ReturnType<typeof getApiUsers>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(
   params?: GetApiUsersParams,
   options?: {
     query?: Partial<
       UseQueryOptions<Awaited<ReturnType<typeof getApiUsers>>, TError, TData>
     >;
-    axios?: AxiosRequestConfig;
+    fetch?: RequestInit;
   },
 ): UseQueryResult<TData, TError> & {
   queryKey: DataTag<QueryKey, TData, TError>;
@@ -338,7 +453,7 @@ export function useGetApiUsers<
  */
 export const prefetchGetApiUsers = async <
   TData = Awaited<ReturnType<typeof getApiUsers>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(
   queryClient: QueryClient,
   params?: GetApiUsersParams,
@@ -346,7 +461,7 @@ export const prefetchGetApiUsers = async <
     query?: Partial<
       UseQueryOptions<Awaited<ReturnType<typeof getApiUsers>>, TError, TData>
     >;
-    axios?: AxiosRequestConfig;
+    fetch?: RequestInit;
   },
 ): Promise<QueryClient> => {
   const queryOptions = getGetApiUsersQueryOptions(params, options);
@@ -359,19 +474,58 @@ export const prefetchGetApiUsers = async <
 /**
  * @summary Create a new user
  */
-export const postApiUsers = (
+export type postApiUsersResponse200 = {
+  data: User;
+  status: 200;
+};
+
+export type postApiUsersResponse400 = {
+  data: void;
+  status: 400;
+};
+
+export type postApiUsersResponseComposite =
+  | postApiUsersResponse200
+  | postApiUsersResponse400;
+
+export type postApiUsersResponse = postApiUsersResponseComposite & {
+  headers: Headers;
+};
+
+export const getPostApiUsersUrl = () => {
+  return `http://localhost:5173/api/users`;
+};
+
+export const postApiUsers = async (
   postApiUsersBody: PostApiUsersBody,
-  options?: AxiosRequestConfig,
-): Promise<AxiosResponse<User>> => {
+  options?: RequestInit,
+): Promise<postApiUsersResponse> => {
   const formUrlEncoded = new URLSearchParams();
   formUrlEncoded.append("data", JSON.stringify(postApiUsersBody.data));
   formUrlEncoded.append("tenantId", postApiUsersBody.tenantId);
 
-  return axios.post(`/api/users`, formUrlEncoded, options);
+  const res = await fetch(getPostApiUsersUrl(), {
+    ...options,
+    method: "POST",
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+      ...options?.headers,
+    },
+    body: formUrlEncoded,
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  const data: postApiUsersResponse["data"] = body ? JSON.parse(body) : {};
+
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as postApiUsersResponse;
 };
 
 export const getPostApiUsersMutationOptions = <
-  TError = AxiosError<void>,
+  TError = void,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<
@@ -380,7 +534,7 @@ export const getPostApiUsersMutationOptions = <
     { data: PostApiUsersBody },
     TContext
   >;
-  axios?: AxiosRequestConfig;
+  fetch?: RequestInit;
 }): UseMutationOptions<
   Awaited<ReturnType<typeof postApiUsers>>,
   TError,
@@ -388,13 +542,13 @@ export const getPostApiUsersMutationOptions = <
   TContext
 > => {
   const mutationKey = ["postApiUsers"];
-  const { mutation: mutationOptions, axios: axiosOptions } = options
+  const { mutation: mutationOptions, fetch: fetchOptions } = options
     ? options.mutation &&
       "mutationKey" in options.mutation &&
       options.mutation.mutationKey
       ? options
       : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, axios: undefined };
+    : { mutation: { mutationKey }, fetch: undefined };
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof postApiUsers>>,
@@ -402,7 +556,7 @@ export const getPostApiUsersMutationOptions = <
   > = (props) => {
     const { data } = props ?? {};
 
-    return postApiUsers(data, axiosOptions);
+    return postApiUsers(data, fetchOptions);
   };
 
   return { mutationFn, ...mutationOptions };
@@ -412,22 +566,19 @@ export type PostApiUsersMutationResult = NonNullable<
   Awaited<ReturnType<typeof postApiUsers>>
 >;
 export type PostApiUsersMutationBody = PostApiUsersBody;
-export type PostApiUsersMutationError = AxiosError<void>;
+export type PostApiUsersMutationError = void;
 
 /**
  * @summary Create a new user
  */
-export const usePostApiUsers = <
-  TError = AxiosError<void>,
-  TContext = unknown,
->(options?: {
+export const usePostApiUsers = <TError = void, TContext = unknown>(options?: {
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof postApiUsers>>,
     TError,
     { data: PostApiUsersBody },
     TContext
   >;
-  axios?: AxiosRequestConfig;
+  fetch?: RequestInit;
 }): UseMutationResult<
   Awaited<ReturnType<typeof postApiUsers>>,
   TError,

@@ -21,9 +21,6 @@ import type {
   UseQueryResult,
 } from "@tanstack/react-query";
 
-import axios from "axios";
-import type { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios";
-
 import type {
   AppColumn,
   GetApiColumnsParams,
@@ -34,16 +31,55 @@ import type {
  * Updates properties of an existing column
  * @summary Update a column
  */
-export const patchApiColumnsColumnId = (
+export type patchApiColumnsColumnIdResponse200 = {
+  data: AppColumn;
+  status: 200;
+};
+
+export type patchApiColumnsColumnIdResponse400 = {
+  data: void;
+  status: 400;
+};
+
+export type patchApiColumnsColumnIdResponseComposite =
+  | patchApiColumnsColumnIdResponse200
+  | patchApiColumnsColumnIdResponse400;
+
+export type patchApiColumnsColumnIdResponse =
+  patchApiColumnsColumnIdResponseComposite & {
+    headers: Headers;
+  };
+
+export const getPatchApiColumnsColumnIdUrl = (columnId: string) => {
+  return `http://localhost:5173/api/columns/${columnId}`;
+};
+
+export const patchApiColumnsColumnId = async (
   columnId: string,
   appColumn: AppColumn,
-  options?: AxiosRequestConfig,
-): Promise<AxiosResponse<AppColumn>> => {
-  return axios.patch(`/api/columns/${columnId}`, appColumn, options);
+  options?: RequestInit,
+): Promise<patchApiColumnsColumnIdResponse> => {
+  const res = await fetch(getPatchApiColumnsColumnIdUrl(columnId), {
+    ...options,
+    method: "PATCH",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(appColumn),
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  const data: patchApiColumnsColumnIdResponse["data"] = body
+    ? JSON.parse(body)
+    : {};
+
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as patchApiColumnsColumnIdResponse;
 };
 
 export const getPatchApiColumnsColumnIdMutationOptions = <
-  TError = AxiosError<void>,
+  TError = void,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<
@@ -52,7 +88,7 @@ export const getPatchApiColumnsColumnIdMutationOptions = <
     { columnId: string; data: AppColumn },
     TContext
   >;
-  axios?: AxiosRequestConfig;
+  fetch?: RequestInit;
 }): UseMutationOptions<
   Awaited<ReturnType<typeof patchApiColumnsColumnId>>,
   TError,
@@ -60,13 +96,13 @@ export const getPatchApiColumnsColumnIdMutationOptions = <
   TContext
 > => {
   const mutationKey = ["patchApiColumnsColumnId"];
-  const { mutation: mutationOptions, axios: axiosOptions } = options
+  const { mutation: mutationOptions, fetch: fetchOptions } = options
     ? options.mutation &&
       "mutationKey" in options.mutation &&
       options.mutation.mutationKey
       ? options
       : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, axios: undefined };
+    : { mutation: { mutationKey }, fetch: undefined };
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof patchApiColumnsColumnId>>,
@@ -74,7 +110,7 @@ export const getPatchApiColumnsColumnIdMutationOptions = <
   > = (props) => {
     const { columnId, data } = props ?? {};
 
-    return patchApiColumnsColumnId(columnId, data, axiosOptions);
+    return patchApiColumnsColumnId(columnId, data, fetchOptions);
   };
 
   return { mutationFn, ...mutationOptions };
@@ -84,13 +120,13 @@ export type PatchApiColumnsColumnIdMutationResult = NonNullable<
   Awaited<ReturnType<typeof patchApiColumnsColumnId>>
 >;
 export type PatchApiColumnsColumnIdMutationBody = AppColumn;
-export type PatchApiColumnsColumnIdMutationError = AxiosError<void>;
+export type PatchApiColumnsColumnIdMutationError = void;
 
 /**
  * @summary Update a column
  */
 export const usePatchApiColumnsColumnId = <
-  TError = AxiosError<void>,
+  TError = void,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<
@@ -99,7 +135,7 @@ export const usePatchApiColumnsColumnId = <
     { columnId: string; data: AppColumn },
     TContext
   >;
-  axios?: AxiosRequestConfig;
+  fetch?: RequestInit;
 }): UseMutationResult<
   Awaited<ReturnType<typeof patchApiColumnsColumnId>>,
   TError,
@@ -114,15 +150,52 @@ export const usePatchApiColumnsColumnId = <
  * Permanently deletes a column from a table
  * @summary Delete a column
  */
-export const deleteApiColumnsColumnId = (
+export type deleteApiColumnsColumnIdResponse200 = {
+  data: AppColumn;
+  status: 200;
+};
+
+export type deleteApiColumnsColumnIdResponse400 = {
+  data: void;
+  status: 400;
+};
+
+export type deleteApiColumnsColumnIdResponseComposite =
+  | deleteApiColumnsColumnIdResponse200
+  | deleteApiColumnsColumnIdResponse400;
+
+export type deleteApiColumnsColumnIdResponse =
+  deleteApiColumnsColumnIdResponseComposite & {
+    headers: Headers;
+  };
+
+export const getDeleteApiColumnsColumnIdUrl = (columnId: string) => {
+  return `http://localhost:5173/api/columns/${columnId}`;
+};
+
+export const deleteApiColumnsColumnId = async (
   columnId: string,
-  options?: AxiosRequestConfig,
-): Promise<AxiosResponse<AppColumn>> => {
-  return axios.delete(`/api/columns/${columnId}`, options);
+  options?: RequestInit,
+): Promise<deleteApiColumnsColumnIdResponse> => {
+  const res = await fetch(getDeleteApiColumnsColumnIdUrl(columnId), {
+    ...options,
+    method: "DELETE",
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  const data: deleteApiColumnsColumnIdResponse["data"] = body
+    ? JSON.parse(body)
+    : {};
+
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as deleteApiColumnsColumnIdResponse;
 };
 
 export const getDeleteApiColumnsColumnIdMutationOptions = <
-  TError = AxiosError<void>,
+  TError = void,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<
@@ -131,7 +204,7 @@ export const getDeleteApiColumnsColumnIdMutationOptions = <
     { columnId: string },
     TContext
   >;
-  axios?: AxiosRequestConfig;
+  fetch?: RequestInit;
 }): UseMutationOptions<
   Awaited<ReturnType<typeof deleteApiColumnsColumnId>>,
   TError,
@@ -139,13 +212,13 @@ export const getDeleteApiColumnsColumnIdMutationOptions = <
   TContext
 > => {
   const mutationKey = ["deleteApiColumnsColumnId"];
-  const { mutation: mutationOptions, axios: axiosOptions } = options
+  const { mutation: mutationOptions, fetch: fetchOptions } = options
     ? options.mutation &&
       "mutationKey" in options.mutation &&
       options.mutation.mutationKey
       ? options
       : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, axios: undefined };
+    : { mutation: { mutationKey }, fetch: undefined };
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof deleteApiColumnsColumnId>>,
@@ -153,7 +226,7 @@ export const getDeleteApiColumnsColumnIdMutationOptions = <
   > = (props) => {
     const { columnId } = props ?? {};
 
-    return deleteApiColumnsColumnId(columnId, axiosOptions);
+    return deleteApiColumnsColumnId(columnId, fetchOptions);
   };
 
   return { mutationFn, ...mutationOptions };
@@ -163,13 +236,13 @@ export type DeleteApiColumnsColumnIdMutationResult = NonNullable<
   Awaited<ReturnType<typeof deleteApiColumnsColumnId>>
 >;
 
-export type DeleteApiColumnsColumnIdMutationError = AxiosError<void>;
+export type DeleteApiColumnsColumnIdMutationError = void;
 
 /**
  * @summary Delete a column
  */
 export const useDeleteApiColumnsColumnId = <
-  TError = AxiosError<void>,
+  TError = void,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<
@@ -178,7 +251,7 @@ export const useDeleteApiColumnsColumnId = <
     { columnId: string },
     TContext
   >;
-  axios?: AxiosRequestConfig;
+  fetch?: RequestInit;
 }): UseMutationResult<
   Awaited<ReturnType<typeof deleteApiColumnsColumnId>>,
   TError,
@@ -192,39 +265,85 @@ export const useDeleteApiColumnsColumnId = <
 /**
  * @summary Get all columns for a table
  */
-export const getApiColumns = (
-  params: GetApiColumnsParams,
-  options?: AxiosRequestConfig,
-): Promise<AxiosResponse<AppColumn[]>> => {
-  return axios.get(`/api/columns`, {
-    ...options,
-    params: { ...params, ...options?.params },
+export type getApiColumnsResponse200 = {
+  data: AppColumn[];
+  status: 200;
+};
+
+export type getApiColumnsResponse400 = {
+  data: void;
+  status: 400;
+};
+
+export type getApiColumnsResponseComposite =
+  | getApiColumnsResponse200
+  | getApiColumnsResponse400;
+
+export type getApiColumnsResponse = getApiColumnsResponseComposite & {
+  headers: Headers;
+};
+
+export const getGetApiColumnsUrl = (params: GetApiColumnsParams) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? "null" : value.toString());
+    }
   });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0
+    ? `http://localhost:5173/api/columns?${stringifiedParams}`
+    : `http://localhost:5173/api/columns`;
+};
+
+export const getApiColumns = async (
+  params: GetApiColumnsParams,
+  options?: RequestInit,
+): Promise<getApiColumnsResponse> => {
+  const res = await fetch(getGetApiColumnsUrl(params), {
+    ...options,
+    method: "GET",
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  const data: getApiColumnsResponse["data"] = body ? JSON.parse(body) : {};
+
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as getApiColumnsResponse;
 };
 
 export const getGetApiColumnsQueryKey = (params: GetApiColumnsParams) => {
-  return [`/api/columns`, ...(params ? [params] : [])] as const;
+  return [
+    `http://localhost:5173/api/columns`,
+    ...(params ? [params] : []),
+  ] as const;
 };
 
 export const getGetApiColumnsQueryOptions = <
   TData = Awaited<ReturnType<typeof getApiColumns>>,
-  TError = AxiosError<void>,
+  TError = void,
 >(
   params: GetApiColumnsParams,
   options?: {
     query?: Partial<
       UseQueryOptions<Awaited<ReturnType<typeof getApiColumns>>, TError, TData>
     >;
-    axios?: AxiosRequestConfig;
+    fetch?: RequestInit;
   },
 ) => {
-  const { query: queryOptions, axios: axiosOptions } = options ?? {};
+  const { query: queryOptions, fetch: fetchOptions } = options ?? {};
 
   const queryKey = queryOptions?.queryKey ?? getGetApiColumnsQueryKey(params);
 
   const queryFn: QueryFunction<Awaited<ReturnType<typeof getApiColumns>>> = ({
     signal,
-  }) => getApiColumns(params, { signal, ...axiosOptions });
+  }) => getApiColumns(params, { signal, ...fetchOptions });
 
   return {
     queryKey,
@@ -241,11 +360,11 @@ export const getGetApiColumnsQueryOptions = <
 export type GetApiColumnsQueryResult = NonNullable<
   Awaited<ReturnType<typeof getApiColumns>>
 >;
-export type GetApiColumnsQueryError = AxiosError<void>;
+export type GetApiColumnsQueryError = void;
 
 export function useGetApiColumns<
   TData = Awaited<ReturnType<typeof getApiColumns>>,
-  TError = AxiosError<void>,
+  TError = void,
 >(
   params: GetApiColumnsParams,
   options: {
@@ -260,14 +379,14 @@ export function useGetApiColumns<
         >,
         "initialData"
       >;
-    axios?: AxiosRequestConfig;
+    fetch?: RequestInit;
   },
 ): DefinedUseQueryResult<TData, TError> & {
   queryKey: DataTag<QueryKey, TData, TError>;
 };
 export function useGetApiColumns<
   TData = Awaited<ReturnType<typeof getApiColumns>>,
-  TError = AxiosError<void>,
+  TError = void,
 >(
   params: GetApiColumnsParams,
   options?: {
@@ -282,21 +401,21 @@ export function useGetApiColumns<
         >,
         "initialData"
       >;
-    axios?: AxiosRequestConfig;
+    fetch?: RequestInit;
   },
 ): UseQueryResult<TData, TError> & {
   queryKey: DataTag<QueryKey, TData, TError>;
 };
 export function useGetApiColumns<
   TData = Awaited<ReturnType<typeof getApiColumns>>,
-  TError = AxiosError<void>,
+  TError = void,
 >(
   params: GetApiColumnsParams,
   options?: {
     query?: Partial<
       UseQueryOptions<Awaited<ReturnType<typeof getApiColumns>>, TError, TData>
     >;
-    axios?: AxiosRequestConfig;
+    fetch?: RequestInit;
   },
 ): UseQueryResult<TData, TError> & {
   queryKey: DataTag<QueryKey, TData, TError>;
@@ -307,14 +426,14 @@ export function useGetApiColumns<
 
 export function useGetApiColumns<
   TData = Awaited<ReturnType<typeof getApiColumns>>,
-  TError = AxiosError<void>,
+  TError = void,
 >(
   params: GetApiColumnsParams,
   options?: {
     query?: Partial<
       UseQueryOptions<Awaited<ReturnType<typeof getApiColumns>>, TError, TData>
     >;
-    axios?: AxiosRequestConfig;
+    fetch?: RequestInit;
   },
 ): UseQueryResult<TData, TError> & {
   queryKey: DataTag<QueryKey, TData, TError>;
@@ -335,7 +454,7 @@ export function useGetApiColumns<
  */
 export const prefetchGetApiColumns = async <
   TData = Awaited<ReturnType<typeof getApiColumns>>,
-  TError = AxiosError<void>,
+  TError = void,
 >(
   queryClient: QueryClient,
   params: GetApiColumnsParams,
@@ -343,7 +462,7 @@ export const prefetchGetApiColumns = async <
     query?: Partial<
       UseQueryOptions<Awaited<ReturnType<typeof getApiColumns>>, TError, TData>
     >;
-    axios?: AxiosRequestConfig;
+    fetch?: RequestInit;
   },
 ): Promise<QueryClient> => {
   const queryOptions = getGetApiColumnsQueryOptions(params, options);
@@ -356,19 +475,58 @@ export const prefetchGetApiColumns = async <
 /**
  * @summary Create a new column
  */
-export const postApiColumns = (
+export type postApiColumnsResponse200 = {
+  data: AppColumn;
+  status: 200;
+};
+
+export type postApiColumnsResponse400 = {
+  data: void;
+  status: 400;
+};
+
+export type postApiColumnsResponseComposite =
+  | postApiColumnsResponse200
+  | postApiColumnsResponse400;
+
+export type postApiColumnsResponse = postApiColumnsResponseComposite & {
+  headers: Headers;
+};
+
+export const getPostApiColumnsUrl = () => {
+  return `http://localhost:5173/api/columns`;
+};
+
+export const postApiColumns = async (
   postApiColumnsBody: PostApiColumnsBody,
-  options?: AxiosRequestConfig,
-): Promise<AxiosResponse<AppColumn>> => {
+  options?: RequestInit,
+): Promise<postApiColumnsResponse> => {
   const formUrlEncoded = new URLSearchParams();
   formUrlEncoded.append("tableId", postApiColumnsBody.tableId);
   formUrlEncoded.append("data", JSON.stringify(postApiColumnsBody.data));
 
-  return axios.post(`/api/columns`, formUrlEncoded, options);
+  const res = await fetch(getPostApiColumnsUrl(), {
+    ...options,
+    method: "POST",
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+      ...options?.headers,
+    },
+    body: formUrlEncoded,
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  const data: postApiColumnsResponse["data"] = body ? JSON.parse(body) : {};
+
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as postApiColumnsResponse;
 };
 
 export const getPostApiColumnsMutationOptions = <
-  TError = AxiosError<void>,
+  TError = void,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<
@@ -377,7 +535,7 @@ export const getPostApiColumnsMutationOptions = <
     { data: PostApiColumnsBody },
     TContext
   >;
-  axios?: AxiosRequestConfig;
+  fetch?: RequestInit;
 }): UseMutationOptions<
   Awaited<ReturnType<typeof postApiColumns>>,
   TError,
@@ -385,13 +543,13 @@ export const getPostApiColumnsMutationOptions = <
   TContext
 > => {
   const mutationKey = ["postApiColumns"];
-  const { mutation: mutationOptions, axios: axiosOptions } = options
+  const { mutation: mutationOptions, fetch: fetchOptions } = options
     ? options.mutation &&
       "mutationKey" in options.mutation &&
       options.mutation.mutationKey
       ? options
       : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, axios: undefined };
+    : { mutation: { mutationKey }, fetch: undefined };
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof postApiColumns>>,
@@ -399,7 +557,7 @@ export const getPostApiColumnsMutationOptions = <
   > = (props) => {
     const { data } = props ?? {};
 
-    return postApiColumns(data, axiosOptions);
+    return postApiColumns(data, fetchOptions);
   };
 
   return { mutationFn, ...mutationOptions };
@@ -409,22 +567,19 @@ export type PostApiColumnsMutationResult = NonNullable<
   Awaited<ReturnType<typeof postApiColumns>>
 >;
 export type PostApiColumnsMutationBody = PostApiColumnsBody;
-export type PostApiColumnsMutationError = AxiosError<void>;
+export type PostApiColumnsMutationError = void;
 
 /**
  * @summary Create a new column
  */
-export const usePostApiColumns = <
-  TError = AxiosError<void>,
-  TContext = unknown,
->(options?: {
+export const usePostApiColumns = <TError = void, TContext = unknown>(options?: {
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof postApiColumns>>,
     TError,
     { data: PostApiColumnsBody },
     TContext
   >;
-  axios?: AxiosRequestConfig;
+  fetch?: RequestInit;
 }): UseMutationResult<
   Awaited<ReturnType<typeof postApiColumns>>,
   TError,

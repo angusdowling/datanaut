@@ -5,9 +5,6 @@ export interface PaginationProps {
 }
 
 export const Pagination = ({ table }: PaginationProps) => {
-  console.log(table.getCanPreviousPage());
-  console.log(table.getCanPreviousPage());
-
   return (
     <div>
       <button

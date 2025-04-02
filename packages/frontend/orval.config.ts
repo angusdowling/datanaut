@@ -7,7 +7,10 @@ export default defineConfig({
       target: "app/services/api",
       schemas: "app/services/api/model",
       client: "react-query",
-      baseUrl: "/",
+      httpClient: "fetch",
+      baseUrl: {
+        getBaseUrlFromSpecification: true,
+      },
       mock: false,
       override: {
         useNativeEnums: true,

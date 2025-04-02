@@ -53,13 +53,11 @@ export const meta: MetaFunction = () => {
 export default function Index() {
   const [data, setData] = useState(() => [...defaultData]);
 
-  useEffect(() => {
-    console.log("useEffect");
-
-    getApiUsers().then((users) => {
-      console.log("users", users);
-    });
-  }, []);
+  // useEffect(() => {
+  //   getApiUsers().then((users) => {
+  //     console.log("users", users);
+  //   });
+  // }, []);
 
   const columns = [
     {

@@ -27,7 +27,6 @@ import { ActionFunctionArgs } from "react-router";
  *             properties:
  *               data:
  *                 type: object
- *                 description: Tenant update data (e.g., \"{\\\"name\\\": \\\"New Name\\\"}\")
  *             required:
  *               - data
  *     responses:

@@ -21,41 +21,311 @@ import type {
   UseQueryResult,
 } from "@tanstack/react-query";
 
-import axios from "axios";
-import type { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios";
+import type {
+  PatchApiTenantsTenantIdBody,
+  PostApiTenantsBody,
+  Tenant,
+} from ".././model";
 
-import type { PostApiTenantsBody, Tenant } from ".././model";
+/**
+ * @summary Update a tenant
+ */
+export type patchApiTenantsTenantIdResponse200 = {
+  data: Tenant;
+  status: 200;
+};
 
+export type patchApiTenantsTenantIdResponse400 = {
+  data: void;
+  status: 400;
+};
+
+export type patchApiTenantsTenantIdResponseComposite =
+  | patchApiTenantsTenantIdResponse200
+  | patchApiTenantsTenantIdResponse400;
+
+export type patchApiTenantsTenantIdResponse =
+  patchApiTenantsTenantIdResponseComposite & {
+    headers: Headers;
+  };
+
+export const getPatchApiTenantsTenantIdUrl = (tenantId: string) => {
+  return `http://localhost:5173/api/tenants/${tenantId}`;
+};
+
+export const patchApiTenantsTenantId = async (
+  tenantId: string,
+  patchApiTenantsTenantIdBody: PatchApiTenantsTenantIdBody,
+  options?: RequestInit,
+): Promise<patchApiTenantsTenantIdResponse> => {
+  const formUrlEncoded = new URLSearchParams();
+  formUrlEncoded.append(
+    "data",
+    JSON.stringify(patchApiTenantsTenantIdBody.data),
+  );
+
+  const res = await fetch(getPatchApiTenantsTenantIdUrl(tenantId), {
+    ...options,
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+      ...options?.headers,
+    },
+    body: formUrlEncoded,
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  const data: patchApiTenantsTenantIdResponse["data"] = body
+    ? JSON.parse(body)
+    : {};
+
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as patchApiTenantsTenantIdResponse;
+};
+
+export const getPatchApiTenantsTenantIdMutationOptions = <
+  TError = void,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof patchApiTenantsTenantId>>,
+    TError,
+    { tenantId: string; data: PatchApiTenantsTenantIdBody },
+    TContext
+  >;
+  fetch?: RequestInit;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof patchApiTenantsTenantId>>,
+  TError,
+  { tenantId: string; data: PatchApiTenantsTenantIdBody },
+  TContext
+> => {
+  const mutationKey = ["patchApiTenantsTenantId"];
+  const { mutation: mutationOptions, fetch: fetchOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, fetch: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof patchApiTenantsTenantId>>,
+    { tenantId: string; data: PatchApiTenantsTenantIdBody }
+  > = (props) => {
+    const { tenantId, data } = props ?? {};
+
+    return patchApiTenantsTenantId(tenantId, data, fetchOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type PatchApiTenantsTenantIdMutationResult = NonNullable<
+  Awaited<ReturnType<typeof patchApiTenantsTenantId>>
+>;
+export type PatchApiTenantsTenantIdMutationBody = PatchApiTenantsTenantIdBody;
+export type PatchApiTenantsTenantIdMutationError = void;
+
+/**
+ * @summary Update a tenant
+ */
+export const usePatchApiTenantsTenantId = <
+  TError = void,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof patchApiTenantsTenantId>>,
+    TError,
+    { tenantId: string; data: PatchApiTenantsTenantIdBody },
+    TContext
+  >;
+  fetch?: RequestInit;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof patchApiTenantsTenantId>>,
+  TError,
+  { tenantId: string; data: PatchApiTenantsTenantIdBody },
+  TContext
+> => {
+  const mutationOptions = getPatchApiTenantsTenantIdMutationOptions(options);
+
+  return useMutation(mutationOptions);
+};
+/**
+ * @summary Delete a tenant
+ */
+export type deleteApiTenantsTenantIdResponse200 = {
+  data: Tenant;
+  status: 200;
+};
+
+export type deleteApiTenantsTenantIdResponse400 = {
+  data: void;
+  status: 400;
+};
+
+export type deleteApiTenantsTenantIdResponseComposite =
+  | deleteApiTenantsTenantIdResponse200
+  | deleteApiTenantsTenantIdResponse400;
+
+export type deleteApiTenantsTenantIdResponse =
+  deleteApiTenantsTenantIdResponseComposite & {
+    headers: Headers;
+  };
+
+export const getDeleteApiTenantsTenantIdUrl = (tenantId: string) => {
+  return `http://localhost:5173/api/tenants/${tenantId}`;
+};
+
+export const deleteApiTenantsTenantId = async (
+  tenantId: string,
+  options?: RequestInit,
+): Promise<deleteApiTenantsTenantIdResponse> => {
+  const res = await fetch(getDeleteApiTenantsTenantIdUrl(tenantId), {
+    ...options,
+    method: "DELETE",
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  const data: deleteApiTenantsTenantIdResponse["data"] = body
+    ? JSON.parse(body)
+    : {};
+
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as deleteApiTenantsTenantIdResponse;
+};
+
+export const getDeleteApiTenantsTenantIdMutationOptions = <
+  TError = void,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof deleteApiTenantsTenantId>>,
+    TError,
+    { tenantId: string },
+    TContext
+  >;
+  fetch?: RequestInit;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof deleteApiTenantsTenantId>>,
+  TError,
+  { tenantId: string },
+  TContext
+> => {
+  const mutationKey = ["deleteApiTenantsTenantId"];
+  const { mutation: mutationOptions, fetch: fetchOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, fetch: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof deleteApiTenantsTenantId>>,
+    { tenantId: string }
+  > = (props) => {
+    const { tenantId } = props ?? {};
+
+    return deleteApiTenantsTenantId(tenantId, fetchOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type DeleteApiTenantsTenantIdMutationResult = NonNullable<
+  Awaited<ReturnType<typeof deleteApiTenantsTenantId>>
+>;
+
+export type DeleteApiTenantsTenantIdMutationError = void;
+
+/**
+ * @summary Delete a tenant
+ */
+export const useDeleteApiTenantsTenantId = <
+  TError = void,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof deleteApiTenantsTenantId>>,
+    TError,
+    { tenantId: string },
+    TContext
+  >;
+  fetch?: RequestInit;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof deleteApiTenantsTenantId>>,
+  TError,
+  { tenantId: string },
+  TContext
+> => {
+  const mutationOptions = getDeleteApiTenantsTenantIdMutationOptions(options);
+
+  return useMutation(mutationOptions);
+};
 /**
  * Returns a list of all tenants accessible to the user.
  * @summary Get all tenants
  */
-export const getApiTenants = (
-  options?: AxiosRequestConfig,
-): Promise<AxiosResponse<Tenant[]>> => {
-  return axios.get(`/api/tenants`, options);
+export type getApiTenantsResponse200 = {
+  data: Tenant[];
+  status: 200;
+};
+
+export type getApiTenantsResponseComposite = getApiTenantsResponse200;
+
+export type getApiTenantsResponse = getApiTenantsResponseComposite & {
+  headers: Headers;
+};
+
+export const getGetApiTenantsUrl = () => {
+  return `http://localhost:5173/api/tenants`;
+};
+
+export const getApiTenants = async (
+  options?: RequestInit,
+): Promise<getApiTenantsResponse> => {
+  const res = await fetch(getGetApiTenantsUrl(), {
+    ...options,
+    method: "GET",
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  const data: getApiTenantsResponse["data"] = body ? JSON.parse(body) : {};
+
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as getApiTenantsResponse;
 };
 
 export const getGetApiTenantsQueryKey = () => {
-  return [`/api/tenants`] as const;
+  return [`http://localhost:5173/api/tenants`] as const;
 };
 
 export const getGetApiTenantsQueryOptions = <
   TData = Awaited<ReturnType<typeof getApiTenants>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(options?: {
   query?: Partial<
     UseQueryOptions<Awaited<ReturnType<typeof getApiTenants>>, TError, TData>
   >;
-  axios?: AxiosRequestConfig;
+  fetch?: RequestInit;
 }) => {
-  const { query: queryOptions, axios: axiosOptions } = options ?? {};
+  const { query: queryOptions, fetch: fetchOptions } = options ?? {};
 
   const queryKey = queryOptions?.queryKey ?? getGetApiTenantsQueryKey();
 
   const queryFn: QueryFunction<Awaited<ReturnType<typeof getApiTenants>>> = ({
     signal,
-  }) => getApiTenants({ signal, ...axiosOptions });
+  }) => getApiTenants({ signal, ...fetchOptions });
 
   return {
     queryKey,
@@ -72,11 +342,11 @@ export const getGetApiTenantsQueryOptions = <
 export type GetApiTenantsQueryResult = NonNullable<
   Awaited<ReturnType<typeof getApiTenants>>
 >;
-export type GetApiTenantsQueryError = AxiosError<unknown>;
+export type GetApiTenantsQueryError = unknown;
 
 export function useGetApiTenants<
   TData = Awaited<ReturnType<typeof getApiTenants>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(options: {
   query: Partial<
     UseQueryOptions<Awaited<ReturnType<typeof getApiTenants>>, TError, TData>
@@ -89,13 +359,13 @@ export function useGetApiTenants<
       >,
       "initialData"
     >;
-  axios?: AxiosRequestConfig;
+  fetch?: RequestInit;
 }): DefinedUseQueryResult<TData, TError> & {
   queryKey: DataTag<QueryKey, TData, TError>;
 };
 export function useGetApiTenants<
   TData = Awaited<ReturnType<typeof getApiTenants>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(options?: {
   query?: Partial<
     UseQueryOptions<Awaited<ReturnType<typeof getApiTenants>>, TError, TData>
@@ -108,18 +378,18 @@ export function useGetApiTenants<
       >,
       "initialData"
     >;
-  axios?: AxiosRequestConfig;
+  fetch?: RequestInit;
 }): UseQueryResult<TData, TError> & {
   queryKey: DataTag<QueryKey, TData, TError>;
 };
 export function useGetApiTenants<
   TData = Awaited<ReturnType<typeof getApiTenants>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(options?: {
   query?: Partial<
     UseQueryOptions<Awaited<ReturnType<typeof getApiTenants>>, TError, TData>
   >;
-  axios?: AxiosRequestConfig;
+  fetch?: RequestInit;
 }): UseQueryResult<TData, TError> & {
   queryKey: DataTag<QueryKey, TData, TError>;
 };
@@ -129,12 +399,12 @@ export function useGetApiTenants<
 
 export function useGetApiTenants<
   TData = Awaited<ReturnType<typeof getApiTenants>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(options?: {
   query?: Partial<
     UseQueryOptions<Awaited<ReturnType<typeof getApiTenants>>, TError, TData>
   >;
-  axios?: AxiosRequestConfig;
+  fetch?: RequestInit;
 }): UseQueryResult<TData, TError> & {
   queryKey: DataTag<QueryKey, TData, TError>;
 } {
@@ -154,14 +424,14 @@ export function useGetApiTenants<
  */
 export const prefetchGetApiTenants = async <
   TData = Awaited<ReturnType<typeof getApiTenants>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(
   queryClient: QueryClient,
   options?: {
     query?: Partial<
       UseQueryOptions<Awaited<ReturnType<typeof getApiTenants>>, TError, TData>
     >;
-    axios?: AxiosRequestConfig;
+    fetch?: RequestInit;
   },
 ): Promise<QueryClient> => {
   const queryOptions = getGetApiTenantsQueryOptions(options);
@@ -174,18 +444,57 @@ export const prefetchGetApiTenants = async <
 /**
  * @summary Create a new tenant
  */
-export const postApiTenants = (
+export type postApiTenantsResponse200 = {
+  data: Tenant;
+  status: 200;
+};
+
+export type postApiTenantsResponse400 = {
+  data: void;
+  status: 400;
+};
+
+export type postApiTenantsResponseComposite =
+  | postApiTenantsResponse200
+  | postApiTenantsResponse400;
+
+export type postApiTenantsResponse = postApiTenantsResponseComposite & {
+  headers: Headers;
+};
+
+export const getPostApiTenantsUrl = () => {
+  return `http://localhost:5173/api/tenants`;
+};
+
+export const postApiTenants = async (
   postApiTenantsBody: PostApiTenantsBody,
-  options?: AxiosRequestConfig,
-): Promise<AxiosResponse<Tenant>> => {
+  options?: RequestInit,
+): Promise<postApiTenantsResponse> => {
   const formUrlEncoded = new URLSearchParams();
   formUrlEncoded.append("data", JSON.stringify(postApiTenantsBody.data));
 
-  return axios.post(`/api/tenants`, formUrlEncoded, options);
+  const res = await fetch(getPostApiTenantsUrl(), {
+    ...options,
+    method: "POST",
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+      ...options?.headers,
+    },
+    body: formUrlEncoded,
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  const data: postApiTenantsResponse["data"] = body ? JSON.parse(body) : {};
+
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as postApiTenantsResponse;
 };
 
 export const getPostApiTenantsMutationOptions = <
-  TError = AxiosError<void>,
+  TError = void,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<
@@ -194,7 +503,7 @@ export const getPostApiTenantsMutationOptions = <
     { data: PostApiTenantsBody },
     TContext
   >;
-  axios?: AxiosRequestConfig;
+  fetch?: RequestInit;
 }): UseMutationOptions<
   Awaited<ReturnType<typeof postApiTenants>>,
   TError,
@@ -202,13 +511,13 @@ export const getPostApiTenantsMutationOptions = <
   TContext
 > => {
   const mutationKey = ["postApiTenants"];
-  const { mutation: mutationOptions, axios: axiosOptions } = options
+  const { mutation: mutationOptions, fetch: fetchOptions } = options
     ? options.mutation &&
       "mutationKey" in options.mutation &&
       options.mutation.mutationKey
       ? options
       : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, axios: undefined };
+    : { mutation: { mutationKey }, fetch: undefined };
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof postApiTenants>>,
@@ -216,7 +525,7 @@ export const getPostApiTenantsMutationOptions = <
   > = (props) => {
     const { data } = props ?? {};
 
-    return postApiTenants(data, axiosOptions);
+    return postApiTenants(data, fetchOptions);
   };
 
   return { mutationFn, ...mutationOptions };
@@ -226,22 +535,19 @@ export type PostApiTenantsMutationResult = NonNullable<
   Awaited<ReturnType<typeof postApiTenants>>
 >;
 export type PostApiTenantsMutationBody = PostApiTenantsBody;
-export type PostApiTenantsMutationError = AxiosError<void>;
+export type PostApiTenantsMutationError = void;
 
 /**
  * @summary Create a new tenant
  */
-export const usePostApiTenants = <
-  TError = AxiosError<void>,
-  TContext = unknown,
->(options?: {
+export const usePostApiTenants = <TError = void, TContext = unknown>(options?: {
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof postApiTenants>>,
     TError,
     { data: PostApiTenantsBody },
     TContext
   >;
-  axios?: AxiosRequestConfig;
+  fetch?: RequestInit;
 }): UseMutationResult<
   Awaited<ReturnType<typeof postApiTenants>>,
   TError,

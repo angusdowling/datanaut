@@ -17,6 +17,8 @@ export * from "./getApiRowsParams";
 export * from "./getApiTablesParams";
 export * from "./getApiUsersParams";
 export * from "./getApiWorkspacesParams";
+export * from "./patchApiTenantsTenantIdBody";
+export * from "./patchApiTenantsTenantIdBodyData";
 export * from "./patchApiUsersUserIdBody";
 export * from "./patchApiUsersUserIdBodyData";
 export * from "./patchApiWorkspacesWorkspaceIdBody";
