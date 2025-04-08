@@ -13,6 +13,9 @@ import pg from "pg";
  *         tenant_id:
  *           type: string
  *           description: The tenant this user belongs to
+ *         role_id:
+ *           type: string
+ *           description: The roles assigned to this user
  *         email:
  *           type: string
  *           description: The user's email
@@ -30,6 +33,7 @@ import pg from "pg";
  *           format: date-time
  *       required:
  *         - id
+ *         - role_id
  *         - tenant_id
  *         - email
  *         - name

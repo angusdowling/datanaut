@@ -8,7 +8,7 @@ export const Swagger = () => {
   return (
     <ClientOnly fallback={<div>Loading API documentation...</div>}>
       {() => {
-        return <SwaggerUIComponent url="/api/swagger" />;
+        return <SwaggerUIComponent url="/api/swagger/v1/swagger" />;
       }}
     </ClientOnly>
   );

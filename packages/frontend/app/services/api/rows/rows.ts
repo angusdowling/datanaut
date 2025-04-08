@@ -21,7 +21,12 @@ import type {
   UseQueryResult,
 } from "@tanstack/react-query";
 
-import type { AppRow, GetApiRowsParams, PostApiRowsBody } from ".././model";
+import type {
+  AppRow,
+  GetApiRowsParams,
+  PatchApiRowsRowIdBody,
+  PostApiRowsBody,
+} from ".././model";
 
 /**
  * Updates properties of an existing row
@@ -51,14 +56,20 @@ export const getPatchApiRowsRowIdUrl = (rowId: string) => {
 
 export const patchApiRowsRowId = async (
   rowId: string,
-  appRow: AppRow,
+  patchApiRowsRowIdBody: PatchApiRowsRowIdBody,
   options?: RequestInit,
 ): Promise<patchApiRowsRowIdResponse> => {
+  const formUrlEncoded = new URLSearchParams();
+  formUrlEncoded.append("data", JSON.stringify(patchApiRowsRowIdBody.data));
+
   const res = await fetch(getPatchApiRowsRowIdUrl(rowId), {
     ...options,
     method: "PATCH",
-    headers: { "Content-Type": "application/json", ...options?.headers },
-    body: JSON.stringify(appRow),
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+      ...options?.headers,
+    },
+    body: formUrlEncoded,
   });
 
   const body = [204, 205, 304].includes(res.status) ? null : await res.text();
@@ -78,14 +89,14 @@ export const getPatchApiRowsRowIdMutationOptions = <
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof patchApiRowsRowId>>,
     TError,
-    { rowId: string; data: AppRow },
+    { rowId: string; data: PatchApiRowsRowIdBody },
     TContext
   >;
   fetch?: RequestInit;
 }): UseMutationOptions<
   Awaited<ReturnType<typeof patchApiRowsRowId>>,
   TError,
-  { rowId: string; data: AppRow },
+  { rowId: string; data: PatchApiRowsRowIdBody },
   TContext
 > => {
   const mutationKey = ["patchApiRowsRowId"];
@@ -99,7 +110,7 @@ export const getPatchApiRowsRowIdMutationOptions = <
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof patchApiRowsRowId>>,
-    { rowId: string; data: AppRow }
+    { rowId: string; data: PatchApiRowsRowIdBody }
   > = (props) => {
     const { rowId, data } = props ?? {};
 
@@ -112,7 +123,7 @@ export const getPatchApiRowsRowIdMutationOptions = <
 export type PatchApiRowsRowIdMutationResult = NonNullable<
   Awaited<ReturnType<typeof patchApiRowsRowId>>
 >;
-export type PatchApiRowsRowIdMutationBody = AppRow;
+export type PatchApiRowsRowIdMutationBody = PatchApiRowsRowIdBody;
 export type PatchApiRowsRowIdMutationError = void;
 
 /**
@@ -125,14 +136,14 @@ export const usePatchApiRowsRowId = <
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof patchApiRowsRowId>>,
     TError,
-    { rowId: string; data: AppRow },
+    { rowId: string; data: PatchApiRowsRowIdBody },
     TContext
   >;
   fetch?: RequestInit;
 }): UseMutationResult<
   Awaited<ReturnType<typeof patchApiRowsRowId>>,
   TError,
-  { rowId: string; data: AppRow },
+  { rowId: string; data: PatchApiRowsRowIdBody },
   TContext
 > => {
   const mutationOptions = getPatchApiRowsRowIdMutationOptions(options);

@@ -16,6 +16,10 @@ import pg from "pg";
  *         name:
  *           type: string
  *           description: The table name
+ *         created_by:
+ *           type: string
+ *           format: string
+ *           description: The user who created this table
  *         created_at:
  *           type: string
  *           format: date-time
@@ -24,8 +28,9 @@ import pg from "pg";
  *           format: date-time
  *       required:
  *         - id
- *         - workspace_id
  *         - name
+ *         - workspace_id
+ *         - created_by
  *         - created_at
  *         - updated_at
  */
@@ -34,6 +39,7 @@ export type AppTable = {
   id: string;
   workspace_id: string;
   name: string;
+  created_by: string;
   created_at: Date;
   updated_at: Date;
 };

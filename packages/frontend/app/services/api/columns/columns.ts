@@ -24,6 +24,7 @@ import type {
 import type {
   AppColumn,
   GetApiColumnsParams,
+  PatchApiColumnsColumnIdBody,
   PostApiColumnsBody,
 } from ".././model";
 
@@ -56,14 +57,23 @@ export const getPatchApiColumnsColumnIdUrl = (columnId: string) => {
 
 export const patchApiColumnsColumnId = async (
   columnId: string,
-  appColumn: AppColumn,
+  patchApiColumnsColumnIdBody: PatchApiColumnsColumnIdBody,
   options?: RequestInit,
 ): Promise<patchApiColumnsColumnIdResponse> => {
+  const formUrlEncoded = new URLSearchParams();
+  formUrlEncoded.append(
+    "data",
+    JSON.stringify(patchApiColumnsColumnIdBody.data),
+  );
+
   const res = await fetch(getPatchApiColumnsColumnIdUrl(columnId), {
     ...options,
     method: "PATCH",
-    headers: { "Content-Type": "application/json", ...options?.headers },
-    body: JSON.stringify(appColumn),
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+      ...options?.headers,
+    },
+    body: formUrlEncoded,
   });
 
   const body = [204, 205, 304].includes(res.status) ? null : await res.text();
@@ -85,14 +95,14 @@ export const getPatchApiColumnsColumnIdMutationOptions = <
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof patchApiColumnsColumnId>>,
     TError,
-    { columnId: string; data: AppColumn },
+    { columnId: string; data: PatchApiColumnsColumnIdBody },
     TContext
   >;
   fetch?: RequestInit;
 }): UseMutationOptions<
   Awaited<ReturnType<typeof patchApiColumnsColumnId>>,
   TError,
-  { columnId: string; data: AppColumn },
+  { columnId: string; data: PatchApiColumnsColumnIdBody },
   TContext
 > => {
   const mutationKey = ["patchApiColumnsColumnId"];
@@ -106,7 +116,7 @@ export const getPatchApiColumnsColumnIdMutationOptions = <
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof patchApiColumnsColumnId>>,
-    { columnId: string; data: AppColumn }
+    { columnId: string; data: PatchApiColumnsColumnIdBody }
   > = (props) => {
     const { columnId, data } = props ?? {};
 
@@ -119,7 +129,7 @@ export const getPatchApiColumnsColumnIdMutationOptions = <
 export type PatchApiColumnsColumnIdMutationResult = NonNullable<
   Awaited<ReturnType<typeof patchApiColumnsColumnId>>
 >;
-export type PatchApiColumnsColumnIdMutationBody = AppColumn;
+export type PatchApiColumnsColumnIdMutationBody = PatchApiColumnsColumnIdBody;
 export type PatchApiColumnsColumnIdMutationError = void;
 
 /**
@@ -132,14 +142,14 @@ export const usePatchApiColumnsColumnId = <
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof patchApiColumnsColumnId>>,
     TError,
-    { columnId: string; data: AppColumn },
+    { columnId: string; data: PatchApiColumnsColumnIdBody },
     TContext
   >;
   fetch?: RequestInit;
 }): UseMutationResult<
   Awaited<ReturnType<typeof patchApiColumnsColumnId>>,
   TError,
-  { columnId: string; data: AppColumn },
+  { columnId: string; data: PatchApiColumnsColumnIdBody },
   TContext
 > => {
   const mutationOptions = getPatchApiColumnsColumnIdMutationOptions(options);

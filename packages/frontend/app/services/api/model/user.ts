@@ -11,6 +11,8 @@ export interface User {
   id: string;
   /** The tenant this user belongs to */
   tenant_id: string;
+  /** The roles assigned to this user */
+  role_id: string;
   /** The user's email */
   email: string;
   /** The user's name */

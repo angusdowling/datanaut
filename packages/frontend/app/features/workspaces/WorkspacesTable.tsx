@@ -1,11 +1,16 @@
 import { useState } from "react";
 import { DataTable } from "~/components/DataTable";
-import { useGetApiTenants } from "~/services/api/tenants/tenants";
+import { useGetApiWorkspaces } from "~/services/api/workspaces/workspaces";
 
 const columns = [
   {
     accessor: "id" as "id",
     header: "ID",
+    type: "text" as "text",
+  },
+  {
+    accessor: "tenant_id" as "tenant_id",
+    header: "Tenant ID",
     type: "text" as "text",
   },
   {
@@ -25,8 +30,8 @@ const columns = [
   },
 ];
 
-export const TenantsTable = () => {
-  const { data: response } = useGetApiTenants();
+export const WorkspacesTable = () => {
+  const { data: response } = useGetApiWorkspaces();
   const [tableData, setTableData] = useState(() => response?.data || []);
 
   return (

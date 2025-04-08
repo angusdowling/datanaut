@@ -6,15 +6,7 @@
  * OpenAPI spec version: 1.0.0
  */
 
-export interface AppTable {
-  /** The table ID */
-  id: string;
-  /** The workspace this table belongs to */
-  workspace_id: string;
-  /** The table name */
-  name: string;
-  /** The user who created this table */
-  created_by: string;
-  created_at: string;
-  updated_at: string;
-}
+export type PostApiVerifyBody = {
+  /** The 6-digit verification code sent to the user's email */
+  code: string;
+};

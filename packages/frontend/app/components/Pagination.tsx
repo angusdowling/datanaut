@@ -1,10 +1,8 @@
-import React from "react";
-
-export interface PaginationProps {
+type Props = {
   table: any;
-}
+};
 
-export const Pagination = ({ table }: PaginationProps) => {
+export const Pagination = ({ table }: Props) => {
   return (
     <div>
       <button

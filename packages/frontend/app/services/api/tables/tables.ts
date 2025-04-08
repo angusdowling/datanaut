@@ -24,6 +24,7 @@ import type {
 import type {
   AppTable,
   GetApiTablesParams,
+  PatchApiTablesTableIdBody,
   PostApiTablesBody,
 } from ".././model";
 
@@ -56,14 +57,20 @@ export const getPatchApiTablesTableIdUrl = (tableId: string) => {
 
 export const patchApiTablesTableId = async (
   tableId: string,
-  appTable: AppTable,
+  patchApiTablesTableIdBody: PatchApiTablesTableIdBody,
   options?: RequestInit,
 ): Promise<patchApiTablesTableIdResponse> => {
+  const formUrlEncoded = new URLSearchParams();
+  formUrlEncoded.append("data", JSON.stringify(patchApiTablesTableIdBody.data));
+
   const res = await fetch(getPatchApiTablesTableIdUrl(tableId), {
     ...options,
     method: "PATCH",
-    headers: { "Content-Type": "application/json", ...options?.headers },
-    body: JSON.stringify(appTable),
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+      ...options?.headers,
+    },
+    body: formUrlEncoded,
   });
 
   const body = [204, 205, 304].includes(res.status) ? null : await res.text();
@@ -85,14 +92,14 @@ export const getPatchApiTablesTableIdMutationOptions = <
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof patchApiTablesTableId>>,
     TError,
-    { tableId: string; data: AppTable },
+    { tableId: string; data: PatchApiTablesTableIdBody },
     TContext
   >;
   fetch?: RequestInit;
 }): UseMutationOptions<
   Awaited<ReturnType<typeof patchApiTablesTableId>>,
   TError,
-  { tableId: string; data: AppTable },
+  { tableId: string; data: PatchApiTablesTableIdBody },
   TContext
 > => {
   const mutationKey = ["patchApiTablesTableId"];
@@ -106,7 +113,7 @@ export const getPatchApiTablesTableIdMutationOptions = <
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof patchApiTablesTableId>>,
-    { tableId: string; data: AppTable }
+    { tableId: string; data: PatchApiTablesTableIdBody }
   > = (props) => {
     const { tableId, data } = props ?? {};
 
@@ -119,7 +126,7 @@ export const getPatchApiTablesTableIdMutationOptions = <
 export type PatchApiTablesTableIdMutationResult = NonNullable<
   Awaited<ReturnType<typeof patchApiTablesTableId>>
 >;
-export type PatchApiTablesTableIdMutationBody = AppTable;
+export type PatchApiTablesTableIdMutationBody = PatchApiTablesTableIdBody;
 export type PatchApiTablesTableIdMutationError = void;
 
 /**
@@ -132,14 +139,14 @@ export const usePatchApiTablesTableId = <
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof patchApiTablesTableId>>,
     TError,
-    { tableId: string; data: AppTable },
+    { tableId: string; data: PatchApiTablesTableIdBody },
     TContext
   >;
   fetch?: RequestInit;
 }): UseMutationResult<
   Awaited<ReturnType<typeof patchApiTablesTableId>>,
   TError,
-  { tableId: string; data: AppTable },
+  { tableId: string; data: PatchApiTablesTableIdBody },
   TContext
 > => {
   const mutationOptions = getPatchApiTablesTableIdMutationOptions(options);

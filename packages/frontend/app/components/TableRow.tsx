@@ -1,14 +1,14 @@
 import React from "react";
 import { Row, Cell } from "@tanstack/react-table";
 
-export interface TableRowProps {
+type Props = {
   row: Row<any>;
   renderCell: (cell: Cell<any, unknown>) => React.ReactNode;
   isGrouped?: boolean;
   isExpanded?: boolean;
   toggleExpanded?: () => void;
   groupedCell?: any;
-}
+};
 
 export const TableRow = ({
   row,
@@ -17,7 +17,7 @@ export const TableRow = ({
   isExpanded,
   toggleExpanded,
   groupedCell,
-}: TableRowProps) => (
+}: Props) => (
   <tr key={row.id}>
     {row.getVisibleCells().map((cell) => {
       if (cell.getIsGrouped()) {

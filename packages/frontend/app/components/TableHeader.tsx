@@ -1,10 +1,10 @@
 import { Header, flexRender } from "@tanstack/react-table";
 
-export interface TableHeaderProps {
+type Props = {
   header: Header<any, unknown>;
-}
+};
 
-export const TableHeader = ({ header }: TableHeaderProps) => {
+export const TableHeader = ({ header }: Props) => {
   const isGrouped = header.column.getIsGrouped();
 
   return (

@@ -38,7 +38,11 @@ import { ActionFunctionArgs } from "react-router";
  *             schema:
  *               $ref: '#/components/schemas/Workspace'
  *       400:
- *         description: Missing workspaceId or invalid data
+ *         description: Missing workspaceId
+ *       401:
+ *         description: Unauthorized
+ *       404:
+ *         description: Workspace not found or invalid data
  *
  *   delete:
  *     summary: Delete a workspace
@@ -60,6 +64,10 @@ import { ActionFunctionArgs } from "react-router";
  *               $ref: '#/components/schemas/Workspace'
  *       400:
  *         description: Missing workspaceId
+ *       401:
+ *         description: Unauthorized
+ *       404:
+ *         description: Workspace not found
  */
 
 const patchHandler = async ({ request, params }: ActionFunctionArgs) => {

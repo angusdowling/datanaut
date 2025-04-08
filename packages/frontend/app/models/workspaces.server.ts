@@ -10,6 +10,9 @@ import pg from "pg";
  *         id:
  *           type: string
  *           description: The workspace ID
+ *         tenant_id:
+ *           type: string
+ *           description: The tenant this workspace belongs to
  *         name:
  *           type: string
  *           description: The workspace name
@@ -21,6 +24,7 @@ import pg from "pg";
  *           format: date-time
  *       required:
  *         - id
+ *         - tenant_id
  *         - name
  *         - created_at
  *         - updated_at
@@ -28,6 +32,7 @@ import pg from "pg";
 
 export type Workspace = {
   id: string;
+  tenant_id: string;
   name: string;
   created_at: Date;
   updated_at: Date;

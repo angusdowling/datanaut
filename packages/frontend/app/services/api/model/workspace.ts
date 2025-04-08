@@ -9,6 +9,8 @@
 export interface Workspace {
   /** The workspace ID */
   id: string;
+  /** The tenant this workspace belongs to */
+  tenant_id: string;
   /** The workspace name */
   name: string;
   created_at: string;

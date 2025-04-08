@@ -5,16 +5,9 @@
  * Datanaut is a cloud-based platform that combines the functionality of a spreadsheet with a database, allowing users to organize, collaborate on, and customize data in a visually intuitive interface
  * OpenAPI spec version: 1.0.0
  */
+import type { PatchApiColumnsColumnIdBodyData } from "./patchApiColumnsColumnIdBodyData";
 
-export interface AppTable {
-  /** The table ID */
-  id: string;
-  /** The workspace this table belongs to */
-  workspace_id: string;
-  /** The table name */
-  name: string;
-  /** The user who created this table */
-  created_by: string;
-  created_at: string;
-  updated_at: string;
-}
+export type PatchApiColumnsColumnIdBody = {
+  /** Column update data */
+  data: PatchApiColumnsColumnIdBodyData;
+};

@@ -21,9 +21,15 @@ import { requireUserSession } from "~/utilities/session.server";
  *     requestBody:
  *       required: true
  *       content:
- *         application/json:
+ *         application/x-www-form-urlencoded:
  *           schema:
- *             $ref: '#/components/schemas/AppColumn'
+ *             type: object
+ *             properties:
+ *               data:
+ *                 type: object
+ *                 description: Column update data
+ *             required:
+ *               - data
  *     responses:
  *       200:
  *         description: Column updated successfully

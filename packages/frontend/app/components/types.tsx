@@ -1,4 +1,4 @@
-import { CellType } from "./EditableCell";
+export type CellType = "text" | "number" | "percentage";
 
 export type ColumnDef<T> = {
   accessor: keyof T;

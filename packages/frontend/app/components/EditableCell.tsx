@@ -1,9 +1,8 @@
 import React from "react";
 import { Row } from "@tanstack/react-table";
+import { CellType } from "./types";
 
-export type CellType = "text" | "number" | "percentage";
-
-export interface EditableCellProps {
+type Props = {
   value: any;
   row: Row<any>;
   column: any;
@@ -12,7 +11,7 @@ export interface EditableCellProps {
   isEditing: boolean;
   onStartEdit: () => void;
   onFinishEdit: () => void;
-}
+};
 
 export const EditableCell = ({
   value,
@@ -23,7 +22,7 @@ export const EditableCell = ({
   isEditing,
   onStartEdit,
   onFinishEdit,
-}: EditableCellProps) => {
+}: Props) => {
   const displayValue = type === "percentage" ? `${value}%` : value;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {

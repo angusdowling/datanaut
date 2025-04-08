@@ -22,6 +22,7 @@ import styles from "./DataTable.module.scss";
 interface DataTableProps<T> {
   data: T[];
   setData: (data: T[]) => void;
+  patchRecord?: (recordIndex: number, columnId: string, value: any) => void;
   columns: ColumnDef<T>[];
   defaultGrouping?: string[];
 }
@@ -29,6 +30,7 @@ interface DataTableProps<T> {
 export function DataTable<T extends object>({
   data,
   setData,
+  patchRecord,
   columns,
   defaultGrouping = [],
 }: DataTableProps<T>) {
@@ -47,6 +49,7 @@ export function DataTable<T extends object>({
     const newData = [...data] as any;
     newData[rowIndex][columnId] = value;
     setData(newData);
+    patchRecord?.(rowIndex, columnId, value);
   };
 
   const tableColumns = columns.map((col) =>

@@ -5,7 +5,7 @@ import {
   HydrationBoundary,
   QueryClient,
 } from "@tanstack/react-query";
-import TenantsTable from "~/features/tenants/TenantsTable";
+import { TenantsTable } from "~/features/tenants/TenantsTable";
 import { prefetchGetApiTenants } from "~/services/api/tenants/tenants";
 
 export async function loader({ request }: LoaderFunctionArgs) {
