@@ -47,7 +47,7 @@ export const getPostApiLoginUrl = () => {
 
 export const postApiLogin = async (
   postApiLoginBody: PostApiLoginBody,
-  options?: RequestInit,
+  options?: RequestInit
 ): Promise<postApiLoginResponse> => {
   const formUrlEncoded = new URLSearchParams();
   formUrlEncoded.append("email", postApiLoginBody.email);
@@ -165,7 +165,7 @@ export const getPostApiVerifyUrl = () => {
 
 export const postApiVerify = async (
   postApiVerifyBody: PostApiVerifyBody,
-  options?: RequestInit,
+  options?: RequestInit
 ): Promise<postApiVerifyResponse> => {
   const formUrlEncoded = new URLSearchParams();
   formUrlEncoded.append("code", postApiVerifyBody.code);
