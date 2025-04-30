@@ -12,14 +12,9 @@ namespace Datanaut.Api.Controllers
     [ApiController]
     [Route("api/[controller]")]
     [Authorize]
-    public class ColumnsController : ControllerBase
+    public class ColumnsController(IService<AppColumn> columnService) : ControllerBase
     {
-        private readonly IService<AppColumn> _columnService;
-
-        public ColumnsController(IService<AppColumn> columnService)
-        {
-            _columnService = columnService;
-        }
+        private readonly IService<AppColumn> _columnService = columnService;
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<AppColumn>>> GetColumns([FromQuery] Guid tableId)

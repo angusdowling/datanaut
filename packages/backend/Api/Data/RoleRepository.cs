@@ -7,14 +7,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Datanaut.Api.Data
 {
-    public class RoleRepository : IRepository<Role>
+    public class RoleRepository(ApplicationDbContext context) : IRepository<Role>
     {
-        private readonly ApplicationDbContext _context;
-
-        public RoleRepository(ApplicationDbContext context)
-        {
-            _context = context;
-        }
+        private readonly ApplicationDbContext _context = context;
 
         public async Task<IEnumerable<Role>> GetAllAsync()
         {

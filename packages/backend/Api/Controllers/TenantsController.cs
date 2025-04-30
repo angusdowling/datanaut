@@ -12,14 +12,9 @@ namespace Datanaut.Api.Controllers
     [ApiController]
     [Route("api/[controller]")]
     [Authorize]
-    public class TenantsController : ControllerBase
+    public class TenantsController(TenantService tenantService) : ControllerBase
     {
-        private readonly TenantService _tenantService;
-
-        public TenantsController(TenantService tenantService)
-        {
-            _tenantService = tenantService;
-        }
+        private readonly TenantService _tenantService = tenantService;
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Tenant>>> GetTenants()

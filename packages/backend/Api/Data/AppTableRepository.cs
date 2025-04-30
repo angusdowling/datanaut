@@ -7,14 +7,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Datanaut.Api.Data
 {
-    public class AppTableRepository : IRepository<AppTable>
+    public class AppTableRepository(ApplicationDbContext context) : IRepository<AppTable>
     {
-        private readonly ApplicationDbContext _context;
-
-        public AppTableRepository(ApplicationDbContext context)
-        {
-            _context = context;
-        }
+        private readonly ApplicationDbContext _context = context;
 
         public async Task<IEnumerable<AppTable>> GetAllAsync()
         {

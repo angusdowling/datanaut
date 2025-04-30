@@ -7,14 +7,9 @@ using Datanaut.Models;
 
 namespace Datanaut.Api.Services
 {
-    public class UserService : IService<User>
+    public class UserService(IRepository<User> userRepository) : IService<User>
     {
-        private readonly IRepository<User> _userRepository;
-
-        public UserService(IRepository<User> userRepository)
-        {
-            _userRepository = userRepository;
-        }
+        private readonly IRepository<User> _userRepository = userRepository;
 
         public async Task<IEnumerable<User>> GetAllAsync()
         {

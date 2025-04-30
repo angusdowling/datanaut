@@ -26,6 +26,14 @@ namespace Datanaut.Api.Configuration
             this WebApplicationBuilder builder
         )
         {
+            var jwtSecretKey = Environment.GetEnvironmentVariable("JWT_SECRET_KEY");
+            if (string.IsNullOrEmpty(jwtSecretKey))
+            {
+                throw new InvalidOperationException(
+                    "JWT_SECRET_KEY environment variable is not set"
+                );
+            }
+
             builder
                 .Services.AddAuthentication(options =>
                 {
@@ -38,7 +46,7 @@ namespace Datanaut.Api.Configuration
                     {
                         ValidateIssuerSigningKey = true,
                         IssuerSigningKey = new SymmetricSecurityKey(
-                            Encoding.UTF8.GetBytes(builder.Configuration["Jwt:SecretKey"]!)
+                            Encoding.UTF8.GetBytes(jwtSecretKey)
                         ),
                         ValidateIssuer = true,
                         ValidIssuer = builder.Configuration["Jwt:Issuer"],
@@ -79,6 +87,9 @@ namespace Datanaut.Api.Configuration
                     .AsImplementedInterfaces()
                     .WithScopedLifetime()
             );
+
+            // Register AuthService
+            builder.Services.AddScoped<IAuthService, AuthService>();
 
             return builder;
         }

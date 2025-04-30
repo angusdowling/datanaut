@@ -6,14 +6,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Datanaut.Api.Data
 {
-    public class UserRepository : IRepository<User>
+    public class UserRepository(ApplicationDbContext context) : IRepository<User>
     {
-        private readonly ApplicationDbContext _context;
-
-        public UserRepository(ApplicationDbContext context)
-        {
-            _context = context;
-        }
+        private readonly ApplicationDbContext _context = context;
 
         public async Task<IEnumerable<User>> GetAllAsync()
         {

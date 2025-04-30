@@ -12,14 +12,9 @@ namespace Datanaut.Api.Controllers
     [ApiController]
     [Route("api/[controller]")]
     [Authorize]
-    public class TablesController : ControllerBase
+    public class TablesController(IService<AppTable> tableService) : ControllerBase
     {
-        private readonly IService<AppTable> _tableService;
-
-        public TablesController(IService<AppTable> tableService)
-        {
-            _tableService = tableService;
-        }
+        private readonly IService<AppTable> _tableService = tableService;
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<AppTable>>> GetTables(

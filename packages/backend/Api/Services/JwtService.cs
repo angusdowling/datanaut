@@ -13,20 +13,14 @@ namespace Datanaut.Api.Services
         Task<bool> ValidateTokenAsync(string token);
     }
 
-    public class JwtService : IJwtService
+    public class JwtService(IConfiguration configuration) : IJwtService
     {
-        private readonly string _secretKey;
-        private readonly string _issuer;
-        private readonly string _audience;
-
-        public JwtService(IConfiguration configuration)
-        {
-            _secretKey =
-                configuration["Jwt:SecretKey"] ?? throw new ArgumentNullException("Jwt:SecretKey");
-            _issuer = configuration["Jwt:Issuer"] ?? throw new ArgumentNullException("Jwt:Issuer");
-            _audience =
-                configuration["Jwt:Audience"] ?? throw new ArgumentNullException("Jwt:Audience");
-        }
+        private readonly string _secretKey =
+            configuration["Jwt:SecretKey"] ?? throw new ArgumentNullException("Jwt:SecretKey");
+        private readonly string _issuer =
+            configuration["Jwt:Issuer"] ?? throw new ArgumentNullException("Jwt:Issuer");
+        private readonly string _audience =
+            configuration["Jwt:Audience"] ?? throw new ArgumentNullException("Jwt:Audience");
 
         public Task<string> GenerateTokenAsync(User user)
         {

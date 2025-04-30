@@ -37,6 +37,13 @@ namespace Datanaut.Api.Data
             return token;
         }
 
+        public async Task<LoginToken> UpdateAsync(LoginToken token)
+        {
+            _context.LoginTokens.Update(token);
+            await _context.SaveChangesAsync();
+            return token;
+        }
+
         public async Task DeleteAsync(Guid id)
         {
             var token = await _context.LoginTokens.FindAsync(id);

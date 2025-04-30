@@ -8,14 +8,9 @@ using Datanaut.Models;
 
 namespace Datanaut.Api.Services
 {
-    public class TenantService : IService<Tenant>
+    public class TenantService(IRepository<Tenant> tenantRepository) : IService<Tenant>
     {
-        private readonly IRepository<Tenant> _tenantRepository;
-
-        public TenantService(IRepository<Tenant> tenantRepository)
-        {
-            _tenantRepository = tenantRepository;
-        }
+        private readonly IRepository<Tenant> _tenantRepository = tenantRepository;
 
         public async Task<IEnumerable<Tenant>> GetAllAsync()
         {

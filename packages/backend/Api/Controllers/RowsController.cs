@@ -12,14 +12,9 @@ namespace Datanaut.Api.Controllers
     [ApiController]
     [Route("api/[controller]")]
     [Authorize]
-    public class RowsController : ControllerBase
+    public class RowsController(IService<AppRow> rowService) : ControllerBase
     {
-        private readonly IService<AppRow> _rowService;
-
-        public RowsController(IService<AppRow> rowService)
-        {
-            _rowService = rowService;
-        }
+        private readonly IService<AppRow> _rowService = rowService;
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<AppRow>>> GetRows([FromQuery] Guid tableId)
