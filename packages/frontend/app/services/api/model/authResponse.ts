@@ -4,8 +4,12 @@
  * backend
  * OpenAPI spec version: 1.0
  */
+import type { UserResponse } from "./userResponse";
 
 export interface AuthResponse {
+  user?: UserResponse;
   /** @nullable */
-  token?: string | null;
+  accessToken?: string | null;
+  /** @nullable */
+  refreshToken?: string | null;
 }

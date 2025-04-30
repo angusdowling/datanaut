@@ -15,14 +15,6 @@ export const customFetch = async <
 ): Promise<T> => {
   const fullUrl = url.startsWith("/") ? `${BASE}${url}` : url;
 
-  console.log({
-    ...options,
-    headers: {
-      "Content-Type": "application/json",
-      ...options?.headers,
-    },
-  });
-
   const res = await fetch(fullUrl, {
     ...options,
     headers: {
@@ -30,8 +22,6 @@ export const customFetch = async <
       ...options?.headers,
     },
   });
-
-  console.log(res);
 
   const body = [204, 205, 304].includes(res.status) ? null : await res.text();
   const data = body ? JSON.parse(body) : {};

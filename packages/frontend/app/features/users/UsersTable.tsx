@@ -43,7 +43,6 @@ const columns = [
 ];
 
 export const UsersTable = () => {
-  console.log("users table");
   const { data: response } = useGetUsers();
   const { mutateAsync: patchUser } = usePatchUsersId();
   const [tableData, setTableData] = useState<User[]>();

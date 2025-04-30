@@ -105,9 +105,6 @@ namespace Datanaut.Api.Configuration
                     .WithScopedLifetime()
             );
 
-            // Register AuthService
-            builder.Services.AddScoped<IAuthService, AuthService>();
-
             return builder;
         }
     }

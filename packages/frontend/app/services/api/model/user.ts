@@ -4,6 +4,7 @@
  * backend
  * OpenAPI spec version: 1.0
  */
+import type { RefreshToken } from "./refreshToken";
 import type { Role } from "./role";
 import type { Tenant } from "./tenant";
 
@@ -17,6 +18,8 @@ export interface User {
   name?: string | null;
   createdAt?: string;
   updatedAt?: string;
+  /** @nullable */
+  refreshTokens?: RefreshToken[] | null;
   role?: Role;
   tenant?: Tenant;
 }

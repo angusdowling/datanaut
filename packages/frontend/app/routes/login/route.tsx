@@ -15,7 +15,6 @@ export const action: ActionFunction = async ({ request }) => {
   }
 
   const response = await postAuthLogin({ email });
-  console.log(response);
 
   // Redirect to verify page with email as URL parameter
   return redirect(`/verify?email=${encodeURIComponent(email)}`);

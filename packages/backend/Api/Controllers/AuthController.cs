@@ -64,6 +64,37 @@ namespace Datanaut.Api.Controllers
             return Ok();
         }
 
+        [HttpPost("refresh")]
+        public async Task<ActionResult> Refresh()
+        {
+            var refreshToken = Request.Cookies["__datanaut_refresh_token"];
+            if (string.IsNullOrEmpty(refreshToken))
+            {
+                return Unauthorized();
+            }
+
+            var response = await _authService.RefreshToken(refreshToken);
+            if (response.User == null)
+            {
+                return Unauthorized();
+            }
+
+            // Set the new access token in an HTTP-only cookie
+            Response.Cookies.Append(
+                "__datanaut_access_token",
+                response.AccessToken,
+                new CookieOptions
+                {
+                    HttpOnly = true,
+                    Secure = true,
+                    SameSite = SameSiteMode.Strict,
+                    Expires = DateTimeOffset.UtcNow.AddHours(1),
+                }
+            );
+
+            return Ok();
+        }
+
         [HttpPost("logout")]
         public IActionResult Logout()
         {

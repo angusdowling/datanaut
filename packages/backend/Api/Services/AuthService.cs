@@ -122,20 +122,11 @@ namespace Datanaut.Api.Services
                 return new AuthResponse { User = null };
             }
 
-            // Revoke the current refresh token
-            await _jwtService.RevokeRefreshTokenAsync(token, "Replaced by new token");
-
             // Generate new tokens
             var newAccessToken = await _jwtService.GenerateAccessTokenAsync(user);
             var newRefreshToken = await _jwtService.GenerateRefreshTokenAsync(user);
             newRefreshToken.ReplacedByToken = token.Token;
             await _refreshTokenService.CreateAsync(newRefreshToken);
-
-            // Revoke all descendant tokens
-            await _refreshTokenService.RevokeDescendantsAsync(
-                token,
-                "Revoked due to token refresh"
-            );
 
             return new AuthResponse
             {
