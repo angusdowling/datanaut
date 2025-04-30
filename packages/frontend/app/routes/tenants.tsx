@@ -6,14 +6,14 @@ import {
   QueryClient,
 } from "@tanstack/react-query";
 import { TenantsTable } from "~/features/tenants/TenantsTable";
-import { prefetchGetApiTenants } from "~/services/api/tenants/tenants";
+import { prefetchGetTenants } from "~/services/api/tenants/tenants";
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const cookie = request.headers.get("Cookie");
   const queryClient = new QueryClient();
 
-  await prefetchGetApiTenants(queryClient, {
-    fetch: {
+  await prefetchGetTenants(queryClient, {
+    request: {
       headers: {
         Cookie: cookie ?? "",
       },

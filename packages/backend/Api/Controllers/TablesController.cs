@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Datanaut.Api.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("tables")]
     [Authorize]
     public class TablesController(IService<AppTable> tableService) : ControllerBase
     {
@@ -50,7 +50,7 @@ namespace Datanaut.Api.Controllers
             return Ok(table);
         }
 
-        [HttpPut("{id}")]
+        [HttpPatch("{id}")]
         public async Task<ActionResult<AppTable>> UpdateTable(Guid id, [FromBody] AppTable table)
         {
             if (id != table.Id)

@@ -1,7 +1,7 @@
 import { LoaderFunctionArgs, MetaFunction } from "@remix-run/node";
 import { dehydrate, QueryClient } from "@tanstack/react-query";
 import { UsersTable } from "~/features/users/UsersTable";
-import { prefetchGetApiUsers } from "~/services/api/users/users";
+import { prefetchGetUsers } from "~/services/api/users/users";
 
 export const meta: MetaFunction = () => {
   return [
@@ -14,8 +14,8 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const cookie = request.headers.get("Cookie");
   const queryClient = new QueryClient();
 
-  await prefetchGetApiUsers(queryClient, undefined, {
-    fetch: {
+  await prefetchGetUsers(queryClient, {
+    request: {
       headers: {
         Cookie: cookie ?? "",
       },

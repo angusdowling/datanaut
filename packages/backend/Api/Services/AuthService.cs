@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using Datanaut.Api.Data;
 using Datanaut.Api.Models;
 using Datanaut.Models;
 using Microsoft.Extensions.Configuration;
@@ -14,11 +15,15 @@ namespace Datanaut.Api.Services
     public class AuthService(
         IService<User> userService,
         IService<LoginToken> loginTokenService,
+        IRefreshTokenRepository refreshTokenService,
+        IJwtService jwtService,
         IConfiguration configuration
     ) : IAuthService
     {
         private readonly IService<User> _userService = userService;
         private readonly IService<LoginToken> _loginTokenService = loginTokenService;
+        private readonly IRefreshTokenRepository _refreshTokenService = refreshTokenService;
+        private readonly IJwtService _jwtService = jwtService;
         private readonly IConfiguration _configuration = configuration;
 
         public async Task<LoginResponse> RequestLoginCode(string email)
@@ -69,7 +74,7 @@ namespace Datanaut.Api.Services
 
             if (loginToken == null)
             {
-                return new AuthResponse { Token = string.Empty };
+                return new AuthResponse { User = null };
             }
 
             // Mark token as used
@@ -81,38 +86,68 @@ namespace Datanaut.Api.Services
             var user = users.FirstOrDefault();
             if (user == null)
             {
-                return new AuthResponse { Token = string.Empty };
+                return new AuthResponse { User = null };
             }
 
-            // Generate JWT token
-            var token = GenerateJwtToken(user);
-            return new AuthResponse { Token = token };
+            // Generate tokens
+            var accessToken = await _jwtService.GenerateAccessTokenAsync(user);
+            var refreshToken = await _jwtService.GenerateRefreshTokenAsync(user);
+            await _refreshTokenService.CreateAsync(refreshToken);
+
+            return new AuthResponse
+            {
+                User = new UserResponse
+                {
+                    Id = user.Id,
+                    Email = user.Email,
+                    Name = user.Name,
+                },
+                AccessToken = accessToken,
+                RefreshToken = refreshToken.Token,
+            };
         }
 
-        private string GenerateJwtToken(User user)
+        public async Task<AuthResponse> RefreshToken(string refreshToken)
         {
-            var securityKey = new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable("JWT_SECRET_KEY")!)
-            );
-            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
-
-            var claims = new[]
+            var token = await _refreshTokenService.GetByTokenAsync(refreshToken);
+            if (token == null || token.Revoked || token.ExpiresAt < DateTime.UtcNow)
             {
-                new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
-                new Claim(JwtRegisteredClaimNames.Email, user.Email),
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                new Claim(ClaimTypes.Role, user.RoleId.ToString()),
-            };
+                return new AuthResponse { User = null };
+            }
 
-            var token = new JwtSecurityToken(
-                issuer: _configuration["Jwt:Issuer"],
-                audience: _configuration["Jwt:Audience"],
-                claims: claims,
-                expires: DateTime.Now.AddHours(1),
-                signingCredentials: credentials
+            // Get user
+            var user = await _userService.GetByIdAsync(token.UserId);
+            if (user == null)
+            {
+                return new AuthResponse { User = null };
+            }
+
+            // Revoke the current refresh token
+            await _jwtService.RevokeRefreshTokenAsync(token, "Replaced by new token");
+
+            // Generate new tokens
+            var newAccessToken = await _jwtService.GenerateAccessTokenAsync(user);
+            var newRefreshToken = await _jwtService.GenerateRefreshTokenAsync(user);
+            newRefreshToken.ReplacedByToken = token.Token;
+            await _refreshTokenService.CreateAsync(newRefreshToken);
+
+            // Revoke all descendant tokens
+            await _refreshTokenService.RevokeDescendantsAsync(
+                token,
+                "Revoked due to token refresh"
             );
 
-            return new JwtSecurityTokenHandler().WriteToken(token);
+            return new AuthResponse
+            {
+                User = new UserResponse
+                {
+                    Id = user.Id,
+                    Email = user.Email,
+                    Name = user.Name,
+                },
+                AccessToken = newAccessToken,
+                RefreshToken = newRefreshToken.Token,
+            };
         }
     }
 }

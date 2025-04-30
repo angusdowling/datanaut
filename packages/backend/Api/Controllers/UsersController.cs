@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Datanaut.Api.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("users")]
     [Authorize]
     public class UsersController(IService<User> userService) : ControllerBase
     {
@@ -54,7 +54,7 @@ namespace Datanaut.Api.Controllers
             return CreatedAtAction(nameof(GetUser), new { id = createdUser.Id }, createdUser);
         }
 
-        [HttpPut("{id}")]
+        [HttpPatch("{id}")]
         public async Task<ActionResult<User>> UpdateUser(Guid id, [FromBody] User user)
         {
             if (id != user.Id)

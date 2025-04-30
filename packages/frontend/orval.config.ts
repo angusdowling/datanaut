@@ -9,7 +9,8 @@ export default defineConfig({
       client: "react-query",
       httpClient: "fetch",
       baseUrl: {
-        getBaseUrlFromSpecification: true,
+        getBaseUrlFromSpecification: false,
+        baseUrl: "/api",
       },
       mock: false,
       override: {
@@ -17,16 +18,18 @@ export default defineConfig({
         query: {
           useQuery: true,
           usePrefetch: true,
-          // useInfinite: true,
-          // useInfiniteQueryParam: "nextId",
           options: {
             staleTime: 10000,
           },
         },
+        mutator: {
+          path: "./app/utilities/api.ts",
+          name: "customFetch",
+        },
       },
     },
     input: {
-      target: "http://localhost:5173/api/swagger/v1/swagger",
+      target: "http://localhost:5104/swagger/v1/swagger.json",
     },
     hooks: {
       afterAllFilesWrite: 'prettier --write "app/services/api/**/*.ts"',

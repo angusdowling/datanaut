@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Datanaut.Api.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("columns")]
     [Authorize]
     public class ColumnsController(IService<AppColumn> columnService) : ControllerBase
     {
@@ -63,7 +63,7 @@ namespace Datanaut.Api.Controllers
             return Ok(column);
         }
 
-        [HttpPut("{id}")]
+        [HttpPatch("{id}")]
         public async Task<ActionResult<AppColumn>> UpdateColumn(
             Guid id,
             [FromBody] AppColumn column

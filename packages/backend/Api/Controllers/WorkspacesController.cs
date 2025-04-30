@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Datanaut.Api.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("workspaces")]
     [Authorize]
     public class WorkspacesController(IService<Workspace> workspaceService) : ControllerBase
     {
@@ -64,7 +64,7 @@ namespace Datanaut.Api.Controllers
             return Ok(workspace);
         }
 
-        [HttpPut("{id}")]
+        [HttpPatch("{id}")]
         public async Task<ActionResult<Workspace>> UpdateWorkspace(
             Guid id,
             [FromBody] Workspace workspace

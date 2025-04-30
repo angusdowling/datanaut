@@ -8,5 +8,6 @@ namespace Datanaut.Api.Services
     {
         Task<LoginResponse> RequestLoginCode(string email);
         Task<AuthResponse> VerifyLoginCode(string email, string code);
+        Task<AuthResponse> RefreshToken(string refreshToken);
     }
 }

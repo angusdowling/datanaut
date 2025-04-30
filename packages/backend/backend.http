@@ -1,25 +1,25 @@
 @backend_HostAddress = http://localhost:5104
 
 ### Users
-GET {{backend_HostAddress}}/api/users
+GET {{backend_HostAddress}}/users
 Accept: application/json
 
 ### Tenants
-GET {{backend_HostAddress}}/api/tenants
+GET {{backend_HostAddress}}/tenants
 Accept: application/json
 
 ### Workspaces
-GET {{backend_HostAddress}}/api/workspaces
+GET {{backend_HostAddress}}/workspaces
 Accept: application/json
 
 ### Tables
-GET {{backend_HostAddress}}/api/tables
+GET {{backend_HostAddress}}/tables
 Accept: application/json
 
 ### Columns
-GET {{backend_HostAddress}}/api/columns
+GET {{backend_HostAddress}}/columns
 Accept: application/json
 
 ### Rows
-GET {{backend_HostAddress}}/api/rows
+GET {{backend_HostAddress}}/rows
 Accept: application/json

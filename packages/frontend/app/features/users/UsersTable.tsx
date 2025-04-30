@@ -1,10 +1,7 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useState } from "react";
 import { DataTable } from "~/components/DataTable";
 import { User } from "~/services/api/model";
-import {
-  useGetApiUsers,
-  usePatchApiUsersUserId,
-} from "~/services/api/users/users";
+import { useGetUsers, usePatchUsersId } from "~/services/api/users/users";
 import { debounce } from "~/utilities/debounce";
 
 const columns = [
@@ -14,12 +11,12 @@ const columns = [
     type: "text" as "text",
   },
   {
-    accessor: "tenant_id" as "tenant_id",
+    accessor: "tenantId" as "tenantId",
     header: "Tenant ID",
     type: "text" as "text",
   },
   {
-    accessor: "role_id" as "role_id",
+    accessor: "roleId" as "roleId",
     header: "Role ID",
     type: "text" as "text",
   },
@@ -34,20 +31,21 @@ const columns = [
     type: "text" as "text",
   },
   {
-    accessor: "created_at" as "created_at",
+    accessor: "createdAt" as "createdAt",
     header: "Created At",
     type: "text" as "text",
   },
   {
-    accessor: "updated_at" as "updated_at",
+    accessor: "updatedAt" as "updatedAt",
     header: "Updated At",
     type: "text" as "text",
   },
 ];
 
 export const UsersTable = () => {
-  const { data: response } = useGetApiUsers();
-  const { mutateAsync: patchUser } = usePatchApiUsersUserId();
+  console.log("users table");
+  const { data: response } = useGetUsers();
+  const { mutateAsync: patchUser } = usePatchUsersId();
   const [tableData, setTableData] = useState<User[]>();
 
   // Raw patch function
@@ -61,11 +59,9 @@ export const UsersTable = () => {
 
     if (recordId) {
       await patchUser({
-        userId: recordId,
+        id: recordId,
         data: {
-          data: {
-            [columnId]: value,
-          },
+          [columnId]: value,
         },
       });
     }

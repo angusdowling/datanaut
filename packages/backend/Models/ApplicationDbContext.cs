@@ -27,6 +27,8 @@ public partial class ApplicationDbContext : DbContext
 
     public virtual DbSet<Migration> Migrations { get; set; }
 
+    public virtual DbSet<RefreshToken> RefreshTokens { get; set; }
+
     public virtual DbSet<Role> Roles { get; set; }
 
     public virtual DbSet<Tenant> Tenants { get; set; }
@@ -190,6 +192,41 @@ public partial class ApplicationDbContext : DbContext
             entity.HasOne(d => d.PreviousHashNavigation).WithMany(p => p.InversePreviousHashNavigation)
                 .HasForeignKey(d => d.PreviousHash)
                 .HasConstraintName("migrations_previous_hash_fkey");
+        });
+
+        modelBuilder.Entity<RefreshToken>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("refresh_tokens_pkey");
+
+            entity.ToTable("refresh_tokens");
+
+            entity.HasIndex(e => e.ReplacedByToken, "idx_refresh_tokens_replaced_by_token");
+
+            entity.HasIndex(e => e.Token, "idx_refresh_tokens_token");
+
+            entity.HasIndex(e => e.UserId, "idx_refresh_tokens_user_id");
+
+            entity.HasIndex(e => e.Token, "refresh_tokens_token_key").IsUnique();
+
+            entity.Property(e => e.Id)
+                .HasDefaultValueSql("uuid_generate_v4()")
+                .HasColumnName("id");
+            entity.Property(e => e.CreatedAt)
+                .HasDefaultValueSql("CURRENT_TIMESTAMP")
+                .HasColumnName("created_at");
+            entity.Property(e => e.ExpiresAt).HasColumnName("expires_at");
+            entity.Property(e => e.ReasonRevoked).HasColumnName("reason_revoked");
+            entity.Property(e => e.ReplacedByToken).HasColumnName("replaced_by_token");
+            entity.Property(e => e.Revoked)
+                .HasDefaultValue(false)
+                .HasColumnName("revoked");
+            entity.Property(e => e.RevokedAt).HasColumnName("revoked_at");
+            entity.Property(e => e.Token).HasColumnName("token");
+            entity.Property(e => e.UserId).HasColumnName("user_id");
+
+            entity.HasOne(d => d.User).WithMany(p => p.RefreshTokens)
+                .HasForeignKey(d => d.UserId)
+                .HasConstraintName("refresh_tokens_user_id_fkey");
         });
 
         modelBuilder.Entity<Role>(entity =>

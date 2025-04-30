@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Datanaut.Api.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("tenants")]
     [Authorize]
     public class TenantsController(TenantService tenantService) : ControllerBase
     {
@@ -46,7 +46,7 @@ namespace Datanaut.Api.Controllers
             return Ok(tenant);
         }
 
-        [HttpPut("{id}")]
+        [HttpPatch("{id}")]
         public async Task<ActionResult<Tenant>> UpdateTenant(Guid id, [FromBody] Tenant tenant)
         {
             if (id != tenant.Id)

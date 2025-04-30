@@ -2,12 +2,13 @@ using System.Threading.Tasks;
 using Datanaut.Api.Models;
 using Datanaut.Api.Services;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Datanaut.Api.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("auth")]
     [AllowAnonymous]
     public class AuthController(IAuthService authService) : ControllerBase
     {
@@ -28,11 +29,45 @@ namespace Datanaut.Api.Controllers
         public async Task<ActionResult<AuthResponse>> Verify([FromBody] VerifyRequest request)
         {
             var response = await _authService.VerifyLoginCode(request.Email, request.Code);
-            if (string.IsNullOrEmpty(response.Token))
+            if (response.User == null)
             {
                 return Unauthorized(response);
             }
-            return Ok(response);
+
+            // Set the JWT in an HTTP-only cookie
+            Response.Cookies.Append(
+                "__datanaut_access_token",
+                response.AccessToken,
+                new CookieOptions
+                {
+                    HttpOnly = true,
+                    Secure = true,
+                    SameSite = SameSiteMode.Strict,
+                    Expires = DateTimeOffset.UtcNow.AddHours(1),
+                }
+            );
+
+            // Set the JWT in an HTTP-only cookie
+            Response.Cookies.Append(
+                "__datanaut_refresh_token",
+                response.RefreshToken,
+                new CookieOptions
+                {
+                    HttpOnly = true,
+                    Secure = true,
+                    SameSite = SameSiteMode.Strict,
+                    Expires = DateTimeOffset.UtcNow.AddDays(7),
+                }
+            );
+
+            // Return only the user data, not the token
+            return Ok();
+        }
+
+        [HttpPost("logout")]
+        public IActionResult Logout()
+        {
+            return Ok();
         }
     }
 }

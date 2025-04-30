@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { DataTable } from "~/components/DataTable";
-import { useGetApiTenants } from "~/services/api/tenants/tenants";
+import { useGetTenants } from "~/services/api/tenants/tenants";
 
 const columns = [
   {
@@ -14,19 +14,19 @@ const columns = [
     type: "text" as "text",
   },
   {
-    accessor: "created_at" as "created_at",
+    accessor: "createdAt" as "createdAt",
     header: "Created At",
     type: "text" as "text",
   },
   {
-    accessor: "updated_at" as "updated_at",
+    accessor: "updatedAt" as "updatedAt",
     header: "Updated At",
     type: "text" as "text",
   },
 ];
 
 export const TenantsTable = () => {
-  const { data: response } = useGetApiTenants();
+  const { data: response } = useGetTenants();
   const [tableData, setTableData] = useState(() => response?.data || []);
 
   return (

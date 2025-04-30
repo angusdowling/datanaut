@@ -1,6 +1,6 @@
 import { Form, useActionData, useNavigation } from "@remix-run/react";
 import { ActionFunction, redirect } from "@remix-run/node";
-import { postApiLogin } from "~/services/api/authentication/authentication";
+import { postAuthLogin } from "~/services/api/auth/auth";
 
 type ActionData = {
   error?: string;
@@ -14,14 +14,11 @@ export const action: ActionFunction = async ({ request }) => {
     throw new Response("Email is required", { status: 400 });
   }
 
-  const response = await postApiLogin({ email });
+  const response = await postAuthLogin({ email });
+  console.log(response);
 
-  if (response.status === 400) {
-    throw new Response("Failed to send login code", { status: 400 });
-  }
-
-  // Redirect to verify page
-  return redirect(`/verify`);
+  // Redirect to verify page with email as URL parameter
+  return redirect(`/verify?email=${encodeURIComponent(email)}`);
 };
 
 export default function LoginPage() {

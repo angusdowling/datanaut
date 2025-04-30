@@ -21,4 +21,14 @@ export default defineConfig({
     }),
     tsconfigPaths(),
   ],
+  server: {
+    proxy: {
+      "/api": {
+        target: process.env.BACKEND_UPSTREAM ?? "http://localhost:5104",
+        changeOrigin: true,
+        secure: false,
+        rewrite: (path) => path.replace(/^\/api/, ""),
+      },
+    },
+  },
 });

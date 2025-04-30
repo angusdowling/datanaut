@@ -55,6 +55,23 @@ namespace Datanaut.Api.Configuration
                         ValidateLifetime = true,
                         ClockSkew = TimeSpan.Zero,
                     };
+
+                    options.Events = new JwtBearerEvents
+                    {
+                        OnMessageReceived = context =>
+                        {
+                            if (
+                                context.Request.Cookies.TryGetValue(
+                                    "__datanaut_access_token",
+                                    out var token
+                                )
+                            )
+                            {
+                                context.Token = token;
+                            }
+                            return Task.CompletedTask;
+                        },
+                    };
                 });
 
             return builder;

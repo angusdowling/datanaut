@@ -14,22 +14,22 @@ const columns = [
     type: "text" as "text",
   },
   {
-    accessor: "workspace_id" as "workspace_id",
+    accessor: "workspaceId" as "workspaceId",
     header: "Workspace ID",
     type: "text" as "text",
   },
   {
-    accessor: "created_by" as "created_by",
+    accessor: "createdBy" as "createdBy",
     header: "Created By",
     type: "text" as "text",
   },
   {
-    accessor: "created_at" as "created_at",
+    accessor: "createdAt" as "createdAt",
     header: "Created At",
     type: "text" as "text",
   },
   {
-    accessor: "updated_at" as "updated_at",
+    accessor: "updatedAt" as "updatedAt",
     header: "Updated At",
     type: "text" as "text",
   },

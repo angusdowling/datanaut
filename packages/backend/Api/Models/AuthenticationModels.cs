@@ -13,9 +13,18 @@ namespace Datanaut.Api.Models
         public Guid RoleId { get; set; }
     }
 
+    public class UserResponse
+    {
+        public Guid Id { get; set; }
+        public string Email { get; set; } = string.Empty;
+        public string Name { get; set; } = string.Empty;
+    }
+
     public class AuthResponse
     {
-        public string Token { get; set; } = string.Empty;
+        public UserResponse? User { get; set; }
+        public string AccessToken { get; set; } = string.Empty;
+        public string RefreshToken { get; set; } = string.Empty;
     }
 
     public class VerifyRequest

@@ -1,6 +1,6 @@
 import { Form, useActionData, useNavigation } from "@remix-run/react";
 import { ActionFunction, redirect } from "@remix-run/node";
-import { postApiVerify } from "~/services/api/authentication/authentication";
+import { postAuthVerify } from "~/services/api/auth/auth";
 
 type ActionData = {
   error?: string;
@@ -14,13 +14,14 @@ export const action: ActionFunction = async ({ request }) => {
     return Response.json({ error: "Verification code is required" });
   }
 
-  const response = await postApiVerify({ code });
+  // Get email from URL parameters
+  const email = new URL(request.url).searchParams.get("email");
 
-  console.log(response);
-
-  if (response.data?.status === 400) {
-    return Response.json({ error: "Invalid or expired code" });
+  if (!email) {
+    return Response.json({ error: "Email not found in URL parameters" });
   }
+
+  const response = await postAuthVerify({ email, code });
 
   // After successful verification, redirect to the home page
   // while preserving the authentication headers
@@ -29,6 +30,7 @@ export const action: ActionFunction = async ({ request }) => {
   });
 
   const setCookie = response.headers.get("set-cookie");
+
   if (setCookie) {
     redirectResponse.headers.set("set-cookie", setCookie);
   }
@@ -57,7 +59,7 @@ export default function VerifyPage() {
               autoComplete="off"
             />
           </div>
-          <p>We've sent a code</p>
+          <p>We've sent a code to your email</p>
         </div>
 
         <button type="submit" disabled={isSubmitting}>
