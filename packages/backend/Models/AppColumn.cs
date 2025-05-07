@@ -25,5 +25,7 @@ public partial class AppColumn
 
     public DateTime UpdatedAt { get; set; }
 
+    public virtual ICollection<AppCell> AppCells { get; set; } = new List<AppCell>();
+
     public virtual AppTable Table { get; set; } = null!;
 }

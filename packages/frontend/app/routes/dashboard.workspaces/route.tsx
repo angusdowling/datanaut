@@ -10,12 +10,12 @@ export const meta: MetaFunction = () => {
 
 export default function DashboardWorkspaces() {
   return (
-    <div className="workspaces-container">
+    <div>
       <header>
         <h2>Workspaces</h2>
         <p>Manage your workspaces</p>
       </header>
-      <div className="workspaces-content">
+      <div>
         <WorkspacesTable />
       </div>
     </div>

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using AutoMapper;
 using Datanaut.Api.Models;
 using Datanaut.Api.Services;
 using Datanaut.Models;
@@ -12,52 +13,64 @@ namespace Datanaut.Api.Controllers
     [ApiController]
     [Route("rows")]
     [Authorize]
-    public class RowsController(IService<AppRow> rowService) : ControllerBase
+    public class RowsController : ControllerBase
     {
-        private readonly IService<AppRow> _rowService = rowService;
+        private readonly IService<AppRow> _rowService;
+        private readonly IMapper _mapper;
+
+        public RowsController(IService<AppRow> rowService, IMapper mapper)
+        {
+            _rowService = rowService;
+            _mapper = mapper;
+        }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<AppRow>>> GetRows([FromQuery] Guid tableId)
+        public async Task<ActionResult<IEnumerable<RowDto>>> GetRows([FromQuery] Guid tableId)
         {
             var rows = await _rowService.FindAsync(r => r.TableId == tableId);
-            return Ok(rows);
+            return Ok(_mapper.Map<IEnumerable<RowDto>>(rows));
         }
 
         [HttpPost]
-        public async Task<ActionResult<AppRow>> CreateRow([FromBody] CreateRowRequest request)
+        public async Task<ActionResult<RowDto>> CreateRow([FromBody] CreateRowDto request)
         {
-            if (string.IsNullOrEmpty(request?.Data) || request.TableId == Guid.Empty)
+            if (request.TableId == Guid.Empty)
             {
-                return BadRequest("Data and TableId are required");
+                return BadRequest("TableId is required");
             }
 
-            var row = new AppRow { Data = request.Data, TableId = request.TableId };
-
+            var row = _mapper.Map<AppRow>(request);
             var createdRow = await _rowService.CreateAsync(row);
-            return CreatedAtAction(nameof(GetRow), new { id = createdRow.Id }, createdRow);
+            return CreatedAtAction(
+                nameof(GetRow),
+                new { id = createdRow.Id },
+                _mapper.Map<RowDto>(createdRow)
+            );
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<AppRow>> GetRow(Guid id)
+        public async Task<ActionResult<RowDto>> GetRow(Guid id)
         {
             var row = await _rowService.GetByIdAsync(id);
             if (row == null)
             {
                 return NotFound();
             }
-            return Ok(row);
+            return Ok(_mapper.Map<RowDto>(row));
         }
 
         [HttpPatch("{id}")]
-        public async Task<ActionResult<AppRow>> UpdateRow(Guid id, [FromBody] AppRow row)
+        public async Task<ActionResult<RowDto>> UpdateRow(Guid id, [FromBody] UpdateRowDto request)
         {
-            if (id != row.Id)
+            var existingRow = await _rowService.GetByIdAsync(id);
+            if (existingRow == null)
             {
-                return BadRequest("ID mismatch");
+                return NotFound();
             }
 
-            var updatedRow = await _rowService.UpdateAsync(row);
-            return Ok(updatedRow);
+            _mapper.Map(request, existingRow);
+            var updatedRow = await _rowService.UpdateAsync(existingRow);
+            return Ok(_mapper.Map<RowDto>(updatedRow));
         }
 
         [HttpDelete("{id}")]

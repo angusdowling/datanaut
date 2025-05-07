@@ -20,7 +20,7 @@ import type {
   UseQueryResult,
 } from "@tanstack/react-query";
 
-import type { CreateTenantRequest, Tenant } from ".././model";
+import type { CreateTenantDto, Tenant } from ".././model";
 
 import { customFetch } from "../../../utilities/api";
 
@@ -195,14 +195,14 @@ export const getPostTenantsUrl = () => {
 };
 
 export const postTenants = async (
-  createTenantRequest: CreateTenantRequest,
+  createTenantDto: CreateTenantDto,
   options?: RequestInit,
 ): Promise<postTenantsResponse> => {
   return customFetch<postTenantsResponse>(getPostTenantsUrl(), {
     ...options,
     method: "POST",
     headers: { "Content-Type": "application/json", ...options?.headers },
-    body: JSON.stringify(createTenantRequest),
+    body: JSON.stringify(createTenantDto),
   });
 };
 
@@ -213,14 +213,14 @@ export const getPostTenantsMutationOptions = <
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof postTenants>>,
     TError,
-    { data: CreateTenantRequest },
+    { data: CreateTenantDto },
     TContext
   >;
   request?: SecondParameter<typeof customFetch>;
 }): UseMutationOptions<
   Awaited<ReturnType<typeof postTenants>>,
   TError,
-  { data: CreateTenantRequest },
+  { data: CreateTenantDto },
   TContext
 > => {
   const mutationKey = ["postTenants"];
@@ -234,7 +234,7 @@ export const getPostTenantsMutationOptions = <
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof postTenants>>,
-    { data: CreateTenantRequest }
+    { data: CreateTenantDto }
   > = (props) => {
     const { data } = props ?? {};
 
@@ -247,21 +247,21 @@ export const getPostTenantsMutationOptions = <
 export type PostTenantsMutationResult = NonNullable<
   Awaited<ReturnType<typeof postTenants>>
 >;
-export type PostTenantsMutationBody = CreateTenantRequest;
+export type PostTenantsMutationBody = CreateTenantDto;
 export type PostTenantsMutationError = unknown;
 
 export const usePostTenants = <TError = unknown, TContext = unknown>(options?: {
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof postTenants>>,
     TError,
-    { data: CreateTenantRequest },
+    { data: CreateTenantDto },
     TContext
   >;
   request?: SecondParameter<typeof customFetch>;
 }): UseMutationResult<
   Awaited<ReturnType<typeof postTenants>>,
   TError,
-  { data: CreateTenantRequest },
+  { data: CreateTenantDto },
   TContext
 > => {
   const mutationOptions = getPostTenantsMutationOptions(options);

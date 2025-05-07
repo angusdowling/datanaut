@@ -21,9 +21,10 @@ import type {
 } from "@tanstack/react-query";
 
 import type {
-  AppColumn,
-  CreateColumnRequest,
+  ColumnDto,
+  CreateColumnDto,
   GetColumnsParams,
+  UpdateColumnDto,
 } from ".././model";
 
 import { customFetch } from "../../../utilities/api";
@@ -31,7 +32,7 @@ import { customFetch } from "../../../utilities/api";
 type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
 export type getColumnsResponse200 = {
-  data: AppColumn[];
+  data: ColumnDto[];
   status: 200;
 };
 
@@ -213,7 +214,7 @@ export const prefetchGetColumns = async <
 };
 
 export type postColumnsResponse200 = {
-  data: AppColumn;
+  data: ColumnDto;
   status: 200;
 };
 
@@ -228,14 +229,14 @@ export const getPostColumnsUrl = () => {
 };
 
 export const postColumns = async (
-  createColumnRequest: CreateColumnRequest,
+  createColumnDto: CreateColumnDto,
   options?: RequestInit,
 ): Promise<postColumnsResponse> => {
   return customFetch<postColumnsResponse>(getPostColumnsUrl(), {
     ...options,
     method: "POST",
     headers: { "Content-Type": "application/json", ...options?.headers },
-    body: JSON.stringify(createColumnRequest),
+    body: JSON.stringify(createColumnDto),
   });
 };
 
@@ -246,14 +247,14 @@ export const getPostColumnsMutationOptions = <
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof postColumns>>,
     TError,
-    { data: CreateColumnRequest },
+    { data: CreateColumnDto },
     TContext
   >;
   request?: SecondParameter<typeof customFetch>;
 }): UseMutationOptions<
   Awaited<ReturnType<typeof postColumns>>,
   TError,
-  { data: CreateColumnRequest },
+  { data: CreateColumnDto },
   TContext
 > => {
   const mutationKey = ["postColumns"];
@@ -267,7 +268,7 @@ export const getPostColumnsMutationOptions = <
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof postColumns>>,
-    { data: CreateColumnRequest }
+    { data: CreateColumnDto }
   > = (props) => {
     const { data } = props ?? {};
 
@@ -280,21 +281,21 @@ export const getPostColumnsMutationOptions = <
 export type PostColumnsMutationResult = NonNullable<
   Awaited<ReturnType<typeof postColumns>>
 >;
-export type PostColumnsMutationBody = CreateColumnRequest;
+export type PostColumnsMutationBody = CreateColumnDto;
 export type PostColumnsMutationError = unknown;
 
 export const usePostColumns = <TError = unknown, TContext = unknown>(options?: {
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof postColumns>>,
     TError,
-    { data: CreateColumnRequest },
+    { data: CreateColumnDto },
     TContext
   >;
   request?: SecondParameter<typeof customFetch>;
 }): UseMutationResult<
   Awaited<ReturnType<typeof postColumns>>,
   TError,
-  { data: CreateColumnRequest },
+  { data: CreateColumnDto },
   TContext
 > => {
   const mutationOptions = getPostColumnsMutationOptions(options);
@@ -302,7 +303,7 @@ export const usePostColumns = <TError = unknown, TContext = unknown>(options?: {
   return useMutation(mutationOptions);
 };
 export type getColumnsIdResponse200 = {
-  data: AppColumn;
+  data: ColumnDto;
   status: 200;
 };
 
@@ -473,7 +474,7 @@ export const prefetchGetColumnsId = async <
 };
 
 export type patchColumnsIdResponse200 = {
-  data: AppColumn;
+  data: ColumnDto;
   status: 200;
 };
 
@@ -489,14 +490,14 @@ export const getPatchColumnsIdUrl = (id: string) => {
 
 export const patchColumnsId = async (
   id: string,
-  appColumn: AppColumn,
+  updateColumnDto: UpdateColumnDto,
   options?: RequestInit,
 ): Promise<patchColumnsIdResponse> => {
   return customFetch<patchColumnsIdResponse>(getPatchColumnsIdUrl(id), {
     ...options,
     method: "PATCH",
     headers: { "Content-Type": "application/json", ...options?.headers },
-    body: JSON.stringify(appColumn),
+    body: JSON.stringify(updateColumnDto),
   });
 };
 
@@ -507,14 +508,14 @@ export const getPatchColumnsIdMutationOptions = <
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof patchColumnsId>>,
     TError,
-    { id: string; data: AppColumn },
+    { id: string; data: UpdateColumnDto },
     TContext
   >;
   request?: SecondParameter<typeof customFetch>;
 }): UseMutationOptions<
   Awaited<ReturnType<typeof patchColumnsId>>,
   TError,
-  { id: string; data: AppColumn },
+  { id: string; data: UpdateColumnDto },
   TContext
 > => {
   const mutationKey = ["patchColumnsId"];
@@ -528,7 +529,7 @@ export const getPatchColumnsIdMutationOptions = <
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof patchColumnsId>>,
-    { id: string; data: AppColumn }
+    { id: string; data: UpdateColumnDto }
   > = (props) => {
     const { id, data } = props ?? {};
 
@@ -541,7 +542,7 @@ export const getPatchColumnsIdMutationOptions = <
 export type PatchColumnsIdMutationResult = NonNullable<
   Awaited<ReturnType<typeof patchColumnsId>>
 >;
-export type PatchColumnsIdMutationBody = AppColumn;
+export type PatchColumnsIdMutationBody = UpdateColumnDto;
 export type PatchColumnsIdMutationError = unknown;
 
 export const usePatchColumnsId = <
@@ -551,14 +552,14 @@ export const usePatchColumnsId = <
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof patchColumnsId>>,
     TError,
-    { id: string; data: AppColumn },
+    { id: string; data: UpdateColumnDto },
     TContext
   >;
   request?: SecondParameter<typeof customFetch>;
 }): UseMutationResult<
   Awaited<ReturnType<typeof patchColumnsId>>,
   TError,
-  { id: string; data: AppColumn },
+  { id: string; data: UpdateColumnDto },
   TContext
 > => {
   const mutationOptions = getPatchColumnsIdMutationOptions(options);

@@ -21,9 +21,10 @@ import type {
 } from "@tanstack/react-query";
 
 import type {
-  CreateWorkspaceRequest,
+  CreateWorkspaceDto,
   GetWorkspacesParams,
-  Workspace,
+  UpdateWorkspaceDto,
+  WorkspaceDto,
 } from ".././model";
 
 import { customFetch } from "../../../utilities/api";
@@ -31,7 +32,7 @@ import { customFetch } from "../../../utilities/api";
 type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
 export type getWorkspacesResponse200 = {
-  data: Workspace[];
+  data: WorkspaceDto[];
   status: 200;
 };
 
@@ -213,7 +214,7 @@ export const prefetchGetWorkspaces = async <
 };
 
 export type postWorkspacesResponse200 = {
-  data: Workspace;
+  data: WorkspaceDto;
   status: 200;
 };
 
@@ -228,14 +229,14 @@ export const getPostWorkspacesUrl = () => {
 };
 
 export const postWorkspaces = async (
-  createWorkspaceRequest: CreateWorkspaceRequest,
+  createWorkspaceDto: CreateWorkspaceDto,
   options?: RequestInit,
 ): Promise<postWorkspacesResponse> => {
   return customFetch<postWorkspacesResponse>(getPostWorkspacesUrl(), {
     ...options,
     method: "POST",
     headers: { "Content-Type": "application/json", ...options?.headers },
-    body: JSON.stringify(createWorkspaceRequest),
+    body: JSON.stringify(createWorkspaceDto),
   });
 };
 
@@ -246,14 +247,14 @@ export const getPostWorkspacesMutationOptions = <
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof postWorkspaces>>,
     TError,
-    { data: CreateWorkspaceRequest },
+    { data: CreateWorkspaceDto },
     TContext
   >;
   request?: SecondParameter<typeof customFetch>;
 }): UseMutationOptions<
   Awaited<ReturnType<typeof postWorkspaces>>,
   TError,
-  { data: CreateWorkspaceRequest },
+  { data: CreateWorkspaceDto },
   TContext
 > => {
   const mutationKey = ["postWorkspaces"];
@@ -267,7 +268,7 @@ export const getPostWorkspacesMutationOptions = <
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof postWorkspaces>>,
-    { data: CreateWorkspaceRequest }
+    { data: CreateWorkspaceDto }
   > = (props) => {
     const { data } = props ?? {};
 
@@ -280,7 +281,7 @@ export const getPostWorkspacesMutationOptions = <
 export type PostWorkspacesMutationResult = NonNullable<
   Awaited<ReturnType<typeof postWorkspaces>>
 >;
-export type PostWorkspacesMutationBody = CreateWorkspaceRequest;
+export type PostWorkspacesMutationBody = CreateWorkspaceDto;
 export type PostWorkspacesMutationError = unknown;
 
 export const usePostWorkspaces = <
@@ -290,14 +291,14 @@ export const usePostWorkspaces = <
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof postWorkspaces>>,
     TError,
-    { data: CreateWorkspaceRequest },
+    { data: CreateWorkspaceDto },
     TContext
   >;
   request?: SecondParameter<typeof customFetch>;
 }): UseMutationResult<
   Awaited<ReturnType<typeof postWorkspaces>>,
   TError,
-  { data: CreateWorkspaceRequest },
+  { data: CreateWorkspaceDto },
   TContext
 > => {
   const mutationOptions = getPostWorkspacesMutationOptions(options);
@@ -305,7 +306,7 @@ export const usePostWorkspaces = <
   return useMutation(mutationOptions);
 };
 export type getWorkspacesIdResponse200 = {
-  data: Workspace;
+  data: WorkspaceDto;
   status: 200;
 };
 
@@ -500,7 +501,7 @@ export const prefetchGetWorkspacesId = async <
 };
 
 export type patchWorkspacesIdResponse200 = {
-  data: Workspace;
+  data: WorkspaceDto;
   status: 200;
 };
 
@@ -516,14 +517,14 @@ export const getPatchWorkspacesIdUrl = (id: string) => {
 
 export const patchWorkspacesId = async (
   id: string,
-  workspace: Workspace,
+  updateWorkspaceDto: UpdateWorkspaceDto,
   options?: RequestInit,
 ): Promise<patchWorkspacesIdResponse> => {
   return customFetch<patchWorkspacesIdResponse>(getPatchWorkspacesIdUrl(id), {
     ...options,
     method: "PATCH",
     headers: { "Content-Type": "application/json", ...options?.headers },
-    body: JSON.stringify(workspace),
+    body: JSON.stringify(updateWorkspaceDto),
   });
 };
 
@@ -534,14 +535,14 @@ export const getPatchWorkspacesIdMutationOptions = <
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof patchWorkspacesId>>,
     TError,
-    { id: string; data: Workspace },
+    { id: string; data: UpdateWorkspaceDto },
     TContext
   >;
   request?: SecondParameter<typeof customFetch>;
 }): UseMutationOptions<
   Awaited<ReturnType<typeof patchWorkspacesId>>,
   TError,
-  { id: string; data: Workspace },
+  { id: string; data: UpdateWorkspaceDto },
   TContext
 > => {
   const mutationKey = ["patchWorkspacesId"];
@@ -555,7 +556,7 @@ export const getPatchWorkspacesIdMutationOptions = <
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof patchWorkspacesId>>,
-    { id: string; data: Workspace }
+    { id: string; data: UpdateWorkspaceDto }
   > = (props) => {
     const { id, data } = props ?? {};
 
@@ -568,7 +569,7 @@ export const getPatchWorkspacesIdMutationOptions = <
 export type PatchWorkspacesIdMutationResult = NonNullable<
   Awaited<ReturnType<typeof patchWorkspacesId>>
 >;
-export type PatchWorkspacesIdMutationBody = Workspace;
+export type PatchWorkspacesIdMutationBody = UpdateWorkspaceDto;
 export type PatchWorkspacesIdMutationError = unknown;
 
 export const usePatchWorkspacesId = <
@@ -578,14 +579,14 @@ export const usePatchWorkspacesId = <
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof patchWorkspacesId>>,
     TError,
-    { id: string; data: Workspace },
+    { id: string; data: UpdateWorkspaceDto },
     TContext
   >;
   request?: SecondParameter<typeof customFetch>;
 }): UseMutationResult<
   Awaited<ReturnType<typeof patchWorkspacesId>>,
   TError,
-  { id: string; data: Workspace },
+  { id: string; data: UpdateWorkspaceDto },
   TContext
 > => {
   const mutationOptions = getPatchWorkspacesIdMutationOptions(options);

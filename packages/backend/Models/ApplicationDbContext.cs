@@ -15,6 +15,8 @@ public partial class ApplicationDbContext : DbContext
     {
     }
 
+    public virtual DbSet<AppCell> AppCells { get; set; }
+
     public virtual DbSet<AppColumn> AppColumns { get; set; }
 
     public virtual DbSet<AppRow> AppRows { get; set; }
@@ -43,6 +45,40 @@ public partial class ApplicationDbContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.HasPostgresExtension("uuid-ossp");
+
+        modelBuilder.Entity<AppCell>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("app_cells_pkey");
+
+            entity.ToTable("app_cells");
+
+            entity.HasIndex(e => new { e.RowId, e.ColumnId }, "app_cells_row_id_column_id_key").IsUnique();
+
+            entity.HasIndex(e => new { e.RowId, e.ColumnId }, "idx_app_cells_row_column");
+
+            entity.Property(e => e.Id)
+                .HasDefaultValueSql("uuid_generate_v4()")
+                .HasColumnName("id");
+            entity.Property(e => e.ColumnId).HasColumnName("column_id");
+            entity.Property(e => e.CreatedAt)
+                .HasDefaultValueSql("now()")
+                .HasColumnName("created_at");
+            entity.Property(e => e.RowId).HasColumnName("row_id");
+            entity.Property(e => e.UpdatedAt)
+                .HasDefaultValueSql("now()")
+                .HasColumnName("updated_at");
+            entity.Property(e => e.Value)
+                .HasColumnType("jsonb")
+                .HasColumnName("value");
+
+            entity.HasOne(d => d.Column).WithMany(p => p.AppCells)
+                .HasForeignKey(d => d.ColumnId)
+                .HasConstraintName("app_cells_column_id_fkey");
+
+            entity.HasOne(d => d.Row).WithMany(p => p.AppCells)
+                .HasForeignKey(d => d.RowId)
+                .HasConstraintName("app_cells_row_id_fkey");
+        });
 
         modelBuilder.Entity<AppColumn>(entity =>
         {
@@ -88,8 +124,6 @@ public partial class ApplicationDbContext : DbContext
 
             entity.ToTable("app_rows");
 
-            entity.HasIndex(e => e.Data, "idx_app_rows_data").HasMethod("gin");
-
             entity.HasIndex(e => e.TableId, "idx_app_rows_table");
 
             entity.Property(e => e.Id)
@@ -99,10 +133,6 @@ public partial class ApplicationDbContext : DbContext
                 .HasDefaultValueSql("now()")
                 .HasColumnName("created_at");
             entity.Property(e => e.CreatedBy).HasColumnName("created_by");
-            entity.Property(e => e.Data)
-                .HasDefaultValueSql("'{}'::jsonb")
-                .HasColumnType("jsonb")
-                .HasColumnName("data");
             entity.Property(e => e.TableId).HasColumnName("table_id");
             entity.Property(e => e.UpdatedAt)
                 .HasDefaultValueSql("now()")

@@ -4,15 +4,16 @@
  * backend
  * OpenAPI spec version: 1.0
  */
+import type { AppCell } from "./appCell";
 import type { AppTable } from "./appTable";
 
 export interface AppRow {
   id?: string;
   tableId?: string;
-  /** @nullable */
-  data?: string | null;
   createdBy?: string;
   createdAt?: string;
   updatedAt?: string;
+  /** @nullable */
+  appCells?: AppCell[] | null;
   table?: AppTable;
 }

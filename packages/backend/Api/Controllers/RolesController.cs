@@ -13,16 +13,10 @@ namespace Datanaut.Api.Controllers
     [ApiController]
     [Route("roles")]
     [Authorize]
-    public class RolesController : ControllerBase
+    public class RolesController(IService<Role> roleService, IMapper mapper) : ControllerBase
     {
-        private readonly IService<Role> _roleService;
-        private readonly IMapper _mapper;
-
-        public RolesController(IService<Role> roleService, IMapper mapper)
-        {
-            _roleService = roleService;
-            _mapper = mapper;
-        }
+        private readonly IService<Role> _roleService = roleService;
+        private readonly IMapper _mapper = mapper;
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<RoleDto>>> GetRoles()

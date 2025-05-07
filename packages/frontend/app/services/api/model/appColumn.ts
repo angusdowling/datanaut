@@ -4,6 +4,7 @@
  * backend
  * OpenAPI spec version: 1.0
  */
+import type { AppCell } from "./appCell";
 import type { AppTable } from "./appTable";
 
 export interface AppColumn {
@@ -21,5 +22,7 @@ export interface AppColumn {
   options?: string | null;
   createdAt?: string;
   updatedAt?: string;
+  /** @nullable */
+  appCells?: AppCell[] | null;
   table?: AppTable;
 }

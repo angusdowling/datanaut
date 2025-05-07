@@ -24,7 +24,7 @@ namespace Datanaut.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Tenant>> CreateTenant([FromBody] CreateTenantRequest request)
+        public async Task<ActionResult<Tenant>> CreateTenant([FromBody] CreateTenantDto request)
         {
             if (string.IsNullOrEmpty(request?.Name))
             {

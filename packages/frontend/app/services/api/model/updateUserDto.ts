@@ -10,6 +10,8 @@ export interface UpdateUserDto {
   email?: string | null;
   /** @nullable */
   name?: string | null;
-  tenantId?: string;
-  roleId?: string;
+  /** @nullable */
+  tenantId?: string | null;
+  /** @nullable */
+  roleId?: string | null;
 }

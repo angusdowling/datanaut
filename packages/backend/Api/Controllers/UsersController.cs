@@ -13,16 +13,10 @@ namespace Datanaut.Api.Controllers
     [ApiController]
     [Route("users")]
     [Authorize]
-    public class UsersController : ControllerBase
+    public class UsersController(IService<User> userService, IMapper mapper) : ControllerBase
     {
-        private readonly IService<User> _userService;
-        private readonly IMapper _mapper;
-
-        public UsersController(IService<User> userService, IMapper mapper)
-        {
-            _userService = userService;
-            _mapper = mapper;
-        }
+        private readonly IService<User> _userService = userService;
+        private readonly IMapper _mapper = mapper;
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<UserDto>>> GetUsers()

@@ -9,13 +9,13 @@ public partial class AppRow
 
     public Guid TableId { get; set; }
 
-    public string Data { get; set; } = null!;
-
     public Guid CreatedBy { get; set; }
 
     public DateTime CreatedAt { get; set; }
 
     public DateTime UpdatedAt { get; set; }
+
+    public virtual ICollection<AppCell> AppCells { get; set; } = new List<AppCell>();
 
     public virtual AppTable Table { get; set; } = null!;
 }

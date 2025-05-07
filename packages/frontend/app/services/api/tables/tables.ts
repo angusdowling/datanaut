@@ -20,14 +20,19 @@ import type {
   UseQueryResult,
 } from "@tanstack/react-query";
 
-import type { AppTable, CreateTableRequest, GetTablesParams } from ".././model";
+import type {
+  CreateTableDto,
+  GetTablesParams,
+  TableDto,
+  UpdateTableDto,
+} from ".././model";
 
 import { customFetch } from "../../../utilities/api";
 
 type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
 export type getTablesResponse200 = {
-  data: AppTable[];
+  data: TableDto[];
   status: 200;
 };
 
@@ -207,7 +212,7 @@ export const prefetchGetTables = async <
 };
 
 export type postTablesResponse200 = {
-  data: AppTable;
+  data: TableDto;
   status: 200;
 };
 
@@ -222,14 +227,14 @@ export const getPostTablesUrl = () => {
 };
 
 export const postTables = async (
-  createTableRequest: CreateTableRequest,
+  createTableDto: CreateTableDto,
   options?: RequestInit,
 ): Promise<postTablesResponse> => {
   return customFetch<postTablesResponse>(getPostTablesUrl(), {
     ...options,
     method: "POST",
     headers: { "Content-Type": "application/json", ...options?.headers },
-    body: JSON.stringify(createTableRequest),
+    body: JSON.stringify(createTableDto),
   });
 };
 
@@ -240,14 +245,14 @@ export const getPostTablesMutationOptions = <
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof postTables>>,
     TError,
-    { data: CreateTableRequest },
+    { data: CreateTableDto },
     TContext
   >;
   request?: SecondParameter<typeof customFetch>;
 }): UseMutationOptions<
   Awaited<ReturnType<typeof postTables>>,
   TError,
-  { data: CreateTableRequest },
+  { data: CreateTableDto },
   TContext
 > => {
   const mutationKey = ["postTables"];
@@ -261,7 +266,7 @@ export const getPostTablesMutationOptions = <
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof postTables>>,
-    { data: CreateTableRequest }
+    { data: CreateTableDto }
   > = (props) => {
     const { data } = props ?? {};
 
@@ -274,21 +279,21 @@ export const getPostTablesMutationOptions = <
 export type PostTablesMutationResult = NonNullable<
   Awaited<ReturnType<typeof postTables>>
 >;
-export type PostTablesMutationBody = CreateTableRequest;
+export type PostTablesMutationBody = CreateTableDto;
 export type PostTablesMutationError = unknown;
 
 export const usePostTables = <TError = unknown, TContext = unknown>(options?: {
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof postTables>>,
     TError,
-    { data: CreateTableRequest },
+    { data: CreateTableDto },
     TContext
   >;
   request?: SecondParameter<typeof customFetch>;
 }): UseMutationResult<
   Awaited<ReturnType<typeof postTables>>,
   TError,
-  { data: CreateTableRequest },
+  { data: CreateTableDto },
   TContext
 > => {
   const mutationOptions = getPostTablesMutationOptions(options);
@@ -296,7 +301,7 @@ export const usePostTables = <TError = unknown, TContext = unknown>(options?: {
   return useMutation(mutationOptions);
 };
 export type getTablesIdResponse200 = {
-  data: AppTable;
+  data: TableDto;
   status: 200;
 };
 
@@ -467,7 +472,7 @@ export const prefetchGetTablesId = async <
 };
 
 export type patchTablesIdResponse200 = {
-  data: AppTable;
+  data: TableDto;
   status: 200;
 };
 
@@ -483,14 +488,14 @@ export const getPatchTablesIdUrl = (id: string) => {
 
 export const patchTablesId = async (
   id: string,
-  appTable: AppTable,
+  updateTableDto: UpdateTableDto,
   options?: RequestInit,
 ): Promise<patchTablesIdResponse> => {
   return customFetch<patchTablesIdResponse>(getPatchTablesIdUrl(id), {
     ...options,
     method: "PATCH",
     headers: { "Content-Type": "application/json", ...options?.headers },
-    body: JSON.stringify(appTable),
+    body: JSON.stringify(updateTableDto),
   });
 };
 
@@ -501,14 +506,14 @@ export const getPatchTablesIdMutationOptions = <
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof patchTablesId>>,
     TError,
-    { id: string; data: AppTable },
+    { id: string; data: UpdateTableDto },
     TContext
   >;
   request?: SecondParameter<typeof customFetch>;
 }): UseMutationOptions<
   Awaited<ReturnType<typeof patchTablesId>>,
   TError,
-  { id: string; data: AppTable },
+  { id: string; data: UpdateTableDto },
   TContext
 > => {
   const mutationKey = ["patchTablesId"];
@@ -522,7 +527,7 @@ export const getPatchTablesIdMutationOptions = <
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof patchTablesId>>,
-    { id: string; data: AppTable }
+    { id: string; data: UpdateTableDto }
   > = (props) => {
     const { id, data } = props ?? {};
 
@@ -535,7 +540,7 @@ export const getPatchTablesIdMutationOptions = <
 export type PatchTablesIdMutationResult = NonNullable<
   Awaited<ReturnType<typeof patchTablesId>>
 >;
-export type PatchTablesIdMutationBody = AppTable;
+export type PatchTablesIdMutationBody = UpdateTableDto;
 export type PatchTablesIdMutationError = unknown;
 
 export const usePatchTablesId = <
@@ -545,14 +550,14 @@ export const usePatchTablesId = <
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof patchTablesId>>,
     TError,
-    { id: string; data: AppTable },
+    { id: string; data: UpdateTableDto },
     TContext
   >;
   request?: SecondParameter<typeof customFetch>;
 }): UseMutationResult<
   Awaited<ReturnType<typeof patchTablesId>>,
   TError,
-  { id: string; data: AppTable },
+  { id: string; data: UpdateTableDto },
   TContext
 > => {
   const mutationOptions = getPatchTablesIdMutationOptions(options);

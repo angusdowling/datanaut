@@ -20,14 +20,19 @@ import type {
   UseQueryResult,
 } from "@tanstack/react-query";
 
-import type { AppRow, CreateRowRequest, GetRowsParams } from ".././model";
+import type {
+  CreateRowDto,
+  GetRowsParams,
+  RowDto,
+  UpdateRowDto,
+} from ".././model";
 
 import { customFetch } from "../../../utilities/api";
 
 type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
 export type getRowsResponse200 = {
-  data: AppRow[];
+  data: RowDto[];
   status: 200;
 };
 
@@ -207,7 +212,7 @@ export const prefetchGetRows = async <
 };
 
 export type postRowsResponse200 = {
-  data: AppRow;
+  data: RowDto;
   status: 200;
 };
 
@@ -222,14 +227,14 @@ export const getPostRowsUrl = () => {
 };
 
 export const postRows = async (
-  createRowRequest: CreateRowRequest,
+  createRowDto: CreateRowDto,
   options?: RequestInit,
 ): Promise<postRowsResponse> => {
   return customFetch<postRowsResponse>(getPostRowsUrl(), {
     ...options,
     method: "POST",
     headers: { "Content-Type": "application/json", ...options?.headers },
-    body: JSON.stringify(createRowRequest),
+    body: JSON.stringify(createRowDto),
   });
 };
 
@@ -240,14 +245,14 @@ export const getPostRowsMutationOptions = <
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof postRows>>,
     TError,
-    { data: CreateRowRequest },
+    { data: CreateRowDto },
     TContext
   >;
   request?: SecondParameter<typeof customFetch>;
 }): UseMutationOptions<
   Awaited<ReturnType<typeof postRows>>,
   TError,
-  { data: CreateRowRequest },
+  { data: CreateRowDto },
   TContext
 > => {
   const mutationKey = ["postRows"];
@@ -261,7 +266,7 @@ export const getPostRowsMutationOptions = <
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof postRows>>,
-    { data: CreateRowRequest }
+    { data: CreateRowDto }
   > = (props) => {
     const { data } = props ?? {};
 
@@ -274,21 +279,21 @@ export const getPostRowsMutationOptions = <
 export type PostRowsMutationResult = NonNullable<
   Awaited<ReturnType<typeof postRows>>
 >;
-export type PostRowsMutationBody = CreateRowRequest;
+export type PostRowsMutationBody = CreateRowDto;
 export type PostRowsMutationError = unknown;
 
 export const usePostRows = <TError = unknown, TContext = unknown>(options?: {
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof postRows>>,
     TError,
-    { data: CreateRowRequest },
+    { data: CreateRowDto },
     TContext
   >;
   request?: SecondParameter<typeof customFetch>;
 }): UseMutationResult<
   Awaited<ReturnType<typeof postRows>>,
   TError,
-  { data: CreateRowRequest },
+  { data: CreateRowDto },
   TContext
 > => {
   const mutationOptions = getPostRowsMutationOptions(options);
@@ -296,7 +301,7 @@ export const usePostRows = <TError = unknown, TContext = unknown>(options?: {
   return useMutation(mutationOptions);
 };
 export type getRowsIdResponse200 = {
-  data: AppRow;
+  data: RowDto;
   status: 200;
 };
 
@@ -465,7 +470,7 @@ export const prefetchGetRowsId = async <
 };
 
 export type patchRowsIdResponse200 = {
-  data: AppRow;
+  data: RowDto;
   status: 200;
 };
 
@@ -481,14 +486,14 @@ export const getPatchRowsIdUrl = (id: string) => {
 
 export const patchRowsId = async (
   id: string,
-  appRow: AppRow,
+  updateRowDto: UpdateRowDto,
   options?: RequestInit,
 ): Promise<patchRowsIdResponse> => {
   return customFetch<patchRowsIdResponse>(getPatchRowsIdUrl(id), {
     ...options,
     method: "PATCH",
     headers: { "Content-Type": "application/json", ...options?.headers },
-    body: JSON.stringify(appRow),
+    body: JSON.stringify(updateRowDto),
   });
 };
 
@@ -499,14 +504,14 @@ export const getPatchRowsIdMutationOptions = <
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof patchRowsId>>,
     TError,
-    { id: string; data: AppRow },
+    { id: string; data: UpdateRowDto },
     TContext
   >;
   request?: SecondParameter<typeof customFetch>;
 }): UseMutationOptions<
   Awaited<ReturnType<typeof patchRowsId>>,
   TError,
-  { id: string; data: AppRow },
+  { id: string; data: UpdateRowDto },
   TContext
 > => {
   const mutationKey = ["patchRowsId"];
@@ -520,7 +525,7 @@ export const getPatchRowsIdMutationOptions = <
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof patchRowsId>>,
-    { id: string; data: AppRow }
+    { id: string; data: UpdateRowDto }
   > = (props) => {
     const { id, data } = props ?? {};
 
@@ -533,21 +538,21 @@ export const getPatchRowsIdMutationOptions = <
 export type PatchRowsIdMutationResult = NonNullable<
   Awaited<ReturnType<typeof patchRowsId>>
 >;
-export type PatchRowsIdMutationBody = AppRow;
+export type PatchRowsIdMutationBody = UpdateRowDto;
 export type PatchRowsIdMutationError = unknown;
 
 export const usePatchRowsId = <TError = unknown, TContext = unknown>(options?: {
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof patchRowsId>>,
     TError,
-    { id: string; data: AppRow },
+    { id: string; data: UpdateRowDto },
     TContext
   >;
   request?: SecondParameter<typeof customFetch>;
 }): UseMutationResult<
   Awaited<ReturnType<typeof patchRowsId>>,
   TError,
-  { id: string; data: AppRow },
+  { id: string; data: UpdateRowDto },
   TContext
 > => {
   const mutationOptions = getPatchRowsIdMutationOptions(options);

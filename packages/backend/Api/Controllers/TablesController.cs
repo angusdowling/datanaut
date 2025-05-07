@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using AutoMapper;
 using Datanaut.Api.Models;
 using Datanaut.Api.Services;
 using Datanaut.Models;
@@ -12,54 +13,69 @@ namespace Datanaut.Api.Controllers
     [ApiController]
     [Route("tables")]
     [Authorize]
-    public class TablesController(IService<AppTable> tableService) : ControllerBase
+    public class TablesController : ControllerBase
     {
-        private readonly IService<AppTable> _tableService = tableService;
+        private readonly IService<AppTable> _tableService;
+        private readonly IMapper _mapper;
+
+        public TablesController(IService<AppTable> tableService, IMapper mapper)
+        {
+            _tableService = tableService;
+            _mapper = mapper;
+        }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<AppTable>>> GetTables(
+        public async Task<ActionResult<IEnumerable<TableDto>>> GetTables(
             [FromQuery] Guid workspaceId
         )
         {
             var tables = await _tableService.FindAsync(t => t.WorkspaceId == workspaceId);
-            return Ok(tables);
+            return Ok(_mapper.Map<IEnumerable<TableDto>>(tables));
         }
 
         [HttpPost]
-        public async Task<ActionResult<AppTable>> CreateTable([FromBody] CreateTableRequest request)
+        public async Task<ActionResult<TableDto>> CreateTable([FromBody] CreateTableDto request)
         {
             if (string.IsNullOrEmpty(request?.Name) || request.WorkspaceId == Guid.Empty)
             {
                 return BadRequest("Name and WorkspaceId are required");
             }
 
-            var table = new AppTable { Name = request.Name, WorkspaceId = request.WorkspaceId };
-
+            var table = _mapper.Map<AppTable>(request);
             var createdTable = await _tableService.CreateAsync(table);
-            return CreatedAtAction(nameof(GetTable), new { id = createdTable.Id }, createdTable);
+            return CreatedAtAction(
+                nameof(GetTable),
+                new { id = createdTable.Id },
+                _mapper.Map<TableDto>(createdTable)
+            );
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<AppTable>> GetTable(Guid id)
+        public async Task<ActionResult<TableDto>> GetTable(Guid id)
         {
             var table = await _tableService.GetByIdAsync(id);
             if (table == null)
             {
                 return NotFound();
             }
-            return Ok(table);
+            return Ok(_mapper.Map<TableDto>(table));
         }
 
         [HttpPatch("{id}")]
-        public async Task<ActionResult<AppTable>> UpdateTable(Guid id, [FromBody] AppTable table)
+        public async Task<ActionResult<TableDto>> UpdateTable(
+            Guid id,
+            [FromBody] UpdateTableDto request
+        )
         {
-            if (id != table.Id)
+            var existingTable = await _tableService.GetByIdAsync(id);
+            if (existingTable == null)
             {
-                return BadRequest("ID mismatch");
+                return NotFound();
             }
 
-            var updatedTable = await _tableService.UpdateAsync(table);
-            return Ok(updatedTable);
+            _mapper.Map(request, existingTable);
+            var updatedTable = await _tableService.UpdateAsync(existingTable);
+            return Ok(_mapper.Map<TableDto>(updatedTable));
         }
 
         [HttpDelete("{id}")]

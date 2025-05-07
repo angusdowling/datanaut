@@ -10,12 +10,12 @@ export const meta: MetaFunction = () => {
 
 export default function Dashboard() {
   return (
-    <div className="dashboard-container">
-      <header className="dashboard-header">
+    <div>
+      <header>
         <h1>Datanaut Dashboard</h1>
       </header>
-      <div className="dashboard-layout">
-        <nav className="dashboard-nav">
+      <div>
+        <nav>
           <ul>
             <li>
               <Link to="/dashboard/workspaces">Workspaces</Link>
@@ -25,7 +25,7 @@ export default function Dashboard() {
             </li>
           </ul>
         </nav>
-        <main className="dashboard-content">
+        <main>
           <Outlet />
         </main>
       </div>

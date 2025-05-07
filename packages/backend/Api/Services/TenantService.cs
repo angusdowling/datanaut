@@ -51,7 +51,7 @@ namespace Datanaut.Api.Services
             return await GetAllAsync();
         }
 
-        public async Task<Tenant> CreateTenantAsync(CreateTenantRequest request)
+        public async Task<Tenant> CreateTenantAsync(CreateTenantDto request)
         {
             var tenant = new Tenant { Name = request.Name };
             return await CreateAsync(tenant);

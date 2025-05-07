@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using AutoMapper;
 using Datanaut.Api.Models;
 using Datanaut.Api.Services;
 using Datanaut.Models;
@@ -12,21 +13,26 @@ namespace Datanaut.Api.Controllers
     [ApiController]
     [Route("columns")]
     [Authorize]
-    public class ColumnsController(IService<AppColumn> columnService) : ControllerBase
+    public class ColumnsController : ControllerBase
     {
-        private readonly IService<AppColumn> _columnService = columnService;
+        private readonly IService<AppColumn> _columnService;
+        private readonly IMapper _mapper;
+
+        public ColumnsController(IService<AppColumn> columnService, IMapper mapper)
+        {
+            _columnService = columnService;
+            _mapper = mapper;
+        }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<AppColumn>>> GetColumns([FromQuery] Guid tableId)
+        public async Task<ActionResult<IEnumerable<ColumnDto>>> GetColumns([FromQuery] Guid tableId)
         {
             var columns = await _columnService.FindAsync(c => c.TableId == tableId);
-            return Ok(columns);
+            return Ok(_mapper.Map<IEnumerable<ColumnDto>>(columns));
         }
 
         [HttpPost]
-        public async Task<ActionResult<AppColumn>> CreateColumn(
-            [FromBody] CreateColumnRequest request
-        )
+        public async Task<ActionResult<ColumnDto>> CreateColumn([FromBody] CreateColumnDto request)
         {
             if (
                 string.IsNullOrEmpty(request?.Name)
@@ -37,45 +43,41 @@ namespace Datanaut.Api.Controllers
                 return BadRequest("Name, Type, and TableId are required");
             }
 
-            var column = new AppColumn
-            {
-                Name = request.Name,
-                Type = request.Type,
-                TableId = request.TableId,
-                Position = request.Position,
-                IsRequired = request.IsRequired,
-                Config = request.Config,
-                Options = request.Options,
-            };
-
+            var column = _mapper.Map<AppColumn>(request);
             var createdColumn = await _columnService.CreateAsync(column);
-            return CreatedAtAction(nameof(GetColumn), new { id = createdColumn.Id }, createdColumn);
+            return CreatedAtAction(
+                nameof(GetColumn),
+                new { id = createdColumn.Id },
+                _mapper.Map<ColumnDto>(createdColumn)
+            );
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<AppColumn>> GetColumn(Guid id)
+        public async Task<ActionResult<ColumnDto>> GetColumn(Guid id)
         {
             var column = await _columnService.GetByIdAsync(id);
             if (column == null)
             {
                 return NotFound();
             }
-            return Ok(column);
+            return Ok(_mapper.Map<ColumnDto>(column));
         }
 
         [HttpPatch("{id}")]
-        public async Task<ActionResult<AppColumn>> UpdateColumn(
+        public async Task<ActionResult<ColumnDto>> UpdateColumn(
             Guid id,
-            [FromBody] AppColumn column
+            [FromBody] UpdateColumnDto request
         )
         {
-            if (id != column.Id)
+            var existingColumn = await _columnService.GetByIdAsync(id);
+            if (existingColumn == null)
             {
-                return BadRequest("ID mismatch");
+                return NotFound();
             }
 
-            var updatedColumn = await _columnService.UpdateAsync(column);
-            return Ok(updatedColumn);
+            _mapper.Map(request, existingColumn);
+            var updatedColumn = await _columnService.UpdateAsync(existingColumn);
+            return Ok(_mapper.Map<ColumnDto>(updatedColumn));
         }
 
         [HttpDelete("{id}")]

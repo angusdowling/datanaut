@@ -27,12 +27,12 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
 export default function DashboardUsers() {
   return (
-    <div className="users-container">
+    <div>
       <header>
         <h2>Users</h2>
         <p>Manage your users</p>
       </header>
-      <div className="users-content">
+      <div>
         <UsersTable />
       </div>
     </div>
