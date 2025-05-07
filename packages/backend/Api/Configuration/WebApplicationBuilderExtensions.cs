@@ -1,5 +1,6 @@
 using System.Reflection;
 using System.Text;
+using AutoMapper;
 using Datanaut.Api.Data;
 using Datanaut.Api.Services;
 using Datanaut.Models;
@@ -18,6 +19,7 @@ namespace Datanaut.Api.Configuration
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+            builder.Services.AddAutoMapper(typeof(WebApplicationBuilderExtensions).Assembly);
 
             return builder;
         }

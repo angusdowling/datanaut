@@ -20,84 +20,84 @@ import type {
   UseQueryResult,
 } from "@tanstack/react-query";
 
-import type { CreateUserDto, UpdateUserDto, UserDto } from ".././model";
+import type { CreateRoleDto, RoleDto, UpdateRoleDto } from ".././model";
 
 import { customFetch } from "../../../utilities/api";
 
 type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
-export type getUsersResponse200 = {
-  data: UserDto[];
+export type getRolesResponse200 = {
+  data: RoleDto[];
   status: 200;
 };
 
-export type getUsersResponseComposite = getUsersResponse200;
+export type getRolesResponseComposite = getRolesResponse200;
 
-export type getUsersResponse = getUsersResponseComposite & {
+export type getRolesResponse = getRolesResponseComposite & {
   headers: Headers;
 };
 
-export const getGetUsersUrl = () => {
-  return `/api/users`;
+export const getGetRolesUrl = () => {
+  return `/api/roles`;
 };
 
-export const getUsers = async (
+export const getRoles = async (
   options?: RequestInit,
-): Promise<getUsersResponse> => {
-  return customFetch<getUsersResponse>(getGetUsersUrl(), {
+): Promise<getRolesResponse> => {
+  return customFetch<getRolesResponse>(getGetRolesUrl(), {
     ...options,
     method: "GET",
   });
 };
 
-export const getGetUsersQueryKey = () => {
-  return [`/api/users`] as const;
+export const getGetRolesQueryKey = () => {
+  return [`/api/roles`] as const;
 };
 
-export const getGetUsersQueryOptions = <
-  TData = Awaited<ReturnType<typeof getUsers>>,
+export const getGetRolesQueryOptions = <
+  TData = Awaited<ReturnType<typeof getRoles>>,
   TError = unknown,
 >(options?: {
   query?: Partial<
-    UseQueryOptions<Awaited<ReturnType<typeof getUsers>>, TError, TData>
+    UseQueryOptions<Awaited<ReturnType<typeof getRoles>>, TError, TData>
   >;
   request?: SecondParameter<typeof customFetch>;
 }) => {
   const { query: queryOptions, request: requestOptions } = options ?? {};
 
-  const queryKey = queryOptions?.queryKey ?? getGetUsersQueryKey();
+  const queryKey = queryOptions?.queryKey ?? getGetRolesQueryKey();
 
-  const queryFn: QueryFunction<Awaited<ReturnType<typeof getUsers>>> = ({
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof getRoles>>> = ({
     signal,
-  }) => getUsers({ signal, ...requestOptions });
+  }) => getRoles({ signal, ...requestOptions });
 
   return {
     queryKey,
     queryFn,
     staleTime: 10000,
     ...queryOptions,
-  } as UseQueryOptions<Awaited<ReturnType<typeof getUsers>>, TError, TData> & {
+  } as UseQueryOptions<Awaited<ReturnType<typeof getRoles>>, TError, TData> & {
     queryKey: DataTag<QueryKey, TData, TError>;
   };
 };
 
-export type GetUsersQueryResult = NonNullable<
-  Awaited<ReturnType<typeof getUsers>>
+export type GetRolesQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getRoles>>
 >;
-export type GetUsersQueryError = unknown;
+export type GetRolesQueryError = unknown;
 
-export function useGetUsers<
-  TData = Awaited<ReturnType<typeof getUsers>>,
+export function useGetRoles<
+  TData = Awaited<ReturnType<typeof getRoles>>,
   TError = unknown,
 >(options: {
   query: Partial<
-    UseQueryOptions<Awaited<ReturnType<typeof getUsers>>, TError, TData>
+    UseQueryOptions<Awaited<ReturnType<typeof getRoles>>, TError, TData>
   > &
     Pick<
       DefinedInitialDataOptions<
-        Awaited<ReturnType<typeof getUsers>>,
+        Awaited<ReturnType<typeof getRoles>>,
         TError,
-        Awaited<ReturnType<typeof getUsers>>
+        Awaited<ReturnType<typeof getRoles>>
       >,
       "initialData"
     >;
@@ -105,18 +105,18 @@ export function useGetUsers<
 }): DefinedUseQueryResult<TData, TError> & {
   queryKey: DataTag<QueryKey, TData, TError>;
 };
-export function useGetUsers<
-  TData = Awaited<ReturnType<typeof getUsers>>,
+export function useGetRoles<
+  TData = Awaited<ReturnType<typeof getRoles>>,
   TError = unknown,
 >(options?: {
   query?: Partial<
-    UseQueryOptions<Awaited<ReturnType<typeof getUsers>>, TError, TData>
+    UseQueryOptions<Awaited<ReturnType<typeof getRoles>>, TError, TData>
   > &
     Pick<
       UndefinedInitialDataOptions<
-        Awaited<ReturnType<typeof getUsers>>,
+        Awaited<ReturnType<typeof getRoles>>,
         TError,
-        Awaited<ReturnType<typeof getUsers>>
+        Awaited<ReturnType<typeof getRoles>>
       >,
       "initialData"
     >;
@@ -124,30 +124,30 @@ export function useGetUsers<
 }): UseQueryResult<TData, TError> & {
   queryKey: DataTag<QueryKey, TData, TError>;
 };
-export function useGetUsers<
-  TData = Awaited<ReturnType<typeof getUsers>>,
+export function useGetRoles<
+  TData = Awaited<ReturnType<typeof getRoles>>,
   TError = unknown,
 >(options?: {
   query?: Partial<
-    UseQueryOptions<Awaited<ReturnType<typeof getUsers>>, TError, TData>
+    UseQueryOptions<Awaited<ReturnType<typeof getRoles>>, TError, TData>
   >;
   request?: SecondParameter<typeof customFetch>;
 }): UseQueryResult<TData, TError> & {
   queryKey: DataTag<QueryKey, TData, TError>;
 };
 
-export function useGetUsers<
-  TData = Awaited<ReturnType<typeof getUsers>>,
+export function useGetRoles<
+  TData = Awaited<ReturnType<typeof getRoles>>,
   TError = unknown,
 >(options?: {
   query?: Partial<
-    UseQueryOptions<Awaited<ReturnType<typeof getUsers>>, TError, TData>
+    UseQueryOptions<Awaited<ReturnType<typeof getRoles>>, TError, TData>
   >;
   request?: SecondParameter<typeof customFetch>;
 }): UseQueryResult<TData, TError> & {
   queryKey: DataTag<QueryKey, TData, TError>;
 } {
-  const queryOptions = getGetUsersQueryOptions(options);
+  const queryOptions = getGetRolesQueryOptions(options);
 
   const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
     queryKey: DataTag<QueryKey, TData, TError>;
@@ -158,70 +158,70 @@ export function useGetUsers<
   return query;
 }
 
-export const prefetchGetUsers = async <
-  TData = Awaited<ReturnType<typeof getUsers>>,
+export const prefetchGetRoles = async <
+  TData = Awaited<ReturnType<typeof getRoles>>,
   TError = unknown,
 >(
   queryClient: QueryClient,
   options?: {
     query?: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof getUsers>>, TError, TData>
+      UseQueryOptions<Awaited<ReturnType<typeof getRoles>>, TError, TData>
     >;
     request?: SecondParameter<typeof customFetch>;
   },
 ): Promise<QueryClient> => {
-  const queryOptions = getGetUsersQueryOptions(options);
+  const queryOptions = getGetRolesQueryOptions(options);
 
   await queryClient.prefetchQuery(queryOptions);
 
   return queryClient;
 };
 
-export type postUsersResponse200 = {
-  data: UserDto;
+export type postRolesResponse200 = {
+  data: RoleDto;
   status: 200;
 };
 
-export type postUsersResponseComposite = postUsersResponse200;
+export type postRolesResponseComposite = postRolesResponse200;
 
-export type postUsersResponse = postUsersResponseComposite & {
+export type postRolesResponse = postRolesResponseComposite & {
   headers: Headers;
 };
 
-export const getPostUsersUrl = () => {
-  return `/api/users`;
+export const getPostRolesUrl = () => {
+  return `/api/roles`;
 };
 
-export const postUsers = async (
-  createUserDto: CreateUserDto,
+export const postRoles = async (
+  createRoleDto: CreateRoleDto,
   options?: RequestInit,
-): Promise<postUsersResponse> => {
-  return customFetch<postUsersResponse>(getPostUsersUrl(), {
+): Promise<postRolesResponse> => {
+  return customFetch<postRolesResponse>(getPostRolesUrl(), {
     ...options,
     method: "POST",
     headers: { "Content-Type": "application/json", ...options?.headers },
-    body: JSON.stringify(createUserDto),
+    body: JSON.stringify(createRoleDto),
   });
 };
 
-export const getPostUsersMutationOptions = <
+export const getPostRolesMutationOptions = <
   TError = unknown,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof postUsers>>,
+    Awaited<ReturnType<typeof postRoles>>,
     TError,
-    { data: CreateUserDto },
+    { data: CreateRoleDto },
     TContext
   >;
   request?: SecondParameter<typeof customFetch>;
 }): UseMutationOptions<
-  Awaited<ReturnType<typeof postUsers>>,
+  Awaited<ReturnType<typeof postRoles>>,
   TError,
-  { data: CreateUserDto },
+  { data: CreateRoleDto },
   TContext
 > => {
-  const mutationKey = ["postUsers"];
+  const mutationKey = ["postRoles"];
   const { mutation: mutationOptions, request: requestOptions } = options
     ? options.mutation &&
       "mutationKey" in options.mutation &&
@@ -231,89 +231,89 @@ export const getPostUsersMutationOptions = <
     : { mutation: { mutationKey }, request: undefined };
 
   const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof postUsers>>,
-    { data: CreateUserDto }
+    Awaited<ReturnType<typeof postRoles>>,
+    { data: CreateRoleDto }
   > = (props) => {
     const { data } = props ?? {};
 
-    return postUsers(data, requestOptions);
+    return postRoles(data, requestOptions);
   };
 
   return { mutationFn, ...mutationOptions };
 };
 
-export type PostUsersMutationResult = NonNullable<
-  Awaited<ReturnType<typeof postUsers>>
+export type PostRolesMutationResult = NonNullable<
+  Awaited<ReturnType<typeof postRoles>>
 >;
-export type PostUsersMutationBody = CreateUserDto;
-export type PostUsersMutationError = unknown;
+export type PostRolesMutationBody = CreateRoleDto;
+export type PostRolesMutationError = unknown;
 
-export const usePostUsers = <TError = unknown, TContext = unknown>(options?: {
+export const usePostRoles = <TError = unknown, TContext = unknown>(options?: {
   mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof postUsers>>,
+    Awaited<ReturnType<typeof postRoles>>,
     TError,
-    { data: CreateUserDto },
+    { data: CreateRoleDto },
     TContext
   >;
   request?: SecondParameter<typeof customFetch>;
 }): UseMutationResult<
-  Awaited<ReturnType<typeof postUsers>>,
+  Awaited<ReturnType<typeof postRoles>>,
   TError,
-  { data: CreateUserDto },
+  { data: CreateRoleDto },
   TContext
 > => {
-  const mutationOptions = getPostUsersMutationOptions(options);
+  const mutationOptions = getPostRolesMutationOptions(options);
 
   return useMutation(mutationOptions);
 };
-export type getUsersIdResponse200 = {
-  data: UserDto;
+export type getRolesIdResponse200 = {
+  data: RoleDto;
   status: 200;
 };
 
-export type getUsersIdResponseComposite = getUsersIdResponse200;
+export type getRolesIdResponseComposite = getRolesIdResponse200;
 
-export type getUsersIdResponse = getUsersIdResponseComposite & {
+export type getRolesIdResponse = getRolesIdResponseComposite & {
   headers: Headers;
 };
 
-export const getGetUsersIdUrl = (id: string) => {
-  return `/api/users/${id}`;
+export const getGetRolesIdUrl = (id: string) => {
+  return `/api/roles/${id}`;
 };
 
-export const getUsersId = async (
+export const getRolesId = async (
   id: string,
   options?: RequestInit,
-): Promise<getUsersIdResponse> => {
-  return customFetch<getUsersIdResponse>(getGetUsersIdUrl(id), {
+): Promise<getRolesIdResponse> => {
+  return customFetch<getRolesIdResponse>(getGetRolesIdUrl(id), {
     ...options,
     method: "GET",
   });
 };
 
-export const getGetUsersIdQueryKey = (id: string) => {
-  return [`/api/users/${id}`] as const;
+export const getGetRolesIdQueryKey = (id: string) => {
+  return [`/api/roles/${id}`] as const;
 };
 
-export const getGetUsersIdQueryOptions = <
-  TData = Awaited<ReturnType<typeof getUsersId>>,
+export const getGetRolesIdQueryOptions = <
+  TData = Awaited<ReturnType<typeof getRolesId>>,
   TError = unknown,
 >(
   id: string,
   options?: {
     query?: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof getUsersId>>, TError, TData>
+      UseQueryOptions<Awaited<ReturnType<typeof getRolesId>>, TError, TData>
     >;
     request?: SecondParameter<typeof customFetch>;
   },
 ) => {
   const { query: queryOptions, request: requestOptions } = options ?? {};
 
-  const queryKey = queryOptions?.queryKey ?? getGetUsersIdQueryKey(id);
+  const queryKey = queryOptions?.queryKey ?? getGetRolesIdQueryKey(id);
 
-  const queryFn: QueryFunction<Awaited<ReturnType<typeof getUsersId>>> = ({
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof getRolesId>>> = ({
     signal,
-  }) => getUsersId(id, { signal, ...requestOptions });
+  }) => getRolesId(id, { signal, ...requestOptions });
 
   return {
     queryKey,
@@ -322,31 +322,31 @@ export const getGetUsersIdQueryOptions = <
     staleTime: 10000,
     ...queryOptions,
   } as UseQueryOptions<
-    Awaited<ReturnType<typeof getUsersId>>,
+    Awaited<ReturnType<typeof getRolesId>>,
     TError,
     TData
   > & { queryKey: DataTag<QueryKey, TData, TError> };
 };
 
-export type GetUsersIdQueryResult = NonNullable<
-  Awaited<ReturnType<typeof getUsersId>>
+export type GetRolesIdQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getRolesId>>
 >;
-export type GetUsersIdQueryError = unknown;
+export type GetRolesIdQueryError = unknown;
 
-export function useGetUsersId<
-  TData = Awaited<ReturnType<typeof getUsersId>>,
+export function useGetRolesId<
+  TData = Awaited<ReturnType<typeof getRolesId>>,
   TError = unknown,
 >(
   id: string,
   options: {
     query: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof getUsersId>>, TError, TData>
+      UseQueryOptions<Awaited<ReturnType<typeof getRolesId>>, TError, TData>
     > &
       Pick<
         DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof getUsersId>>,
+          Awaited<ReturnType<typeof getRolesId>>,
           TError,
-          Awaited<ReturnType<typeof getUsersId>>
+          Awaited<ReturnType<typeof getRolesId>>
         >,
         "initialData"
       >;
@@ -355,20 +355,20 @@ export function useGetUsersId<
 ): DefinedUseQueryResult<TData, TError> & {
   queryKey: DataTag<QueryKey, TData, TError>;
 };
-export function useGetUsersId<
-  TData = Awaited<ReturnType<typeof getUsersId>>,
+export function useGetRolesId<
+  TData = Awaited<ReturnType<typeof getRolesId>>,
   TError = unknown,
 >(
   id: string,
   options?: {
     query?: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof getUsersId>>, TError, TData>
+      UseQueryOptions<Awaited<ReturnType<typeof getRolesId>>, TError, TData>
     > &
       Pick<
         UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof getUsersId>>,
+          Awaited<ReturnType<typeof getRolesId>>,
           TError,
-          Awaited<ReturnType<typeof getUsersId>>
+          Awaited<ReturnType<typeof getRolesId>>
         >,
         "initialData"
       >;
@@ -377,14 +377,14 @@ export function useGetUsersId<
 ): UseQueryResult<TData, TError> & {
   queryKey: DataTag<QueryKey, TData, TError>;
 };
-export function useGetUsersId<
-  TData = Awaited<ReturnType<typeof getUsersId>>,
+export function useGetRolesId<
+  TData = Awaited<ReturnType<typeof getRolesId>>,
   TError = unknown,
 >(
   id: string,
   options?: {
     query?: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof getUsersId>>, TError, TData>
+      UseQueryOptions<Awaited<ReturnType<typeof getRolesId>>, TError, TData>
     >;
     request?: SecondParameter<typeof customFetch>;
   },
@@ -392,21 +392,21 @@ export function useGetUsersId<
   queryKey: DataTag<QueryKey, TData, TError>;
 };
 
-export function useGetUsersId<
-  TData = Awaited<ReturnType<typeof getUsersId>>,
+export function useGetRolesId<
+  TData = Awaited<ReturnType<typeof getRolesId>>,
   TError = unknown,
 >(
   id: string,
   options?: {
     query?: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof getUsersId>>, TError, TData>
+      UseQueryOptions<Awaited<ReturnType<typeof getRolesId>>, TError, TData>
     >;
     request?: SecondParameter<typeof customFetch>;
   },
 ): UseQueryResult<TData, TError> & {
   queryKey: DataTag<QueryKey, TData, TError>;
 } {
-  const queryOptions = getGetUsersIdQueryOptions(id, options);
+  const queryOptions = getGetRolesIdQueryOptions(id, options);
 
   const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
     queryKey: DataTag<QueryKey, TData, TError>;
@@ -417,72 +417,72 @@ export function useGetUsersId<
   return query;
 }
 
-export const prefetchGetUsersId = async <
-  TData = Awaited<ReturnType<typeof getUsersId>>,
+export const prefetchGetRolesId = async <
+  TData = Awaited<ReturnType<typeof getRolesId>>,
   TError = unknown,
 >(
   queryClient: QueryClient,
   id: string,
   options?: {
     query?: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof getUsersId>>, TError, TData>
+      UseQueryOptions<Awaited<ReturnType<typeof getRolesId>>, TError, TData>
     >;
     request?: SecondParameter<typeof customFetch>;
   },
 ): Promise<QueryClient> => {
-  const queryOptions = getGetUsersIdQueryOptions(id, options);
+  const queryOptions = getGetRolesIdQueryOptions(id, options);
 
   await queryClient.prefetchQuery(queryOptions);
 
   return queryClient;
 };
 
-export type patchUsersIdResponse200 = {
-  data: UserDto;
+export type patchRolesIdResponse200 = {
+  data: RoleDto;
   status: 200;
 };
 
-export type patchUsersIdResponseComposite = patchUsersIdResponse200;
+export type patchRolesIdResponseComposite = patchRolesIdResponse200;
 
-export type patchUsersIdResponse = patchUsersIdResponseComposite & {
+export type patchRolesIdResponse = patchRolesIdResponseComposite & {
   headers: Headers;
 };
 
-export const getPatchUsersIdUrl = (id: string) => {
-  return `/api/users/${id}`;
+export const getPatchRolesIdUrl = (id: string) => {
+  return `/api/roles/${id}`;
 };
 
-export const patchUsersId = async (
+export const patchRolesId = async (
   id: string,
-  updateUserDto: UpdateUserDto,
+  updateRoleDto: UpdateRoleDto,
   options?: RequestInit,
-): Promise<patchUsersIdResponse> => {
-  return customFetch<patchUsersIdResponse>(getPatchUsersIdUrl(id), {
+): Promise<patchRolesIdResponse> => {
+  return customFetch<patchRolesIdResponse>(getPatchRolesIdUrl(id), {
     ...options,
     method: "PATCH",
     headers: { "Content-Type": "application/json", ...options?.headers },
-    body: JSON.stringify(updateUserDto),
+    body: JSON.stringify(updateRoleDto),
   });
 };
 
-export const getPatchUsersIdMutationOptions = <
+export const getPatchRolesIdMutationOptions = <
   TError = unknown,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof patchUsersId>>,
+    Awaited<ReturnType<typeof patchRolesId>>,
     TError,
-    { id: string; data: UpdateUserDto },
+    { id: string; data: UpdateRoleDto },
     TContext
   >;
   request?: SecondParameter<typeof customFetch>;
 }): UseMutationOptions<
-  Awaited<ReturnType<typeof patchUsersId>>,
+  Awaited<ReturnType<typeof patchRolesId>>,
   TError,
-  { id: string; data: UpdateUserDto },
+  { id: string; data: UpdateRoleDto },
   TContext
 > => {
-  const mutationKey = ["patchUsersId"];
+  const mutationKey = ["patchRolesId"];
   const { mutation: mutationOptions, request: requestOptions } = options
     ? options.mutation &&
       "mutationKey" in options.mutation &&
@@ -492,87 +492,87 @@ export const getPatchUsersIdMutationOptions = <
     : { mutation: { mutationKey }, request: undefined };
 
   const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof patchUsersId>>,
-    { id: string; data: UpdateUserDto }
+    Awaited<ReturnType<typeof patchRolesId>>,
+    { id: string; data: UpdateRoleDto }
   > = (props) => {
     const { id, data } = props ?? {};
 
-    return patchUsersId(id, data, requestOptions);
+    return patchRolesId(id, data, requestOptions);
   };
 
   return { mutationFn, ...mutationOptions };
 };
 
-export type PatchUsersIdMutationResult = NonNullable<
-  Awaited<ReturnType<typeof patchUsersId>>
+export type PatchRolesIdMutationResult = NonNullable<
+  Awaited<ReturnType<typeof patchRolesId>>
 >;
-export type PatchUsersIdMutationBody = UpdateUserDto;
-export type PatchUsersIdMutationError = unknown;
+export type PatchRolesIdMutationBody = UpdateRoleDto;
+export type PatchRolesIdMutationError = unknown;
 
-export const usePatchUsersId = <
+export const usePatchRolesId = <
   TError = unknown,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof patchUsersId>>,
+    Awaited<ReturnType<typeof patchRolesId>>,
     TError,
-    { id: string; data: UpdateUserDto },
+    { id: string; data: UpdateRoleDto },
     TContext
   >;
   request?: SecondParameter<typeof customFetch>;
 }): UseMutationResult<
-  Awaited<ReturnType<typeof patchUsersId>>,
+  Awaited<ReturnType<typeof patchRolesId>>,
   TError,
-  { id: string; data: UpdateUserDto },
+  { id: string; data: UpdateRoleDto },
   TContext
 > => {
-  const mutationOptions = getPatchUsersIdMutationOptions(options);
+  const mutationOptions = getPatchRolesIdMutationOptions(options);
 
   return useMutation(mutationOptions);
 };
-export type deleteUsersIdResponse200 = {
+export type deleteRolesIdResponse200 = {
   data: void;
   status: 200;
 };
 
-export type deleteUsersIdResponseComposite = deleteUsersIdResponse200;
+export type deleteRolesIdResponseComposite = deleteRolesIdResponse200;
 
-export type deleteUsersIdResponse = deleteUsersIdResponseComposite & {
+export type deleteRolesIdResponse = deleteRolesIdResponseComposite & {
   headers: Headers;
 };
 
-export const getDeleteUsersIdUrl = (id: string) => {
-  return `/api/users/${id}`;
+export const getDeleteRolesIdUrl = (id: string) => {
+  return `/api/roles/${id}`;
 };
 
-export const deleteUsersId = async (
+export const deleteRolesId = async (
   id: string,
   options?: RequestInit,
-): Promise<deleteUsersIdResponse> => {
-  return customFetch<deleteUsersIdResponse>(getDeleteUsersIdUrl(id), {
+): Promise<deleteRolesIdResponse> => {
+  return customFetch<deleteRolesIdResponse>(getDeleteRolesIdUrl(id), {
     ...options,
     method: "DELETE",
   });
 };
 
-export const getDeleteUsersIdMutationOptions = <
+export const getDeleteRolesIdMutationOptions = <
   TError = unknown,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof deleteUsersId>>,
+    Awaited<ReturnType<typeof deleteRolesId>>,
     TError,
     { id: string },
     TContext
   >;
   request?: SecondParameter<typeof customFetch>;
 }): UseMutationOptions<
-  Awaited<ReturnType<typeof deleteUsersId>>,
+  Awaited<ReturnType<typeof deleteRolesId>>,
   TError,
   { id: string },
   TContext
 > => {
-  const mutationKey = ["deleteUsersId"];
+  const mutationKey = ["deleteRolesId"];
   const { mutation: mutationOptions, request: requestOptions } = options
     ? options.mutation &&
       "mutationKey" in options.mutation &&
@@ -582,41 +582,41 @@ export const getDeleteUsersIdMutationOptions = <
     : { mutation: { mutationKey }, request: undefined };
 
   const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof deleteUsersId>>,
+    Awaited<ReturnType<typeof deleteRolesId>>,
     { id: string }
   > = (props) => {
     const { id } = props ?? {};
 
-    return deleteUsersId(id, requestOptions);
+    return deleteRolesId(id, requestOptions);
   };
 
   return { mutationFn, ...mutationOptions };
 };
 
-export type DeleteUsersIdMutationResult = NonNullable<
-  Awaited<ReturnType<typeof deleteUsersId>>
+export type DeleteRolesIdMutationResult = NonNullable<
+  Awaited<ReturnType<typeof deleteRolesId>>
 >;
 
-export type DeleteUsersIdMutationError = unknown;
+export type DeleteRolesIdMutationError = unknown;
 
-export const useDeleteUsersId = <
+export const useDeleteRolesId = <
   TError = unknown,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof deleteUsersId>>,
+    Awaited<ReturnType<typeof deleteRolesId>>,
     TError,
     { id: string },
     TContext
   >;
   request?: SecondParameter<typeof customFetch>;
 }): UseMutationResult<
-  Awaited<ReturnType<typeof deleteUsersId>>,
+  Awaited<ReturnType<typeof deleteRolesId>>,
   TError,
   { id: string },
   TContext
 > => {
-  const mutationOptions = getDeleteUsersIdMutationOptions(options);
+  const mutationOptions = getDeleteRolesIdMutationOptions(options);
 
   return useMutation(mutationOptions);
 };

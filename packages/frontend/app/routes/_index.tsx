@@ -1,7 +1,6 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import type { MetaFunction } from "@remix-run/node";
 import { DataTable } from "~/components/DataTable";
-import { getApiUsers } from "~/services/api/users/users";
 
 type Person = {
   firstName: string;

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using AutoMapper;
 using Datanaut.Api.Models;
 using Datanaut.Api.Services;
 using Datanaut.Models;
@@ -12,58 +13,68 @@ namespace Datanaut.Api.Controllers
     [ApiController]
     [Route("users")]
     [Authorize]
-    public class UsersController(IService<User> userService) : ControllerBase
+    public class UsersController : ControllerBase
     {
-        private readonly IService<User> _userService = userService;
+        private readonly IService<User> _userService;
+        private readonly IMapper _mapper;
+
+        public UsersController(IService<User> userService, IMapper mapper)
+        {
+            _userService = userService;
+            _mapper = mapper;
+        }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<User>>> GetUsers()
+        public async Task<ActionResult<IEnumerable<UserDto>>> GetUsers()
         {
             var users = await _userService.GetAllAsync();
-            return Ok(users);
+            var userDtos = _mapper.Map<IEnumerable<UserDto>>(users);
+            return Ok(userDtos);
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<User>> GetUser(Guid id)
+        public async Task<ActionResult<UserDto>> GetUser(Guid id)
         {
             var user = await _userService.GetByIdAsync(id);
             if (user == null)
             {
                 return NotFound();
             }
-            return Ok(user);
+            return Ok(_mapper.Map<UserDto>(user));
         }
 
         [HttpPost]
-        public async Task<ActionResult<User>> CreateUser([FromBody] CreateUserRequest request)
+        public async Task<ActionResult<UserDto>> CreateUser([FromBody] CreateUserDto request)
         {
             if (string.IsNullOrEmpty(request?.Email) || string.IsNullOrEmpty(request?.Name))
             {
                 return BadRequest("Email and Name are required");
             }
 
-            var user = new User
-            {
-                Email = request.Email,
-                Name = request.Name,
-                TenantId = request.TenantId,
-                RoleId = request.RoleId,
-            };
-
+            var user = _mapper.Map<User>(request);
             var createdUser = await _userService.CreateAsync(user);
-            return CreatedAtAction(nameof(GetUser), new { id = createdUser.Id }, createdUser);
+            return CreatedAtAction(
+                nameof(GetUser),
+                new { id = createdUser.Id },
+                _mapper.Map<UserDto>(createdUser)
+            );
         }
 
         [HttpPatch("{id}")]
-        public async Task<ActionResult<User>> UpdateUser(Guid id, [FromBody] User user)
+        public async Task<ActionResult<UserDto>> UpdateUser(
+            Guid id,
+            [FromBody] UpdateUserDto request
+        )
         {
-            if (id != user.Id)
+            var existingUser = await _userService.GetByIdAsync(id);
+            if (existingUser == null)
             {
-                return BadRequest("ID mismatch");
+                return NotFound();
             }
 
-            var updatedUser = await _userService.UpdateAsync(user);
-            return Ok(updatedUser);
+            _mapper.Map(request, existingUser);
+            var updatedUser = await _userService.UpdateAsync(existingUser);
+            return Ok(_mapper.Map<UserDto>(updatedUser));
         }
 
         [HttpDelete("{id}")]

@@ -8,38 +8,48 @@ type Props = {
   isExpanded?: boolean;
   toggleExpanded?: () => void;
   groupedCell?: any;
-};
+} & React.HTMLAttributes<HTMLTableRowElement>;
 
-export const TableRow = ({
-  row,
-  renderCell,
-  isGrouped,
-  isExpanded,
-  toggleExpanded,
-  groupedCell,
-}: Props) => (
-  <tr key={row.id}>
-    {row.getVisibleCells().map((cell) => {
-      if (cell.getIsGrouped()) {
-        return (
-          <td key={cell.id}>
-            <button onClick={toggleExpanded}>{isExpanded ? "🔽" : "▶️"}</button>
-            {`${cell.column.columnDef.header as string}: ${String(
-              cell.getValue()
-            )}`}
-            <span>({row.subRows.length} items)</span>
-          </td>
-        );
-      } else if (cell.getIsAggregated()) {
-        // If the cell is aggregated, you can display aggregated values
+export const TableRow = React.forwardRef<HTMLTableRowElement, Props>(
+  (
+    {
+      row,
+      renderCell,
+      isGrouped,
+      isExpanded,
+      toggleExpanded,
+      groupedCell,
+      ...rest
+    },
+    ref
+  ) => (
+    <tr key={row.id} ref={ref} {...rest}>
+      {row.getVisibleCells().map((cell) => {
+        if (cell.getIsGrouped()) {
+          return (
+            <td key={cell.id}>
+              <button onClick={toggleExpanded}>
+                {isExpanded ? "🔽" : "▶️"}
+              </button>
+              {`${cell.column.columnDef.header as string}: ${String(
+                cell.getValue()
+              )}`}
+              <span>({row.subRows.length} items)</span>
+            </td>
+          );
+        } else if (cell.getIsAggregated()) {
+          // If the cell is aggregated, you can display aggregated values
+          return <td key={cell.id}>{renderCell(cell)}</td>;
+        } else if (cell.getIsPlaceholder()) {
+          // For placeholder cells (in grouped rows)
+          return <td key={cell.id}></td>;
+        }
+
+        // Regular cell
         return <td key={cell.id}>{renderCell(cell)}</td>;
-      } else if (cell.getIsPlaceholder()) {
-        // For placeholder cells (in grouped rows)
-        return <td key={cell.id}></td>;
-      }
-
-      // Regular cell
-      return <td key={cell.id}>{renderCell(cell)}</td>;
-    })}
-  </tr>
+      })}
+    </tr>
+  )
 );
+
+TableRow.displayName = "TableRow";

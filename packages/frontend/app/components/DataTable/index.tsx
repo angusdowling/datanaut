@@ -12,6 +12,7 @@ import {
   ExpandedState,
   GroupingState,
 } from "@tanstack/react-table";
+import * as ContextMenu from "@radix-ui/react-context-menu";
 import { EditableCell } from "../EditableCell";
 import { TableHeader } from "../TableHeader";
 import { TableRow } from "../TableRow";
@@ -19,12 +20,19 @@ import { Pagination } from "../Pagination";
 import { ColumnDef } from "../types";
 import styles from "./DataTable.module.scss";
 
+export type ContextMenuItem<T> = {
+  label: string;
+  onClick: (row: T) => void;
+  disabled?: boolean;
+};
+
 interface DataTableProps<T> {
   data: T[];
   setData: (data: T[]) => void;
   patchRecord?: (recordIndex: number, columnId: string, value: any) => void;
   columns: ColumnDef<T>[];
   defaultGrouping?: string[];
+  contextMenuItems?: ContextMenuItem<T>[];
 }
 
 export function DataTable<T extends object>({
@@ -33,6 +41,7 @@ export function DataTable<T extends object>({
   patchRecord,
   columns,
   defaultGrouping = [],
+  contextMenuItems = [],
 }: DataTableProps<T>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [grouping, setGrouping] = useState<GroupingState>(defaultGrouping);
@@ -46,6 +55,7 @@ export function DataTable<T extends object>({
 
   // Function to update data when cell value changes
   const updateData = (rowIndex: number, columnId: string, value: any) => {
+    console.log("updateData", rowIndex, columnId, value);
     const newData = [...data] as any;
     newData[rowIndex][columnId] = value;
     setData(newData);
@@ -114,19 +124,36 @@ export function DataTable<T extends object>({
         </thead>
         <tbody>
           {rowModel.rows.map((row) => (
-            <TableRow
-              key={row.id}
-              row={row}
-              renderCell={(cell) =>
-                flexRender(cell.column.columnDef.cell, cell.getContext())
-              }
-              isGrouped={row.getIsGrouped()}
-              isExpanded={row.getIsExpanded()}
-              toggleExpanded={() => row.toggleExpanded()}
-              groupedCell={
-                grouping[0] ? row.getGroupingValue(grouping[0]) : undefined
-              }
-            />
+            <ContextMenu.Root key={row.id}>
+              <ContextMenu.Trigger asChild>
+                <TableRow
+                  row={row}
+                  renderCell={(cell) =>
+                    flexRender(cell.column.columnDef.cell, cell.getContext())
+                  }
+                  isGrouped={row.getIsGrouped()}
+                  isExpanded={row.getIsExpanded()}
+                  toggleExpanded={() => row.toggleExpanded()}
+                  groupedCell={
+                    grouping[0] ? row.getGroupingValue(grouping[0]) : undefined
+                  }
+                />
+              </ContextMenu.Trigger>
+              <ContextMenu.Portal>
+                <ContextMenu.Content className={styles.contextMenu}>
+                  {contextMenuItems.map((item, index) => (
+                    <ContextMenu.Item
+                      key={index}
+                      className={styles.contextMenuItem}
+                      disabled={item.disabled}
+                      onSelect={() => item.onClick(row.original)}
+                    >
+                      {item.label}
+                    </ContextMenu.Item>
+                  ))}
+                </ContextMenu.Content>
+              </ContextMenu.Portal>
+            </ContextMenu.Root>
           ))}
         </tbody>
       </table>

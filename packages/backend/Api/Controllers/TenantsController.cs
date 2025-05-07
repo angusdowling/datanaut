@@ -12,14 +12,14 @@ namespace Datanaut.Api.Controllers
     [ApiController]
     [Route("tenants")]
     [Authorize]
-    public class TenantsController(TenantService tenantService) : ControllerBase
+    public class TenantsController(IService<Tenant> tenantService) : ControllerBase
     {
-        private readonly TenantService _tenantService = tenantService;
+        private readonly IService<Tenant> _tenantService = tenantService;
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Tenant>>> GetTenants()
         {
-            var tenants = await _tenantService.GetTenantsAsync();
+            var tenants = await _tenantService.GetAllAsync();
             return Ok(tenants);
         }
 
@@ -31,8 +31,9 @@ namespace Datanaut.Api.Controllers
                 return BadRequest("Name is required");
             }
 
-            var tenant = await _tenantService.CreateTenantAsync(request);
-            return CreatedAtAction(nameof(GetTenant), new { id = tenant.Id }, tenant);
+            var tenant = new Tenant { Name = request.Name };
+            var createdTenant = await _tenantService.CreateAsync(tenant);
+            return CreatedAtAction(nameof(GetTenant), new { id = createdTenant.Id }, createdTenant);
         }
 
         [HttpGet("{id}")]

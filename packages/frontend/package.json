@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@faker-js/faker": "^9.6.0",
+    "@radix-ui/react-context-menu": "^2.2.14",
     "@radix-ui/themes": "^3.2.1",
     "@remix-run/node": "^2.16.3",
     "@remix-run/react": "^2.16.3",
