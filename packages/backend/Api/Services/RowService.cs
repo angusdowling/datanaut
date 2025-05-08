@@ -7,9 +7,15 @@ using Datanaut.Models;
 
 namespace Datanaut.Api.Services
 {
-    public class RowService(IRepository<AppRow> rowRepository) : IService<AppRow>
+    public class RowService(
+        IRepository<AppRow> rowRepository,
+        IRepository<AppColumn> columnRepository,
+        IRepository<AppCell> cellRepository
+    ) : IService<AppRow>
     {
         private readonly IRepository<AppRow> _rowRepository = rowRepository;
+        private readonly IRepository<AppColumn> _columnRepository = columnRepository;
+        private readonly IRepository<AppCell> _cellRepository = cellRepository;
 
         public async Task<IEnumerable<AppRow>> GetAllAsync()
         {
@@ -23,7 +29,24 @@ namespace Datanaut.Api.Services
 
         public async Task<AppRow> CreateAsync(AppRow row)
         {
-            return await _rowRepository.CreateAsync(row);
+            var createdRow = await _rowRepository.CreateAsync(row);
+
+            // Get all columns for this table
+            var columns = await _columnRepository.FindAsync(c => c.TableId == row.TableId);
+
+            // Create a cell for each column
+            foreach (var column in columns)
+            {
+                var cell = new AppCell
+                {
+                    RowId = createdRow.Id,
+                    ColumnId = column.Id,
+                    Value = "{}",
+                };
+                await _cellRepository.CreateAsync(cell);
+            }
+
+            return createdRow;
         }
 
         public async Task<AppRow> UpdateAsync(AppRow row)

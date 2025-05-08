@@ -13,16 +13,10 @@ namespace Datanaut.Api.Controllers
     [ApiController]
     [Route("rows")]
     [Authorize]
-    public class RowsController : ControllerBase
+    public class RowsController(IService<AppRow> rowService, IMapper mapper) : ControllerBase
     {
-        private readonly IService<AppRow> _rowService;
-        private readonly IMapper _mapper;
-
-        public RowsController(IService<AppRow> rowService, IMapper mapper)
-        {
-            _rowService = rowService;
-            _mapper = mapper;
-        }
+        private readonly IService<AppRow> _rowService = rowService;
+        private readonly IMapper _mapper = mapper;
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<RowDto>>> GetRows([FromQuery] Guid tableId)

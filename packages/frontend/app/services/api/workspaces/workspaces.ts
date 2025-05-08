@@ -28,6 +28,7 @@ import type {
 } from ".././model";
 
 import { customFetch } from "../../../utilities/api";
+import { useCustomMutatorOptions } from "../../../features/api/hooks/useCustomMutatorOptions";
 
 type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
@@ -240,7 +241,7 @@ export const postWorkspaces = async (
   });
 };
 
-export const getPostWorkspacesMutationOptions = <
+export const usePostWorkspacesMutationOptions = <
   TError = unknown,
   TContext = unknown,
 >(options?: {
@@ -275,7 +276,13 @@ export const getPostWorkspacesMutationOptions = <
     return postWorkspaces(data, requestOptions);
   };
 
-  return { mutationFn, ...mutationOptions };
+  const customOptions = useCustomMutatorOptions(
+    { ...mutationOptions, mutationFn },
+    { url: `/api/workspaces` },
+    { operationId: "PostWorkspaces", operationName: "postWorkspaces" },
+  );
+
+  return customOptions;
 };
 
 export type PostWorkspacesMutationResult = NonNullable<
@@ -301,7 +308,7 @@ export const usePostWorkspaces = <
   { data: CreateWorkspaceDto },
   TContext
 > => {
-  const mutationOptions = getPostWorkspacesMutationOptions(options);
+  const mutationOptions = usePostWorkspacesMutationOptions(options);
 
   return useMutation(mutationOptions);
 };
@@ -528,7 +535,7 @@ export const patchWorkspacesId = async (
   });
 };
 
-export const getPatchWorkspacesIdMutationOptions = <
+export const usePatchWorkspacesIdMutationOptions = <
   TError = unknown,
   TContext = unknown,
 >(options?: {
@@ -563,7 +570,13 @@ export const getPatchWorkspacesIdMutationOptions = <
     return patchWorkspacesId(id, data, requestOptions);
   };
 
-  return { mutationFn, ...mutationOptions };
+  const customOptions = useCustomMutatorOptions(
+    { ...mutationOptions, mutationFn },
+    { url: `/api/workspaces/{id}` },
+    { operationId: "PatchWorkspacesId", operationName: "patchWorkspacesId" },
+  );
+
+  return customOptions;
 };
 
 export type PatchWorkspacesIdMutationResult = NonNullable<
@@ -589,7 +602,7 @@ export const usePatchWorkspacesId = <
   { id: string; data: UpdateWorkspaceDto },
   TContext
 > => {
-  const mutationOptions = getPatchWorkspacesIdMutationOptions(options);
+  const mutationOptions = usePatchWorkspacesIdMutationOptions(options);
 
   return useMutation(mutationOptions);
 };
@@ -618,7 +631,7 @@ export const deleteWorkspacesId = async (
   });
 };
 
-export const getDeleteWorkspacesIdMutationOptions = <
+export const useDeleteWorkspacesIdMutationOptions = <
   TError = unknown,
   TContext = unknown,
 >(options?: {
@@ -653,7 +666,13 @@ export const getDeleteWorkspacesIdMutationOptions = <
     return deleteWorkspacesId(id, requestOptions);
   };
 
-  return { mutationFn, ...mutationOptions };
+  const customOptions = useCustomMutatorOptions(
+    { ...mutationOptions, mutationFn },
+    { url: `/api/workspaces/{id}` },
+    { operationId: "DeleteWorkspacesId", operationName: "deleteWorkspacesId" },
+  );
+
+  return customOptions;
 };
 
 export type DeleteWorkspacesIdMutationResult = NonNullable<
@@ -679,7 +698,7 @@ export const useDeleteWorkspacesId = <
   { id: string },
   TContext
 > => {
-  const mutationOptions = getDeleteWorkspacesIdMutationOptions(options);
+  const mutationOptions = useDeleteWorkspacesIdMutationOptions(options);
 
   return useMutation(mutationOptions);
 };

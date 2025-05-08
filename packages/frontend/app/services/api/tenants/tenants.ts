@@ -23,6 +23,7 @@ import type {
 import type { CreateTenantDto, Tenant } from ".././model";
 
 import { customFetch } from "../../../utilities/api";
+import { useCustomMutatorOptions } from "../../../features/api/hooks/useCustomMutatorOptions";
 
 type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
@@ -206,7 +207,7 @@ export const postTenants = async (
   });
 };
 
-export const getPostTenantsMutationOptions = <
+export const usePostTenantsMutationOptions = <
   TError = unknown,
   TContext = unknown,
 >(options?: {
@@ -241,7 +242,13 @@ export const getPostTenantsMutationOptions = <
     return postTenants(data, requestOptions);
   };
 
-  return { mutationFn, ...mutationOptions };
+  const customOptions = useCustomMutatorOptions(
+    { ...mutationOptions, mutationFn },
+    { url: `/api/tenants` },
+    { operationId: "PostTenants", operationName: "postTenants" },
+  );
+
+  return customOptions;
 };
 
 export type PostTenantsMutationResult = NonNullable<
@@ -264,7 +271,7 @@ export const usePostTenants = <TError = unknown, TContext = unknown>(options?: {
   { data: CreateTenantDto },
   TContext
 > => {
-  const mutationOptions = getPostTenantsMutationOptions(options);
+  const mutationOptions = usePostTenantsMutationOptions(options);
 
   return useMutation(mutationOptions);
 };
@@ -467,7 +474,7 @@ export const patchTenantsId = async (
   });
 };
 
-export const getPatchTenantsIdMutationOptions = <
+export const usePatchTenantsIdMutationOptions = <
   TError = unknown,
   TContext = unknown,
 >(options?: {
@@ -502,7 +509,13 @@ export const getPatchTenantsIdMutationOptions = <
     return patchTenantsId(id, data, requestOptions);
   };
 
-  return { mutationFn, ...mutationOptions };
+  const customOptions = useCustomMutatorOptions(
+    { ...mutationOptions, mutationFn },
+    { url: `/api/tenants/{id}` },
+    { operationId: "PatchTenantsId", operationName: "patchTenantsId" },
+  );
+
+  return customOptions;
 };
 
 export type PatchTenantsIdMutationResult = NonNullable<
@@ -528,7 +541,7 @@ export const usePatchTenantsId = <
   { id: string; data: Tenant },
   TContext
 > => {
-  const mutationOptions = getPatchTenantsIdMutationOptions(options);
+  const mutationOptions = usePatchTenantsIdMutationOptions(options);
 
   return useMutation(mutationOptions);
 };
@@ -557,7 +570,7 @@ export const deleteTenantsId = async (
   });
 };
 
-export const getDeleteTenantsIdMutationOptions = <
+export const useDeleteTenantsIdMutationOptions = <
   TError = unknown,
   TContext = unknown,
 >(options?: {
@@ -592,7 +605,13 @@ export const getDeleteTenantsIdMutationOptions = <
     return deleteTenantsId(id, requestOptions);
   };
 
-  return { mutationFn, ...mutationOptions };
+  const customOptions = useCustomMutatorOptions(
+    { ...mutationOptions, mutationFn },
+    { url: `/api/tenants/{id}` },
+    { operationId: "DeleteTenantsId", operationName: "deleteTenantsId" },
+  );
+
+  return customOptions;
 };
 
 export type DeleteTenantsIdMutationResult = NonNullable<
@@ -618,7 +637,7 @@ export const useDeleteTenantsId = <
   { id: string },
   TContext
 > => {
-  const mutationOptions = getDeleteTenantsIdMutationOptions(options);
+  const mutationOptions = useDeleteTenantsIdMutationOptions(options);
 
   return useMutation(mutationOptions);
 };

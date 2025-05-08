@@ -8,7 +8,8 @@ namespace Datanaut.Api.Mapping
     {
         public RowMappingProfile()
         {
-            CreateMap<AppRow, RowDto>();
+            CreateMap<AppRow, RowDto>()
+                .ForMember(dest => dest.Cells, opt => opt.MapFrom(src => src.AppCells));
             CreateMap<CreateRowDto, AppRow>();
             CreateMap<UpdateRowDto, AppRow>();
         }

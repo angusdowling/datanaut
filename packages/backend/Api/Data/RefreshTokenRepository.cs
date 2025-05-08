@@ -7,14 +7,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Datanaut.Api.Data
 {
-    public class RefreshTokenRepository : IRefreshTokenRepository
+    public class RefreshTokenRepository(ApplicationDbContext context) : IRefreshTokenRepository
     {
-        private readonly ApplicationDbContext _context;
-
-        public RefreshTokenRepository(ApplicationDbContext context)
-        {
-            _context = context;
-        }
+        private readonly ApplicationDbContext _context = context;
 
         public async Task<IEnumerable<RefreshToken>> GetAllAsync()
         {

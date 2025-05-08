@@ -1,7 +1,7 @@
 import { DataTable } from "~/components/DataTable";
 import { UserDto } from "~/services/api/model/userDto";
 import { Role } from "~/services/api/model/role";
-import { UpdateUserDto } from "~/services/api/model";
+import { CreateUserDto, UpdateUserDto } from "~/services/api/model";
 import {
   useGetUsers,
   usePatchUsersId,
@@ -10,9 +10,8 @@ import {
 } from "~/services/api/users/users";
 import { useGetTenants } from "~/services/api/tenants/tenants";
 import { useGetRoles } from "~/services/api/roles/roles";
-import { useEntityTable } from "../api/hooks/useEntityTable";
-import { CreateEntityDialog } from "../common/dialogs/CreateEntityDialog";
-import { DeleteEntityDialog } from "../common/dialogs/DeleteEntityDialog";
+import { useEntityTable } from "../../../api/hooks/useEntityTable";
+import { CreateEntityDialog, DeleteEntityDialog } from "~/features/common";
 
 const columns = [
   {
@@ -58,7 +57,7 @@ export const UsersTable = () => {
     confirmDelete,
     handleCreate,
     debouncedPatchRecord,
-  } = useEntityTable<UserDto, any, UpdateUserDto>({
+  } = useEntityTable<UserDto, CreateUserDto, UpdateUserDto>({
     data: users,
     createEntity: createUser,
     updateEntity: patchUser,
@@ -107,7 +106,7 @@ export const UsersTable = () => {
             <label htmlFor="tenantId">Tenant</label>
             <select id="tenantId" name="tenantId" required>
               <option value="">Select a tenant</option>
-              {tenants?.data.map((tenant) => (
+              {tenants?.data?.map((tenant) => (
                 <option key={tenant.id} value={tenant.id}>
                   {tenant.name}
                 </option>
@@ -118,7 +117,7 @@ export const UsersTable = () => {
             <label htmlFor="roleId">Role</label>
             <select id="roleId" name="roleId" required>
               <option value="">Select a role</option>
-              {roles?.data.map((role: Role) => (
+              {roles?.data?.map((role: Role) => (
                 <option key={role.id} value={role.id}>
                   {role.name}
                 </option>

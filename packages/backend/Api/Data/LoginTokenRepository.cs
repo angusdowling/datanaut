@@ -7,14 +7,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Datanaut.Api.Data
 {
-    public class LoginTokenRepository : IRepository<LoginToken>
+    public class LoginTokenRepository(ApplicationDbContext context) : IRepository<LoginToken>
     {
-        private readonly ApplicationDbContext _context;
-
-        public LoginTokenRepository(ApplicationDbContext context)
-        {
-            _context = context;
-        }
+        private readonly ApplicationDbContext _context = context;
 
         public async Task<IEnumerable<LoginToken>> GetAllAsync()
         {

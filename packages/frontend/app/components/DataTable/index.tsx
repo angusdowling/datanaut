@@ -110,6 +110,13 @@ export function DataTable<T extends object>({
 
   const rowModel = table.getRowModel();
 
+  const handleContextMenuAction = (row: T, action: (row: T) => void) => {
+    // Use requestAnimationFrame to ensure the context menu is fully closed
+    requestAnimationFrame(() => {
+      action(row);
+    });
+  };
+
   return (
     <div className={styles.wrapper}>
       <table>
@@ -146,7 +153,9 @@ export function DataTable<T extends object>({
                       key={index}
                       className={styles.contextMenuItem}
                       disabled={item.disabled}
-                      onSelect={() => item.onClick(row.original)}
+                      onSelect={() =>
+                        handleContextMenuAction(row.original, item.onClick)
+                      }
                     >
                       {item.label}
                     </ContextMenu.Item>

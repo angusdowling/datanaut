@@ -4,15 +4,19 @@
  * backend
  * OpenAPI spec version: 1.0
  */
+import type { WorkspaceDto } from "./workspaceDto";
 import type { ColumnDto } from "./columnDto";
+import type { RowDto } from "./rowDto";
 
 export interface TableDto {
   id?: string;
   /** @nullable */
   name?: string | null;
-  workspaceId?: string;
+  workspace?: WorkspaceDto;
   /** @nullable */
   columns?: ColumnDto[] | null;
+  /** @nullable */
+  rows?: RowDto[] | null;
   createdAt?: string;
   updatedAt?: string;
 }

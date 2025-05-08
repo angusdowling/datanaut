@@ -5,20 +5,21 @@ import {
   useDeleteWorkspacesId,
   usePostWorkspaces,
 } from "~/services/api/workspaces/workspaces";
-import { UpdateWorkspaceDto, WorkspaceDto } from "~/services/api/model";
-import { useEntityTable } from "../api/hooks/useEntityTable";
-import { CreateEntityDialog } from "../common/dialogs/CreateEntityDialog";
-import { DeleteEntityDialog } from "../common/dialogs/DeleteEntityDialog";
+import {
+  CreateWorkspaceDto,
+  UpdateWorkspaceDto,
+  WorkspaceDto,
+} from "~/services/api/model";
+import { useEntityTable } from "../../../api/hooks/useEntityTable";
+import { Button } from "@radix-ui/themes";
+import { useGetTenants } from "~/services/api/tenants/tenants";
+import { useNavigate } from "@remix-run/react";
+import { CreateEntityDialog, DeleteEntityDialog } from "~/features/common";
 
 const columns = [
   {
-    accessor: "id" as const,
-    header: "ID",
-    type: "text" as "text",
-  },
-  {
-    accessor: "tenantId" as const,
-    header: "Tenant ID",
+    accessor: "tenant.name" as const,
+    header: "Tenant",
     type: "text" as "text",
   },
   {
@@ -30,9 +31,11 @@ const columns = [
 
 export const WorkspacesTable = () => {
   const { data: workspaces } = useGetWorkspaces();
+  const { data: tenants } = useGetTenants();
   const { mutateAsync: patchWorkspace } = usePatchWorkspacesId();
   const { mutateAsync: deleteWorkspace } = useDeleteWorkspacesId();
   const { mutateAsync: createWorkspace } = usePostWorkspaces();
+  const navigate = useNavigate();
 
   const {
     tableData,
@@ -47,7 +50,7 @@ export const WorkspacesTable = () => {
     confirmDelete,
     handleCreate,
     debouncedPatchRecord,
-  } = useEntityTable<WorkspaceDto, any, UpdateWorkspaceDto>({
+  } = useEntityTable<WorkspaceDto, CreateWorkspaceDto, UpdateWorkspaceDto>({
     data: workspaces,
     createEntity: createWorkspace,
     updateEntity: patchWorkspace,
@@ -63,10 +66,20 @@ export const WorkspacesTable = () => {
       label: "Delete Workspace",
       onClick: handleDeleteEntity,
     },
+    {
+      label: "View Workspace",
+      onClick: (row: WorkspaceDto) => {
+        navigate(`/admin/workspaces/${row?.id}`);
+      },
+    },
   ];
 
   return (
     <>
+      <div>
+        <Button onClick={handleCreateEntity}>Create Workspace</Button>
+      </div>
+
       <DataTable
         data={tableData}
         setData={setTableData}
@@ -87,8 +100,15 @@ export const WorkspacesTable = () => {
             <input type="text" id="name" name="name" required />
           </div>
           <div>
-            <label htmlFor="tenantId">Tenant ID</label>
-            <input type="text" id="tenantId" name="tenantId" required />
+            <label htmlFor="tenantId">Tenant</label>
+            <select id="tenantId" name="tenantId" required>
+              <option value="">Select a tenant</option>
+              {tenants?.data?.map((tenant) => (
+                <option key={tenant.id} value={tenant.id}>
+                  {tenant.name}
+                </option>
+              ))}
+            </select>
           </div>
         </div>
       </CreateEntityDialog>

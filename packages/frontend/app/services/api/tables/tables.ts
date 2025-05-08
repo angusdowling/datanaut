@@ -28,6 +28,7 @@ import type {
 } from ".././model";
 
 import { customFetch } from "../../../utilities/api";
+import { useCustomMutatorOptions } from "../../../features/api/hooks/useCustomMutatorOptions";
 
 type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
@@ -238,7 +239,7 @@ export const postTables = async (
   });
 };
 
-export const getPostTablesMutationOptions = <
+export const usePostTablesMutationOptions = <
   TError = unknown,
   TContext = unknown,
 >(options?: {
@@ -273,7 +274,13 @@ export const getPostTablesMutationOptions = <
     return postTables(data, requestOptions);
   };
 
-  return { mutationFn, ...mutationOptions };
+  const customOptions = useCustomMutatorOptions(
+    { ...mutationOptions, mutationFn },
+    { url: `/api/tables` },
+    { operationId: "PostTables", operationName: "postTables" },
+  );
+
+  return customOptions;
 };
 
 export type PostTablesMutationResult = NonNullable<
@@ -296,7 +303,7 @@ export const usePostTables = <TError = unknown, TContext = unknown>(options?: {
   { data: CreateTableDto },
   TContext
 > => {
-  const mutationOptions = getPostTablesMutationOptions(options);
+  const mutationOptions = usePostTablesMutationOptions(options);
 
   return useMutation(mutationOptions);
 };
@@ -499,7 +506,7 @@ export const patchTablesId = async (
   });
 };
 
-export const getPatchTablesIdMutationOptions = <
+export const usePatchTablesIdMutationOptions = <
   TError = unknown,
   TContext = unknown,
 >(options?: {
@@ -534,7 +541,13 @@ export const getPatchTablesIdMutationOptions = <
     return patchTablesId(id, data, requestOptions);
   };
 
-  return { mutationFn, ...mutationOptions };
+  const customOptions = useCustomMutatorOptions(
+    { ...mutationOptions, mutationFn },
+    { url: `/api/tables/{id}` },
+    { operationId: "PatchTablesId", operationName: "patchTablesId" },
+  );
+
+  return customOptions;
 };
 
 export type PatchTablesIdMutationResult = NonNullable<
@@ -560,7 +573,7 @@ export const usePatchTablesId = <
   { id: string; data: UpdateTableDto },
   TContext
 > => {
-  const mutationOptions = getPatchTablesIdMutationOptions(options);
+  const mutationOptions = usePatchTablesIdMutationOptions(options);
 
   return useMutation(mutationOptions);
 };
@@ -589,7 +602,7 @@ export const deleteTablesId = async (
   });
 };
 
-export const getDeleteTablesIdMutationOptions = <
+export const useDeleteTablesIdMutationOptions = <
   TError = unknown,
   TContext = unknown,
 >(options?: {
@@ -624,7 +637,13 @@ export const getDeleteTablesIdMutationOptions = <
     return deleteTablesId(id, requestOptions);
   };
 
-  return { mutationFn, ...mutationOptions };
+  const customOptions = useCustomMutatorOptions(
+    { ...mutationOptions, mutationFn },
+    { url: `/api/tables/{id}` },
+    { operationId: "DeleteTablesId", operationName: "deleteTablesId" },
+  );
+
+  return customOptions;
 };
 
 export type DeleteTablesIdMutationResult = NonNullable<
@@ -650,7 +669,7 @@ export const useDeleteTablesId = <
   { id: string },
   TContext
 > => {
-  const mutationOptions = getDeleteTablesIdMutationOptions(options);
+  const mutationOptions = useDeleteTablesIdMutationOptions(options);
 
   return useMutation(mutationOptions);
 };

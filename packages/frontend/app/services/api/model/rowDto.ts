@@ -4,11 +4,14 @@
  * backend
  * OpenAPI spec version: 1.0
  */
+import type { CellDto } from "./cellDto";
 
 export interface RowDto {
   id?: string;
   tableId?: string;
   createdBy?: string;
+  /** @nullable */
+  cells?: CellDto[] | null;
   createdAt?: string;
   updatedAt?: string;
 }

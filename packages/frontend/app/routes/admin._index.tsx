@@ -18,10 +18,10 @@ export default function Dashboard() {
         <nav>
           <ul>
             <li>
-              <Link to="/dashboard/workspaces">Workspaces</Link>
+              <Link to="/admin/workspaces">Workspaces</Link>
             </li>
             <li>
-              <Link to="/dashboard/users">Users</Link>
+              <Link to="/admin/users">Users</Link>
             </li>
           </ul>
         </nav>

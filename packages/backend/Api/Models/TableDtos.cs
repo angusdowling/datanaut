@@ -7,8 +7,9 @@ namespace Datanaut.Api.Models
     {
         public Guid Id { get; set; }
         public required string Name { get; set; }
-        public required Guid WorkspaceId { get; set; }
+        public required WorkspaceDto Workspace { get; set; }
         public required List<ColumnDto> Columns { get; set; }
+        public required List<RowDto> Rows { get; set; }
         public required DateTime CreatedAt { get; set; }
         public required DateTime UpdatedAt { get; set; }
     }
@@ -17,7 +18,6 @@ namespace Datanaut.Api.Models
     {
         public required string Name { get; set; }
         public required Guid WorkspaceId { get; set; }
-        public required List<CreateColumnDto> Columns { get; set; }
     }
 
     public class UpdateTableDto

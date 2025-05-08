@@ -21,6 +21,10 @@ export default defineConfig({
           options: {
             staleTime: 10000,
           },
+          mutationOptions: {
+            path: "./app/features/api/hooks/useCustomMutatorOptions.ts",
+            name: "useCustomMutatorOptions",
+          },
         },
         mutator: {
           path: "./app/utilities/api.ts",

@@ -16,6 +16,11 @@ export function DeleteEntityDialog({
   entityName,
   onConfirm,
 }: DeleteEntityDialogProps) {
+  const handleConfirm = async () => {
+    await onConfirm();
+    onOpenChange(false);
+  };
+
   return (
     <Dialog.Root open={isOpen} onOpenChange={onOpenChange}>
       <Dialog.Portal>
@@ -30,7 +35,7 @@ export function DeleteEntityDialog({
             <Button variant="soft" onClick={() => onOpenChange(false)}>
               Cancel
             </Button>
-            <Button variant="solid" color="red" onClick={onConfirm}>
+            <Button variant="solid" color="red" onClick={handleConfirm}>
               Delete
             </Button>
           </div>

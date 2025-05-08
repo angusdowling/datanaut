@@ -13,16 +13,11 @@ namespace Datanaut.Api.Controllers
     [ApiController]
     [Route("workspaces")]
     [Authorize]
-    public class WorkspacesController : ControllerBase
+    public class WorkspacesController(IService<Workspace> workspaceService, IMapper mapper)
+        : ControllerBase
     {
-        private readonly IService<Workspace> _workspaceService;
-        private readonly IMapper _mapper;
-
-        public WorkspacesController(IService<Workspace> workspaceService, IMapper mapper)
-        {
-            _workspaceService = workspaceService;
-            _mapper = mapper;
-        }
+        private readonly IService<Workspace> _workspaceService = workspaceService;
+        private readonly IMapper _mapper = mapper;
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<WorkspaceDto>>> GetWorkspaces(

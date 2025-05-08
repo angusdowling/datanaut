@@ -13,7 +13,7 @@ namespace Datanaut.Api.Data
 
         public async Task<IEnumerable<Workspace>> GetAllAsync()
         {
-            return await _context.Workspaces.ToListAsync();
+            return await _context.Workspaces.Include(w => w.Tenant).ToListAsync();
         }
 
         public async Task<Workspace?> GetByIdAsync(Guid id)
@@ -56,7 +56,7 @@ namespace Datanaut.Api.Data
             Expression<Func<Workspace, bool>> predicate
         )
         {
-            return await _context.Workspaces.Where(predicate).ToListAsync();
+            return await _context.Workspaces.Where(predicate).Include(w => w.Tenant).ToListAsync();
         }
     }
 }

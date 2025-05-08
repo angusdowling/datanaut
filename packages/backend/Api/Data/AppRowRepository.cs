@@ -13,12 +13,14 @@ namespace Datanaut.Api.Data
 
         public async Task<IEnumerable<AppRow>> GetAllAsync()
         {
-            return await _context.AppRows.ToListAsync();
+            return await _context.AppRows.Include(r => r.AppCells).ToListAsync();
         }
 
         public async Task<AppRow?> GetByIdAsync(Guid id)
         {
-            return await _context.AppRows.FindAsync(id);
+            return await _context
+                .AppRows.Include(r => r.AppCells)
+                .FirstOrDefaultAsync(r => r.Id == id);
         }
 
         public async Task<AppRow> CreateAsync(AppRow row)
@@ -54,7 +56,7 @@ namespace Datanaut.Api.Data
 
         public async Task<IEnumerable<AppRow>> FindAsync(Expression<Func<AppRow, bool>> predicate)
         {
-            return await _context.AppRows.Where(predicate).ToListAsync();
+            return await _context.AppRows.Where(predicate).Include(r => r.AppCells).ToListAsync();
         }
     }
 }

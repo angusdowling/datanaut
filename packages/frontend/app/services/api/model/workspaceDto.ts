@@ -4,13 +4,14 @@
  * backend
  * OpenAPI spec version: 1.0
  */
+import type { TenantDto } from "./tenantDto";
 import type { TableDto } from "./tableDto";
 
 export interface WorkspaceDto {
   id?: string;
   /** @nullable */
   name?: string | null;
-  tenantId?: string;
+  tenant?: TenantDto;
   /** @nullable */
   tables?: TableDto[] | null;
   createdAt?: string;

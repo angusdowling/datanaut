@@ -28,6 +28,7 @@ import type {
 } from ".././model";
 
 import { customFetch } from "../../../utilities/api";
+import { useCustomMutatorOptions } from "../../../features/api/hooks/useCustomMutatorOptions";
 
 type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
@@ -238,7 +239,7 @@ export const postRows = async (
   });
 };
 
-export const getPostRowsMutationOptions = <
+export const usePostRowsMutationOptions = <
   TError = unknown,
   TContext = unknown,
 >(options?: {
@@ -273,7 +274,13 @@ export const getPostRowsMutationOptions = <
     return postRows(data, requestOptions);
   };
 
-  return { mutationFn, ...mutationOptions };
+  const customOptions = useCustomMutatorOptions(
+    { ...mutationOptions, mutationFn },
+    { url: `/api/rows` },
+    { operationId: "PostRows", operationName: "postRows" },
+  );
+
+  return customOptions;
 };
 
 export type PostRowsMutationResult = NonNullable<
@@ -296,7 +303,7 @@ export const usePostRows = <TError = unknown, TContext = unknown>(options?: {
   { data: CreateRowDto },
   TContext
 > => {
-  const mutationOptions = getPostRowsMutationOptions(options);
+  const mutationOptions = usePostRowsMutationOptions(options);
 
   return useMutation(mutationOptions);
 };
@@ -497,7 +504,7 @@ export const patchRowsId = async (
   });
 };
 
-export const getPatchRowsIdMutationOptions = <
+export const usePatchRowsIdMutationOptions = <
   TError = unknown,
   TContext = unknown,
 >(options?: {
@@ -532,7 +539,13 @@ export const getPatchRowsIdMutationOptions = <
     return patchRowsId(id, data, requestOptions);
   };
 
-  return { mutationFn, ...mutationOptions };
+  const customOptions = useCustomMutatorOptions(
+    { ...mutationOptions, mutationFn },
+    { url: `/api/rows/{id}` },
+    { operationId: "PatchRowsId", operationName: "patchRowsId" },
+  );
+
+  return customOptions;
 };
 
 export type PatchRowsIdMutationResult = NonNullable<
@@ -555,7 +568,7 @@ export const usePatchRowsId = <TError = unknown, TContext = unknown>(options?: {
   { id: string; data: UpdateRowDto },
   TContext
 > => {
-  const mutationOptions = getPatchRowsIdMutationOptions(options);
+  const mutationOptions = usePatchRowsIdMutationOptions(options);
 
   return useMutation(mutationOptions);
 };
@@ -584,7 +597,7 @@ export const deleteRowsId = async (
   });
 };
 
-export const getDeleteRowsIdMutationOptions = <
+export const useDeleteRowsIdMutationOptions = <
   TError = unknown,
   TContext = unknown,
 >(options?: {
@@ -619,7 +632,13 @@ export const getDeleteRowsIdMutationOptions = <
     return deleteRowsId(id, requestOptions);
   };
 
-  return { mutationFn, ...mutationOptions };
+  const customOptions = useCustomMutatorOptions(
+    { ...mutationOptions, mutationFn },
+    { url: `/api/rows/{id}` },
+    { operationId: "DeleteRowsId", operationName: "deleteRowsId" },
+  );
+
+  return customOptions;
 };
 
 export type DeleteRowsIdMutationResult = NonNullable<
@@ -645,7 +664,7 @@ export const useDeleteRowsId = <
   { id: string },
   TContext
 > => {
-  const mutationOptions = getDeleteRowsIdMutationOptions(options);
+  const mutationOptions = useDeleteRowsIdMutationOptions(options);
 
   return useMutation(mutationOptions);
 };

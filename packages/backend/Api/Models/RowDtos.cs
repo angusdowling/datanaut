@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Datanaut.Models;
 
 namespace Datanaut.Api.Models
 {
@@ -8,6 +9,7 @@ namespace Datanaut.Api.Models
         public Guid Id { get; set; }
         public required Guid TableId { get; set; }
         public required Guid CreatedBy { get; set; }
+        public required List<CellDto> Cells { get; set; }
         public required DateTime CreatedAt { get; set; }
         public required DateTime UpdatedAt { get; set; }
     }

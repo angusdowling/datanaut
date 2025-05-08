@@ -4,12 +4,9 @@
  * backend
  * OpenAPI spec version: 1.0
  */
-import type { CreateColumnDto } from "./createColumnDto";
 
 export interface CreateTableDto {
   /** @nullable */
   name?: string | null;
   workspaceId?: string;
-  /** @nullable */
-  columns?: CreateColumnDto[] | null;
 }

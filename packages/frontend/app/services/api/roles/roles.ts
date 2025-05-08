@@ -23,6 +23,7 @@ import type {
 import type { CreateRoleDto, RoleDto, UpdateRoleDto } from ".././model";
 
 import { customFetch } from "../../../utilities/api";
+import { useCustomMutatorOptions } from "../../../features/api/hooks/useCustomMutatorOptions";
 
 type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
@@ -204,7 +205,7 @@ export const postRoles = async (
   });
 };
 
-export const getPostRolesMutationOptions = <
+export const usePostRolesMutationOptions = <
   TError = unknown,
   TContext = unknown,
 >(options?: {
@@ -239,7 +240,13 @@ export const getPostRolesMutationOptions = <
     return postRoles(data, requestOptions);
   };
 
-  return { mutationFn, ...mutationOptions };
+  const customOptions = useCustomMutatorOptions(
+    { ...mutationOptions, mutationFn },
+    { url: `/api/roles` },
+    { operationId: "PostRoles", operationName: "postRoles" },
+  );
+
+  return customOptions;
 };
 
 export type PostRolesMutationResult = NonNullable<
@@ -262,7 +269,7 @@ export const usePostRoles = <TError = unknown, TContext = unknown>(options?: {
   { data: CreateRoleDto },
   TContext
 > => {
-  const mutationOptions = getPostRolesMutationOptions(options);
+  const mutationOptions = usePostRolesMutationOptions(options);
 
   return useMutation(mutationOptions);
 };
@@ -465,7 +472,7 @@ export const patchRolesId = async (
   });
 };
 
-export const getPatchRolesIdMutationOptions = <
+export const usePatchRolesIdMutationOptions = <
   TError = unknown,
   TContext = unknown,
 >(options?: {
@@ -500,7 +507,13 @@ export const getPatchRolesIdMutationOptions = <
     return patchRolesId(id, data, requestOptions);
   };
 
-  return { mutationFn, ...mutationOptions };
+  const customOptions = useCustomMutatorOptions(
+    { ...mutationOptions, mutationFn },
+    { url: `/api/roles/{id}` },
+    { operationId: "PatchRolesId", operationName: "patchRolesId" },
+  );
+
+  return customOptions;
 };
 
 export type PatchRolesIdMutationResult = NonNullable<
@@ -526,7 +539,7 @@ export const usePatchRolesId = <
   { id: string; data: UpdateRoleDto },
   TContext
 > => {
-  const mutationOptions = getPatchRolesIdMutationOptions(options);
+  const mutationOptions = usePatchRolesIdMutationOptions(options);
 
   return useMutation(mutationOptions);
 };
@@ -555,7 +568,7 @@ export const deleteRolesId = async (
   });
 };
 
-export const getDeleteRolesIdMutationOptions = <
+export const useDeleteRolesIdMutationOptions = <
   TError = unknown,
   TContext = unknown,
 >(options?: {
@@ -590,7 +603,13 @@ export const getDeleteRolesIdMutationOptions = <
     return deleteRolesId(id, requestOptions);
   };
 
-  return { mutationFn, ...mutationOptions };
+  const customOptions = useCustomMutatorOptions(
+    { ...mutationOptions, mutationFn },
+    { url: `/api/roles/{id}` },
+    { operationId: "DeleteRolesId", operationName: "deleteRolesId" },
+  );
+
+  return customOptions;
 };
 
 export type DeleteRolesIdMutationResult = NonNullable<
@@ -616,7 +635,7 @@ export const useDeleteRolesId = <
   { id: string },
   TContext
 > => {
-  const mutationOptions = getDeleteRolesIdMutationOptions(options);
+  const mutationOptions = useDeleteRolesIdMutationOptions(options);
 
   return useMutation(mutationOptions);
 };

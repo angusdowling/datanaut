@@ -13,12 +13,16 @@ namespace Datanaut.Api.Data
 
         public async Task<IEnumerable<AppTable>> GetAllAsync()
         {
-            return await _context.AppTables.ToListAsync();
+            return await _context.AppTables.Include(t => t.Workspace).ToListAsync();
         }
 
         public async Task<AppTable?> GetByIdAsync(Guid id)
         {
-            return await _context.AppTables.FindAsync(id);
+            return await _context
+                .AppTables.Include(t => t.Workspace)
+                .Include(t => t.AppColumns)
+                .Include(t => t.AppRows)
+                .FirstOrDefaultAsync(t => t.Id == id);
         }
 
         public async Task<AppTable> CreateAsync(AppTable table)
@@ -56,7 +60,12 @@ namespace Datanaut.Api.Data
             Expression<Func<AppTable, bool>> predicate
         )
         {
-            return await _context.AppTables.Where(predicate).ToListAsync();
+            return await _context
+                .AppTables.Include(t => t.Workspace)
+                .Include(t => t.AppColumns)
+                .Include(t => t.AppRows)
+                .Where(predicate)
+                .ToListAsync();
         }
     }
 }

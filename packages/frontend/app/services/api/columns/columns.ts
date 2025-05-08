@@ -28,6 +28,7 @@ import type {
 } from ".././model";
 
 import { customFetch } from "../../../utilities/api";
+import { useCustomMutatorOptions } from "../../../features/api/hooks/useCustomMutatorOptions";
 
 type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
@@ -240,7 +241,7 @@ export const postColumns = async (
   });
 };
 
-export const getPostColumnsMutationOptions = <
+export const usePostColumnsMutationOptions = <
   TError = unknown,
   TContext = unknown,
 >(options?: {
@@ -275,7 +276,13 @@ export const getPostColumnsMutationOptions = <
     return postColumns(data, requestOptions);
   };
 
-  return { mutationFn, ...mutationOptions };
+  const customOptions = useCustomMutatorOptions(
+    { ...mutationOptions, mutationFn },
+    { url: `/api/columns` },
+    { operationId: "PostColumns", operationName: "postColumns" },
+  );
+
+  return customOptions;
 };
 
 export type PostColumnsMutationResult = NonNullable<
@@ -298,7 +305,7 @@ export const usePostColumns = <TError = unknown, TContext = unknown>(options?: {
   { data: CreateColumnDto },
   TContext
 > => {
-  const mutationOptions = getPostColumnsMutationOptions(options);
+  const mutationOptions = usePostColumnsMutationOptions(options);
 
   return useMutation(mutationOptions);
 };
@@ -501,7 +508,7 @@ export const patchColumnsId = async (
   });
 };
 
-export const getPatchColumnsIdMutationOptions = <
+export const usePatchColumnsIdMutationOptions = <
   TError = unknown,
   TContext = unknown,
 >(options?: {
@@ -536,7 +543,13 @@ export const getPatchColumnsIdMutationOptions = <
     return patchColumnsId(id, data, requestOptions);
   };
 
-  return { mutationFn, ...mutationOptions };
+  const customOptions = useCustomMutatorOptions(
+    { ...mutationOptions, mutationFn },
+    { url: `/api/columns/{id}` },
+    { operationId: "PatchColumnsId", operationName: "patchColumnsId" },
+  );
+
+  return customOptions;
 };
 
 export type PatchColumnsIdMutationResult = NonNullable<
@@ -562,7 +575,7 @@ export const usePatchColumnsId = <
   { id: string; data: UpdateColumnDto },
   TContext
 > => {
-  const mutationOptions = getPatchColumnsIdMutationOptions(options);
+  const mutationOptions = usePatchColumnsIdMutationOptions(options);
 
   return useMutation(mutationOptions);
 };
@@ -591,7 +604,7 @@ export const deleteColumnsId = async (
   });
 };
 
-export const getDeleteColumnsIdMutationOptions = <
+export const useDeleteColumnsIdMutationOptions = <
   TError = unknown,
   TContext = unknown,
 >(options?: {
@@ -626,7 +639,13 @@ export const getDeleteColumnsIdMutationOptions = <
     return deleteColumnsId(id, requestOptions);
   };
 
-  return { mutationFn, ...mutationOptions };
+  const customOptions = useCustomMutatorOptions(
+    { ...mutationOptions, mutationFn },
+    { url: `/api/columns/{id}` },
+    { operationId: "DeleteColumnsId", operationName: "deleteColumnsId" },
+  );
+
+  return customOptions;
 };
 
 export type DeleteColumnsIdMutationResult = NonNullable<
@@ -652,7 +671,7 @@ export const useDeleteColumnsId = <
   { id: string },
   TContext
 > => {
-  const mutationOptions = getDeleteColumnsIdMutationOptions(options);
+  const mutationOptions = useDeleteColumnsIdMutationOptions(options);
 
   return useMutation(mutationOptions);
 };

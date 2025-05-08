@@ -28,6 +28,7 @@ import type {
 } from ".././model";
 
 import { customFetch } from "../../../utilities/api";
+import { useCustomMutatorOptions } from "../../../features/api/hooks/useCustomMutatorOptions";
 
 type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
@@ -238,7 +239,7 @@ export const postCells = async (
   });
 };
 
-export const getPostCellsMutationOptions = <
+export const usePostCellsMutationOptions = <
   TError = unknown,
   TContext = unknown,
 >(options?: {
@@ -273,7 +274,13 @@ export const getPostCellsMutationOptions = <
     return postCells(data, requestOptions);
   };
 
-  return { mutationFn, ...mutationOptions };
+  const customOptions = useCustomMutatorOptions(
+    { ...mutationOptions, mutationFn },
+    { url: `/api/cells` },
+    { operationId: "PostCells", operationName: "postCells" },
+  );
+
+  return customOptions;
 };
 
 export type PostCellsMutationResult = NonNullable<
@@ -296,7 +303,7 @@ export const usePostCells = <TError = unknown, TContext = unknown>(options?: {
   { data: CreateCellDto },
   TContext
 > => {
-  const mutationOptions = getPostCellsMutationOptions(options);
+  const mutationOptions = usePostCellsMutationOptions(options);
 
   return useMutation(mutationOptions);
 };
@@ -499,7 +506,7 @@ export const patchCellsId = async (
   });
 };
 
-export const getPatchCellsIdMutationOptions = <
+export const usePatchCellsIdMutationOptions = <
   TError = unknown,
   TContext = unknown,
 >(options?: {
@@ -534,7 +541,13 @@ export const getPatchCellsIdMutationOptions = <
     return patchCellsId(id, data, requestOptions);
   };
 
-  return { mutationFn, ...mutationOptions };
+  const customOptions = useCustomMutatorOptions(
+    { ...mutationOptions, mutationFn },
+    { url: `/api/cells/{id}` },
+    { operationId: "PatchCellsId", operationName: "patchCellsId" },
+  );
+
+  return customOptions;
 };
 
 export type PatchCellsIdMutationResult = NonNullable<
@@ -560,7 +573,7 @@ export const usePatchCellsId = <
   { id: string; data: UpdateCellDto },
   TContext
 > => {
-  const mutationOptions = getPatchCellsIdMutationOptions(options);
+  const mutationOptions = usePatchCellsIdMutationOptions(options);
 
   return useMutation(mutationOptions);
 };
@@ -589,7 +602,7 @@ export const deleteCellsId = async (
   });
 };
 
-export const getDeleteCellsIdMutationOptions = <
+export const useDeleteCellsIdMutationOptions = <
   TError = unknown,
   TContext = unknown,
 >(options?: {
@@ -624,7 +637,13 @@ export const getDeleteCellsIdMutationOptions = <
     return deleteCellsId(id, requestOptions);
   };
 
-  return { mutationFn, ...mutationOptions };
+  const customOptions = useCustomMutatorOptions(
+    { ...mutationOptions, mutationFn },
+    { url: `/api/cells/{id}` },
+    { operationId: "DeleteCellsId", operationName: "deleteCellsId" },
+  );
+
+  return customOptions;
 };
 
 export type DeleteCellsIdMutationResult = NonNullable<
@@ -650,7 +669,7 @@ export const useDeleteCellsId = <
   { id: string },
   TContext
 > => {
-  const mutationOptions = getDeleteCellsIdMutationOptions(options);
+  const mutationOptions = useDeleteCellsIdMutationOptions(options);
 
   return useMutation(mutationOptions);
 };

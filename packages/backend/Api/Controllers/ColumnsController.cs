@@ -13,16 +13,11 @@ namespace Datanaut.Api.Controllers
     [ApiController]
     [Route("columns")]
     [Authorize]
-    public class ColumnsController : ControllerBase
+    public class ColumnsController(IService<AppColumn> columnService, IMapper mapper)
+        : ControllerBase
     {
-        private readonly IService<AppColumn> _columnService;
-        private readonly IMapper _mapper;
-
-        public ColumnsController(IService<AppColumn> columnService, IMapper mapper)
-        {
-            _columnService = columnService;
-            _mapper = mapper;
-        }
+        private readonly IService<AppColumn> _columnService = columnService;
+        private readonly IMapper _mapper = mapper;
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ColumnDto>>> GetColumns([FromQuery] Guid tableId)

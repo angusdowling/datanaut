@@ -13,16 +13,10 @@ namespace Datanaut.Api.Controllers
     [ApiController]
     [Route("cells")]
     [Authorize]
-    public class CellsController : ControllerBase
+    public class CellsController(IService<AppCell> cellService, IMapper mapper) : ControllerBase
     {
-        private readonly IService<AppCell> _cellService;
-        private readonly IMapper _mapper;
-
-        public CellsController(IService<AppCell> cellService, IMapper mapper)
-        {
-            _cellService = cellService;
-            _mapper = mapper;
-        }
+        private readonly IService<AppCell> _cellService = cellService;
+        private readonly IMapper _mapper = mapper;
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<CellDto>>> GetCells([FromQuery] Guid rowId)

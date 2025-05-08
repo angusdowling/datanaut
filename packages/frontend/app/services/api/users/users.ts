@@ -23,6 +23,7 @@ import type {
 import type { CreateUserDto, UpdateUserDto, UserDto } from ".././model";
 
 import { customFetch } from "../../../utilities/api";
+import { useCustomMutatorOptions } from "../../../features/api/hooks/useCustomMutatorOptions";
 
 type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
@@ -204,7 +205,7 @@ export const postUsers = async (
   });
 };
 
-export const getPostUsersMutationOptions = <
+export const usePostUsersMutationOptions = <
   TError = unknown,
   TContext = unknown,
 >(options?: {
@@ -239,7 +240,13 @@ export const getPostUsersMutationOptions = <
     return postUsers(data, requestOptions);
   };
 
-  return { mutationFn, ...mutationOptions };
+  const customOptions = useCustomMutatorOptions(
+    { ...mutationOptions, mutationFn },
+    { url: `/api/users` },
+    { operationId: "PostUsers", operationName: "postUsers" },
+  );
+
+  return customOptions;
 };
 
 export type PostUsersMutationResult = NonNullable<
@@ -262,7 +269,7 @@ export const usePostUsers = <TError = unknown, TContext = unknown>(options?: {
   { data: CreateUserDto },
   TContext
 > => {
-  const mutationOptions = getPostUsersMutationOptions(options);
+  const mutationOptions = usePostUsersMutationOptions(options);
 
   return useMutation(mutationOptions);
 };
@@ -465,7 +472,7 @@ export const patchUsersId = async (
   });
 };
 
-export const getPatchUsersIdMutationOptions = <
+export const usePatchUsersIdMutationOptions = <
   TError = unknown,
   TContext = unknown,
 >(options?: {
@@ -500,7 +507,13 @@ export const getPatchUsersIdMutationOptions = <
     return patchUsersId(id, data, requestOptions);
   };
 
-  return { mutationFn, ...mutationOptions };
+  const customOptions = useCustomMutatorOptions(
+    { ...mutationOptions, mutationFn },
+    { url: `/api/users/{id}` },
+    { operationId: "PatchUsersId", operationName: "patchUsersId" },
+  );
+
+  return customOptions;
 };
 
 export type PatchUsersIdMutationResult = NonNullable<
@@ -526,7 +539,7 @@ export const usePatchUsersId = <
   { id: string; data: UpdateUserDto },
   TContext
 > => {
-  const mutationOptions = getPatchUsersIdMutationOptions(options);
+  const mutationOptions = usePatchUsersIdMutationOptions(options);
 
   return useMutation(mutationOptions);
 };
@@ -555,7 +568,7 @@ export const deleteUsersId = async (
   });
 };
 
-export const getDeleteUsersIdMutationOptions = <
+export const useDeleteUsersIdMutationOptions = <
   TError = unknown,
   TContext = unknown,
 >(options?: {
@@ -590,7 +603,13 @@ export const getDeleteUsersIdMutationOptions = <
     return deleteUsersId(id, requestOptions);
   };
 
-  return { mutationFn, ...mutationOptions };
+  const customOptions = useCustomMutatorOptions(
+    { ...mutationOptions, mutationFn },
+    { url: `/api/users/{id}` },
+    { operationId: "DeleteUsersId", operationName: "deleteUsersId" },
+  );
+
+  return customOptions;
 };
 
 export type DeleteUsersIdMutationResult = NonNullable<
@@ -616,7 +635,7 @@ export const useDeleteUsersId = <
   { id: string },
   TContext
 > => {
-  const mutationOptions = getDeleteUsersIdMutationOptions(options);
+  const mutationOptions = useDeleteUsersIdMutationOptions(options);
 
   return useMutation(mutationOptions);
 };

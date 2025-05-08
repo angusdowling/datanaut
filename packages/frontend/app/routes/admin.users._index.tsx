@@ -1,6 +1,6 @@
 import { LoaderFunctionArgs, MetaFunction } from "@remix-run/node";
 import { dehydrate, QueryClient } from "@tanstack/react-query";
-import { UsersTable } from "~/features/users/UsersTable";
+import { UsersTable } from "~/features/users";
 import { prefetchGetUsers } from "~/services/api/users/users";
 
 export const meta: MetaFunction = () => {

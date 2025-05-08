@@ -1,13 +1,5 @@
-import {
-  Box,
-  Button,
-  Card,
-  Flex,
-  Heading,
-  Table,
-  Text,
-} from "@radix-ui/themes";
-import { Link, useLoaderData } from "@remix-run/react";
+import { Box, Button, Card, Flex, Heading, Table } from "@radix-ui/themes";
+import { Link } from "@remix-run/react";
 
 export async function loader({ params }: { params: { id: string } }) {
   // const users = await getUsers({ tenantId: params.id });

@@ -1,5 +1,5 @@
 import { MetaFunction } from "@remix-run/node";
-import { WorkspacesTable } from "~/features/workspaces/WorkspacesTable";
+import { WorkspacesTable } from "~/features/workspaces";
 
 export const meta: MetaFunction = () => {
   return [

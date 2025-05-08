@@ -19,6 +19,7 @@ import type {
 } from ".././model";
 
 import { customFetch } from "../../../utilities/api";
+import { useCustomMutatorOptions } from "../../../features/api/hooks/useCustomMutatorOptions";
 
 type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
@@ -49,7 +50,7 @@ export const postAuthLogin = async (
   });
 };
 
-export const getPostAuthLoginMutationOptions = <
+export const usePostAuthLoginMutationOptions = <
   TError = unknown,
   TContext = unknown,
 >(options?: {
@@ -84,7 +85,13 @@ export const getPostAuthLoginMutationOptions = <
     return postAuthLogin(data, requestOptions);
   };
 
-  return { mutationFn, ...mutationOptions };
+  const customOptions = useCustomMutatorOptions(
+    { ...mutationOptions, mutationFn },
+    { url: `/api/auth/login` },
+    { operationId: "PostAuthLogin", operationName: "postAuthLogin" },
+  );
+
+  return customOptions;
 };
 
 export type PostAuthLoginMutationResult = NonNullable<
@@ -110,7 +117,7 @@ export const usePostAuthLogin = <
   { data: LoginRequest },
   TContext
 > => {
-  const mutationOptions = getPostAuthLoginMutationOptions(options);
+  const mutationOptions = usePostAuthLoginMutationOptions(options);
 
   return useMutation(mutationOptions);
 };
@@ -141,7 +148,7 @@ export const postAuthVerify = async (
   });
 };
 
-export const getPostAuthVerifyMutationOptions = <
+export const usePostAuthVerifyMutationOptions = <
   TError = unknown,
   TContext = unknown,
 >(options?: {
@@ -176,7 +183,13 @@ export const getPostAuthVerifyMutationOptions = <
     return postAuthVerify(data, requestOptions);
   };
 
-  return { mutationFn, ...mutationOptions };
+  const customOptions = useCustomMutatorOptions(
+    { ...mutationOptions, mutationFn },
+    { url: `/api/auth/verify` },
+    { operationId: "PostAuthVerify", operationName: "postAuthVerify" },
+  );
+
+  return customOptions;
 };
 
 export type PostAuthVerifyMutationResult = NonNullable<
@@ -202,7 +215,7 @@ export const usePostAuthVerify = <
   { data: VerifyRequest },
   TContext
 > => {
-  const mutationOptions = getPostAuthVerifyMutationOptions(options);
+  const mutationOptions = usePostAuthVerifyMutationOptions(options);
 
   return useMutation(mutationOptions);
 };
@@ -230,7 +243,7 @@ export const postAuthRefresh = async (
   });
 };
 
-export const getPostAuthRefreshMutationOptions = <
+export const usePostAuthRefreshMutationOptions = <
   TError = unknown,
   TContext = unknown,
 >(options?: {
@@ -263,7 +276,13 @@ export const getPostAuthRefreshMutationOptions = <
     return postAuthRefresh(requestOptions);
   };
 
-  return { mutationFn, ...mutationOptions };
+  const customOptions = useCustomMutatorOptions(
+    { ...mutationOptions, mutationFn },
+    { url: `/api/auth/refresh` },
+    { operationId: "PostAuthRefresh", operationName: "postAuthRefresh" },
+  );
+
+  return customOptions;
 };
 
 export type PostAuthRefreshMutationResult = NonNullable<
@@ -289,7 +308,7 @@ export const usePostAuthRefresh = <
   void,
   TContext
 > => {
-  const mutationOptions = getPostAuthRefreshMutationOptions(options);
+  const mutationOptions = usePostAuthRefreshMutationOptions(options);
 
   return useMutation(mutationOptions);
 };
@@ -317,7 +336,7 @@ export const postAuthLogout = async (
   });
 };
 
-export const getPostAuthLogoutMutationOptions = <
+export const usePostAuthLogoutMutationOptions = <
   TError = unknown,
   TContext = unknown,
 >(options?: {
@@ -350,7 +369,13 @@ export const getPostAuthLogoutMutationOptions = <
     return postAuthLogout(requestOptions);
   };
 
-  return { mutationFn, ...mutationOptions };
+  const customOptions = useCustomMutatorOptions(
+    { ...mutationOptions, mutationFn },
+    { url: `/api/auth/logout` },
+    { operationId: "PostAuthLogout", operationName: "postAuthLogout" },
+  );
+
+  return customOptions;
 };
 
 export type PostAuthLogoutMutationResult = NonNullable<
@@ -376,7 +401,7 @@ export const usePostAuthLogout = <
   void,
   TContext
 > => {
-  const mutationOptions = getPostAuthLogoutMutationOptions(options);
+  const mutationOptions = usePostAuthLogoutMutationOptions(options);
 
   return useMutation(mutationOptions);
 };
