@@ -1,42 +1,6 @@
-import { useState } from "react";
-import type { MetaFunction } from "@remix-run/node";
-import { DataTable } from "~/components/DataTable";
-
-type Person = {
-  firstName: string;
-  lastName: string;
-  age: number;
-  visits: number;
-  status: string;
-  progress: number;
-};
-
-const defaultData: Person[] = [
-  {
-    firstName: "John",
-    lastName: "Doe",
-    age: 30,
-    visits: 10,
-    status: "Active",
-    progress: 50,
-  },
-  {
-    firstName: "Jane",
-    lastName: "Smith",
-    age: 28,
-    visits: 15,
-    status: "Inactive",
-    progress: 80,
-  },
-  {
-    firstName: "Bob",
-    lastName: "Johnson",
-    age: 45,
-    visits: 20,
-    status: "Active",
-    progress: 90,
-  },
-];
+import type { MetaFunction, LoaderFunction } from "@remix-run/node";
+import { redirect } from "@remix-run/node";
+import { requireAuth } from "~/utilities/auth";
 
 export const meta: MetaFunction = () => {
   return [
@@ -49,48 +13,21 @@ export const meta: MetaFunction = () => {
   ];
 };
 
+export const loader: LoaderFunction = async ({ request }) => {
+  try {
+    // Try to get authenticated user
+    // const response = await requireAuth(request);
+    // console.log("RESPONSE", response);
+    // If successful, redirect to dashboard
+    return redirect("/dashboard");
+  } catch (error) {
+    // If not authenticated, redirect to login
+    console.log("ERROR", error);
+    // return redirect("/login");
+  }
+};
+
 export default function Index() {
-  const [data, setData] = useState(() => [...defaultData]);
-
-  // useEffect(() => {
-  //   getApiUsers().then((users) => {
-  //     console.log("users", users);
-  //   });
-  // }, []);
-
-  const columns = [
-    {
-      accessor: "firstName" as "firstName",
-      header: "First Name",
-      type: "text" as "text",
-    },
-    {
-      accessor: "lastName" as "lastName",
-      header: "Last Name",
-      type: "text" as "text",
-    },
-    { accessor: "age" as "age", header: "Age", type: "number" as "number" },
-    {
-      accessor: "visits" as "visits",
-      header: "Visits",
-      type: "number" as "number",
-    },
-    {
-      accessor: "status" as "status",
-      header: "Status",
-      type: "text" as "text",
-    },
-    {
-      accessor: "progress" as "progress",
-      header: "Profile Progress",
-      type: "percentage" as "percentage",
-    },
-  ];
-
-  return (
-    <div>
-      <h1>Data Table</h1>
-      <DataTable data={data} setData={setData} columns={columns} />
-    </div>
-  );
+  // This component won't be rendered due to the loader redirects
+  return null;
 }
