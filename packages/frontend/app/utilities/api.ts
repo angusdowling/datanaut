@@ -66,7 +66,6 @@ export const customFetch = async <
         headers: retryRes.headers,
       } as T;
     } catch (error) {
-      console.error("Token refresh failed:", error);
       throw error;
     }
   }
