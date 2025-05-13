@@ -68,9 +68,14 @@ export function DataTable<T extends object>({
   ) => {
     console.log("updateData", rowIndex, columnId, value, cellId);
     const newData = [...data] as any;
-    newData[rowIndex][columnId] = { value, cellId };
+    // Preserve the existing cell structure if it exists
+    const existingCell = newData[rowIndex][columnId];
+    newData[rowIndex][columnId] = {
+      value,
+      cellId: cellId || existingCell?.cellId,
+    };
     setData(newData);
-    patchRecord?.(rowIndex, columnId, value, cellId);
+    patchRecord?.(rowIndex, columnId, value, cellId || existingCell?.cellId);
   };
 
   const tableColumns: ColumnDef<T, any>[] = [

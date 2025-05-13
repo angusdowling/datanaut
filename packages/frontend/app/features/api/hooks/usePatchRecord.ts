@@ -21,7 +21,10 @@ export const usePatchRecord = <T extends { id?: string }, U>(
           value: any,
           cellId?: string
         ) => {
+          console.log({ recordIndex, columnId, value, cellId });
           const record = tableDataRef.current?.[recordIndex];
+
+          console.log("record", record);
           if (!record?.id) {
             console.error("Missing record ID");
             return;
