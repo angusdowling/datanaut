@@ -29,8 +29,7 @@
     "sass": "^1.86.0",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-dist": "^5.20.2",
-    "swagger-ui-express": "^5.0.1",
-    "swagger-ui-react": "^5.20.2"
+    "swagger-ui-express": "^5.0.1"
   },
   "devDependencies": {
     "@remix-run/dev": "^2.16.3",

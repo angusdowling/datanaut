@@ -1,4 +1,4 @@
-# Datanaut Database Package
+# Datanaut Database
 
 This package contains the database schema, migrations, and configuration for the Datanaut project. We use PostgreSQL as our database and Graphile Migrate for managing database migrations.
 
