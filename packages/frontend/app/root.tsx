@@ -9,8 +9,11 @@ import {
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useState } from "react";
 import { requireAuth, isPublicRoute } from "./utilities/auth";
+import globalStylesUrl from "./styles/global.scss?url";
 
-export const links: LinksFunction = () => [];
+export const links: LinksFunction = () => [
+  { rel: "stylesheet", href: globalStylesUrl },
+];
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const url = new URL(request.url);

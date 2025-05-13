@@ -11,13 +11,14 @@ import {
   getExpandedRowModel,
   ExpandedState,
   GroupingState,
+  ColumnDef,
 } from "@tanstack/react-table";
 import * as ContextMenu from "@radix-ui/react-context-menu";
 import { EditableCell } from "../EditableCell";
 import { TableHeader } from "../TableHeader";
 import { TableRow } from "../TableRow";
 import { Pagination } from "../Pagination";
-import { ColumnDef } from "../types";
+import { ColumnDef as CustomColumnDef } from "../types";
 import styles from "./DataTable.module.scss";
 
 export type ContextMenuItem<T> = {
@@ -29,8 +30,13 @@ export type ContextMenuItem<T> = {
 interface DataTableProps<T> {
   data: T[];
   setData: (data: T[]) => void;
-  patchRecord?: (recordIndex: number, columnId: string, value: any) => void;
-  columns: ColumnDef<T>[];
+  patchRecord?: (
+    recordIndex: number,
+    columnId: string,
+    value: any,
+    cellId?: string
+  ) => void;
+  columns: CustomColumnDef<T>[];
   defaultGrouping?: string[];
   contextMenuItems?: ContextMenuItem<T>[];
 }
@@ -54,40 +60,72 @@ export function DataTable<T extends object>({
   const columnHelper = createColumnHelper<T>();
 
   // Function to update data when cell value changes
-  const updateData = (rowIndex: number, columnId: string, value: any) => {
-    console.log("updateData", rowIndex, columnId, value);
+  const updateData = (
+    rowIndex: number,
+    columnId: string,
+    value: any,
+    cellId?: string
+  ) => {
+    console.log("updateData", rowIndex, columnId, value, cellId);
     const newData = [...data] as any;
-    newData[rowIndex][columnId] = value;
+    newData[rowIndex][columnId] = { value, cellId };
     setData(newData);
-    patchRecord?.(rowIndex, columnId, value);
+    patchRecord?.(rowIndex, columnId, value, cellId);
   };
 
-  const tableColumns = columns.map((col) =>
-    columnHelper.accessor(col.accessor as any, {
-      header: col.header,
-      cell: (info) => {
-        const isEditing =
-          editingCell?.rowId === info.row.id &&
-          editingCell?.columnId === info.column.id;
+  const tableColumns: ColumnDef<T, any>[] = [
+    columnHelper.display({
+      id: "index",
+      header: "",
+      cell: (info) => info.row.index + 1,
+      enableGrouping: false,
+    }),
+    ...columns.map((col) =>
+      columnHelper.accessor(
+        (row: T) => {
+          // Handle nested property paths (e.g., "workspace.name")
+          const path = (col.accessor as string).split(".");
+          let value: any = row;
+          for (const key of path) {
+            value = value?.[key];
+          }
 
-        return (
-          <EditableCell
-            value={info.getValue()}
-            row={info.row}
-            column={info.column}
-            type={col.type || "text"}
-            updateData={updateData}
-            isEditing={isEditing}
-            onStartEdit={() =>
-              setEditingCell({ rowId: info.row.id, columnId: info.column.id })
-            }
-            onFinishEdit={() => setEditingCell(null)}
-          />
-        );
-      },
-      enableGrouping: true,
-    })
-  );
+          // Handle value objects
+          return typeof value === "object" && value !== null && "value" in value
+            ? (value as { value: any }).value
+            : value;
+        },
+        {
+          id: col.accessor as string,
+          header: col.header,
+          cell: (info) => {
+            const isEditing =
+              editingCell?.rowId === info.row.id &&
+              editingCell?.columnId === info.column.id;
+
+            return (
+              <EditableCell
+                value={info.getValue()}
+                row={info.row}
+                column={info.column}
+                type={col.type || "text"}
+                updateData={updateData}
+                isEditing={isEditing}
+                onStartEdit={() =>
+                  setEditingCell({
+                    rowId: info.row.id,
+                    columnId: info.column.id,
+                  })
+                }
+                onFinishEdit={() => setEditingCell(null)}
+              />
+            );
+          },
+          enableGrouping: true,
+        }
+      )
+    ),
+  ];
 
   const table = useReactTable({
     data,

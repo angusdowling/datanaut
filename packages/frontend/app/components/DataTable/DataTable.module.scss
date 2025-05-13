@@ -1,7 +1,4 @@
 // Global styles
-.wrapper {
-}
-
 .contextMenu {
   min-width: 220px;
   background-color: white;
@@ -37,5 +34,48 @@
   &[data-highlighted] {
     background-color: var(--violet9);
     color: var(--violet1);
+  }
+}
+
+table {
+  border: 1px solid lightgray;
+}
+
+tbody {
+  border-bottom: 1px solid lightgray;
+}
+
+th,
+td {
+  height: 32px;
+  min-width: 180px;
+  border-bottom: 1px solid lightgray;
+  border-right: 1px solid lightgray;
+}
+
+td {
+  button {
+    padding: 1px 1rem;
+    cursor: grab;
+  }
+
+  &:last-child {
+    border-right: 0;
+  }
+}
+
+tr {
+  &:last-child {
+    td {
+      border-bottom: 0;
+    }
+  }
+}
+
+tfoot {
+  color: gray;
+
+  th {
+    font-weight: normal;
   }
 }

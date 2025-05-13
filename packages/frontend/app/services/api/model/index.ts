@@ -47,6 +47,7 @@ export * from "./tenantDto";
 export * from "./updateCellDto";
 export * from "./updateColumnDto";
 export * from "./updateRoleDto";
+export * from "./updateRowCellDto";
 export * from "./updateRowDto";
 export * from "./updateTableDto";
 export * from "./updateUserDto";

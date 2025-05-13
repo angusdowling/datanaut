@@ -26,14 +26,18 @@ export const TableRow = React.forwardRef<HTMLTableRowElement, Props>(
     <tr key={row.id} ref={ref} {...rest}>
       {row.getVisibleCells().map((cell) => {
         if (cell.getIsGrouped()) {
+          const value = cell.getValue();
+          const displayValue =
+            typeof value === "object" && value !== null && "value" in value
+              ? value.value
+              : value;
+
           return (
             <td key={cell.id}>
               <button onClick={toggleExpanded}>
                 {isExpanded ? "🔽" : "▶️"}
               </button>
-              {`${cell.column.columnDef.header as string}: ${String(
-                cell.getValue()
-              )}`}
+              {`${cell.column.columnDef.header as string}: ${String(displayValue)}`}
               <span>({row.subRows.length} items)</span>
             </td>
           );

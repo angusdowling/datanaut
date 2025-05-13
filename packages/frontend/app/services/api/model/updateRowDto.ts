@@ -4,7 +4,9 @@
  * backend
  * OpenAPI spec version: 1.0
  */
+import type { UpdateRowCellDto } from "./updateRowCellDto";
 
 export interface UpdateRowDto {
-  [key: string]: unknown;
+  /** @nullable */
+  cells?: UpdateRowCellDto[] | null;
 }

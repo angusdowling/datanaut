@@ -103,11 +103,12 @@ export const WorkspacesTable = () => {
             <label htmlFor="tenantId">Tenant</label>
             <select id="tenantId" name="tenantId" required>
               <option value="">Select a tenant</option>
-              {tenants?.data?.map((tenant) => (
-                <option key={tenant.id} value={tenant.id}>
-                  {tenant.name}
-                </option>
-              ))}
+              {tenants?.status === 200 &&
+                tenants?.data?.map((tenant) => (
+                  <option key={tenant.id} value={tenant.id}>
+                    {tenant.name}
+                  </option>
+                ))}
             </select>
           </div>
         </div>

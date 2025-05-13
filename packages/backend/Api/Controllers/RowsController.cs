@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Datanaut.Api.Models;
@@ -62,7 +63,20 @@ namespace Datanaut.Api.Controllers
                 return NotFound();
             }
 
-            _mapper.Map(request, existingRow);
+            if (request.Cells != null)
+            {
+                foreach (var cellUpdate in request.Cells)
+                {
+                    var existingCell = existingRow.AppCells.FirstOrDefault(c =>
+                        c.Id == cellUpdate.Id
+                    );
+                    if (existingCell != null)
+                    {
+                        _mapper.Map(cellUpdate, existingCell);
+                    }
+                }
+            }
+
             var updatedRow = await _rowService.UpdateAsync(existingRow);
             return Ok(_mapper.Map<RowDto>(updatedRow));
         }

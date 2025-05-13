@@ -106,22 +106,24 @@ export const UsersTable = () => {
             <label htmlFor="tenantId">Tenant</label>
             <select id="tenantId" name="tenantId" required>
               <option value="">Select a tenant</option>
-              {tenants?.data?.map((tenant) => (
-                <option key={tenant.id} value={tenant.id}>
-                  {tenant.name}
-                </option>
-              ))}
+              {tenants?.status === 200 &&
+                tenants?.data?.map((tenant) => (
+                  <option key={tenant.id} value={tenant.id}>
+                    {tenant.name}
+                  </option>
+                ))}
             </select>
           </div>
           <div>
             <label htmlFor="roleId">Role</label>
             <select id="roleId" name="roleId" required>
               <option value="">Select a role</option>
-              {roles?.data?.map((role: Role) => (
-                <option key={role.id} value={role.id}>
-                  {role.name}
-                </option>
-              ))}
+              {roles?.status === 200 &&
+                roles?.data?.map((role: Role) => (
+                  <option key={role.id} value={role.id}>
+                    {role.name}
+                  </option>
+                ))}
             </select>
           </div>
         </div>

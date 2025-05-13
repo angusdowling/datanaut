@@ -19,5 +19,8 @@ namespace Datanaut.Api.Models
         public required Guid TableId { get; set; }
     }
 
-    public class UpdateRowDto { }
+    public class UpdateRowDto
+    {
+        public List<UpdateRowCellDto>? Cells { get; set; }
+    }
 }

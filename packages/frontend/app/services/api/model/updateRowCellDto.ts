@@ -4,14 +4,9 @@
  * backend
  * OpenAPI spec version: 1.0
  */
-import type { ColumnDto } from "./columnDto";
 
-export interface CellDto {
+export interface UpdateRowCellDto {
   id?: string;
-  rowId?: string;
-  column?: ColumnDto;
   /** @nullable */
   value?: string | null;
-  createdAt?: string;
-  updatedAt?: string;
 }

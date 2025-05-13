@@ -4,18 +4,21 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Datanaut.Api.Data;
 using Datanaut.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Datanaut.Api.Services
 {
     public class RowService(
         IRepository<AppRow> rowRepository,
         IRepository<AppColumn> columnRepository,
-        IRepository<AppCell> cellRepository
+        IRepository<AppCell> cellRepository,
+        ApplicationDbContext context
     ) : IService<AppRow>
     {
         private readonly IRepository<AppRow> _rowRepository = rowRepository;
         private readonly IRepository<AppColumn> _columnRepository = columnRepository;
         private readonly IRepository<AppCell> _cellRepository = cellRepository;
+        private readonly ApplicationDbContext _context = context;
 
         public async Task<IEnumerable<AppRow>> GetAllAsync()
         {
@@ -51,6 +54,15 @@ namespace Datanaut.Api.Services
 
         public async Task<AppRow> UpdateAsync(AppRow row)
         {
+            // Update any modified cells
+            foreach (var cell in row.AppCells)
+            {
+                if (_context.Entry(cell).State == EntityState.Modified)
+                {
+                    await _cellRepository.UpdateAsync(cell);
+                }
+            }
+
             return await _rowRepository.UpdateAsync(row);
         }
 

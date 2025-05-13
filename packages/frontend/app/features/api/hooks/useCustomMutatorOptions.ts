@@ -26,7 +26,17 @@ export const useCustomMutatorOptions = <T, TError, TData, TContext>(
     onSuccess: (data: T, variables: TData, context: TContext) => {
       const route = getRoute(path.url);
 
-      queryClient.invalidateQueries({ queryKey: [`/api/${route}`] });
+      // If this is a cell mutation, invalidate all related queries
+      if (route === "cells") {
+        // Invalidate all table-related queries
+        queryClient.invalidateQueries({ queryKey: ["/api/tables"] });
+        queryClient.invalidateQueries({ queryKey: ["/api/rows"] });
+        queryClient.invalidateQueries({ queryKey: ["/api/columns"] });
+        queryClient.invalidateQueries({ queryKey: ["/api/cells"] });
+      } else {
+        // For other mutations, just invalidate the specific route
+        queryClient.invalidateQueries({ queryKey: [`/api/${route}`] });
+      }
 
       // Call the original onSuccess if it exists
       if (options.onSuccess) {
