@@ -126,6 +126,8 @@ public partial class ApplicationDbContext : DbContext
 
             entity.HasIndex(e => e.TableId, "idx_app_rows_table");
 
+            entity.HasIndex(e => new { e.TableId, e.Position }, "idx_app_rows_table_position");
+
             entity.Property(e => e.Id)
                 .HasDefaultValueSql("uuid_generate_v4()")
                 .HasColumnName("id");
@@ -133,6 +135,7 @@ public partial class ApplicationDbContext : DbContext
                 .HasDefaultValueSql("now()")
                 .HasColumnName("created_at");
             entity.Property(e => e.CreatedBy).HasColumnName("created_by");
+            entity.Property(e => e.Position).HasColumnName("position");
             entity.Property(e => e.TableId).HasColumnName("table_id");
             entity.Property(e => e.UpdatedAt)
                 .HasDefaultValueSql("now()")

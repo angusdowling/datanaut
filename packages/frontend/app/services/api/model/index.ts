@@ -58,3 +58,4 @@ export * from "./userResponse";
 export * from "./verifyRequest";
 export * from "./workspace";
 export * from "./workspaceDto";
+export * from "./updateCellDtoValue";

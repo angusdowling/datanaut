@@ -14,4 +14,6 @@ export interface RowDto {
   cells?: CellDto[] | null;
   createdAt?: string;
   updatedAt?: string;
+  /** @nullable */
+  position?: number | null;
 }

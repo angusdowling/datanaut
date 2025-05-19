@@ -27,6 +27,12 @@ export type ContextMenuItem<T> = {
   disabled?: boolean;
 };
 
+export type ColumnHeaderContextMenuItem = {
+  label: string;
+  onClick: (columnId: string) => void;
+  disabled?: boolean;
+};
+
 interface DataTableProps<T> {
   data: T[];
   setData: (data: T[]) => void;
@@ -39,6 +45,7 @@ interface DataTableProps<T> {
   columns: CustomColumnDef<T>[];
   defaultGrouping?: string[];
   contextMenuItems?: ContextMenuItem<T>[];
+  columnHeaderContextMenuItems?: ColumnHeaderContextMenuItem[];
 }
 
 export function DataTable<T extends object>({
@@ -48,6 +55,7 @@ export function DataTable<T extends object>({
   columns,
   defaultGrouping = [],
   contextMenuItems = [],
+  columnHeaderContextMenuItems = [],
 }: DataTableProps<T>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [grouping, setGrouping] = useState<GroupingState>(defaultGrouping);
@@ -167,7 +175,11 @@ export function DataTable<T extends object>({
           {table.getHeaderGroups().map((headerGroup) => (
             <tr key={headerGroup.id}>
               {headerGroup.headers.map((header) => (
-                <TableHeader key={header.id} header={header} />
+                <TableHeader
+                  key={header.id}
+                  header={header}
+                  contextMenuItems={columnHeaderContextMenuItems}
+                />
               ))}
             </tr>
           ))}

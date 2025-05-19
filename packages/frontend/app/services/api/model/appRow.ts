@@ -14,6 +14,8 @@ export interface AppRow {
   createdAt?: string;
   updatedAt?: string;
   /** @nullable */
+  position?: number | null;
+  /** @nullable */
   appCells?: AppCell[] | null;
   table?: AppTable;
 }

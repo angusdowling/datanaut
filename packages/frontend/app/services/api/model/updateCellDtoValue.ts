@@ -5,8 +5,7 @@
  * OpenAPI spec version: 1.0
  */
 
-export interface CreateRowDto {
-  tableId?: string;
-  /** @nullable */
-  position?: number | null;
-}
+/**
+ * @nullable
+ */
+export type UpdateCellDtoValue = unknown | null;

@@ -9,4 +9,6 @@ import type { UpdateRowCellDto } from "./updateRowCellDto";
 export interface UpdateRowDto {
   /** @nullable */
   cells?: UpdateRowCellDto[] | null;
+  /** @nullable */
+  position?: number | null;
 }

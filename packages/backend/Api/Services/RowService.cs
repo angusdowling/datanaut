@@ -32,6 +32,16 @@ namespace Datanaut.Api.Services
 
         public async Task<AppRow> CreateAsync(AppRow row)
         {
+            // If position is not specified, set it to the max position + 1
+            if (!row.Position.HasValue)
+            {
+                var maxPosition =
+                    await _context
+                        .AppRows.Where(r => r.TableId == row.TableId)
+                        .MaxAsync(r => r.Position) ?? 0;
+                row.Position = maxPosition + 1;
+            }
+
             var createdRow = await _rowRepository.CreateAsync(row);
 
             // Get all columns for this table

@@ -16,6 +16,7 @@ namespace Datanaut.Api.Data
             return await _context
                 .AppRows.Include(r => r.AppCells)
                 .ThenInclude(c => c.Column)
+                .OrderBy(r => r.Position)
                 .ToListAsync();
         }
 
@@ -63,6 +64,7 @@ namespace Datanaut.Api.Data
                 .AppRows.Where(predicate)
                 .Include(r => r.AppCells)
                 .ThenInclude(c => c.Column)
+                .OrderBy(r => r.Position)
                 .ToListAsync();
         }
     }

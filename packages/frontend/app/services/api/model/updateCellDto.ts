@@ -4,8 +4,9 @@
  * backend
  * OpenAPI spec version: 1.0
  */
+import type { UpdateCellDtoValue } from "./updateCellDtoValue";
 
 export interface UpdateCellDto {
   /** @nullable */
-  value?: string | null;
+  value?: UpdateCellDtoValue;
 }
